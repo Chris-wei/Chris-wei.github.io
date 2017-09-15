@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, Blog" />
+  <meta name="keywords" content="Vue," />
 
 
 
@@ -95,16 +95,23 @@
 
 
 
-<meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cryptic&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/archives/2017/index.html">
+<meta name="description" content="前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~ 废话不多说，先上效果图，无图无真相嘛~  可以在控制台看出图片压缩的信息：  本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题； 整个项目的核心">
+<meta name="keywords" content="Vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于vue的移动端图片裁剪压缩处理">
+<meta property="og:url" content="http://yoursite.com/2017/08/05/vue-clip/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta property="og:description" content="前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~ 废话不多说，先上效果图，无图无真相嘛~  可以在控制台看出图片压缩的信息：  本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题； 整个项目的核心">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-3c5c4111e4df639b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-e90a928bbbe2e6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-7ea49a2ef17a893e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-09-15T02:46:07.862Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cryptic&#39;s Blog">
-<meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta name="twitter:title" content="基于vue的移动端图片裁剪压缩处理">
+<meta name="twitter:description" content="前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~ 废话不多说，先上效果图，无图无真相嘛~  可以在控制台看出图片压缩的信息：  本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题； 整个项目的核心">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip">
 
 
 
@@ -134,13 +141,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2017/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/05/vue-clip/"/>
 
 
 
 
 
-  <title>归档 | Cryptic's Blog</title>
+  <title>基于vue的移动端图片裁剪压缩处理 | Cryptic's Blog</title>
   
 
 
@@ -159,7 +166,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -253,411 +260,179 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/05/vue-clip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
+          <h2 class="post-title" itemprop="name headline">基于vue的移动端图片裁剪压缩处理</h2>
         
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-05T10:32:46+08:00">
+                2017-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-        嗯..! 目前共计 11 篇日志。 继续努力。
-      </span>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
 
-      
-
-        
-        
-        
-
-        
+                
+                
+              
+            </span>
           
-          <div class="collection-title">
-            <h2 class="archive-year" id="archive-year-2017">2017</h2>
-          </div>
-        
-        
 
-        
+          
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/05/vue-clip/" itemprop="url">
-              
-                <span itemprop="name">基于vue的移动端图片裁剪压缩处理</span>
-              
-            </a>
-        
-      </h3>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-05T10:32:46+08:00"
-              content="2017-08-05" >
-          08-05
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/02/vue-music/" itemprop="url">
-              
-                <span itemprop="name">Vue初学者的福音——QQ音乐移动端官网</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-02T09:55:38+08:00"
-              content="2017-08-02" >
-          08-02
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/27/ES6-09/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （九）—— Module</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-27T10:40:38+08:00"
-              content="2017-07-27" >
-          07-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~</p>
+<p>废话不多说，先上效果图，无图无真相嘛~</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip" alt="效果图"></p>
+<p>可以在控制台看出图片压缩的信息：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-3c5c4111e4df639b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="压缩信息"></p>
+<p>本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题；</p>
+<p>整个项目的核心 代码是 clipper.js ，其主要使用方式是直接给 input[file] 控件，添加change事件，并调用 methods 中的change方法，这里要传 event 对象， change 方法接收两个参数，第一个是 event 对象，第二个参数是一个对象，resultObj表示要展示的结果 img 对象，aspectRatio 表示宽高比，另外参数可以根据实际情况添加，主要参考<a href="http://blog.csdn.net/qq727013465/article/details/51823231" target="_blank" rel="external">cropper文档说明</a></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e90a928bbbe2e6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="使用方法"></p>
+<p>整个项目实现思路是，触发 change 事件后，动态添加 整个裁剪对象 ， 通过移动裁剪框，判断当前裁剪框的位置和大小，通过canvas将裁剪框范围内的图片信息提取出来，转成base64编码，放到 img 标签的 src 属性里，在此之前，会经过一次图片大小判断，如果上传的图片大于100K ，会通过 compress 函数对其经行压缩，压缩也是借助 canvas 对象，通过计算压缩比进行等比例的压缩，达到最终的效果；</p>
+<p>图片压缩后的上传放在 postImg 函数里，目前是本地模拟，实际开发中请自行根据需求进行编写，等到上传成功之后销毁整个裁剪对象就大功告成了。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7ea49a2ef17a893e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片上传"></p>
+<p>整个项目已经托管在github上，核心代码都有较为详细的注释，有需要的小伙伴可以自行下载看看，如果觉得不错的话，记得给个star哈~<br><a href="https://github.com/Chris-wei/vue-clip" target="_blank" rel="external">项目传送门</a></p>
+<p>ps：由于编辑器的问题，强迫症请忽略那些红色波浪线…</p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/26/ES6-08/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （八）—— async 函数</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-26T11:36:48+08:00"
-              content="2017-07-26" >
-          07-26
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/25/ES6-07/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （七）—— Generator 函数</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-25T15:59:36+08:00"
-              content="2017-07-25" >
-          07-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/24/ES6-06/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （六）—— Class</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-24T12:16:23+08:00"
-              content="2017-07-24" >
-          07-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/22/ES6-05/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （五）—— Promise 对象</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-22T11:45:36+08:00"
-              content="2017-07-22" >
-          07-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/21/ES6-04/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （四）—— Symbol、Set和Map</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-21T10:44:32+08:00"
-              content="2017-07-21" >
-          07-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/20/ES6-03/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （三）—— 数组和对象的拓展</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-20T17:52:23+08:00"
-              content="2017-07-20" >
-          07-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/19/ES6-02/" itemprop="url">
-              
-                <span itemprop="name">ES6必知必会 （二）—— 字符串和函数的拓展</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-19T11:11:45+08:00"
-              content="2017-07-19" >
-          07-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vue/" rel="tag"># Vue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/02/vue-music/" rel="next" title="Vue初学者的福音——QQ音乐移动端官网">
+                <i class="fa fa-chevron-left"></i> Vue初学者的福音——QQ音乐移动端官网
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2017/page/2/">2</a><a class="extend next" rel="next" href="/archives/2017/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -897,6 +672,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
 
   
 
