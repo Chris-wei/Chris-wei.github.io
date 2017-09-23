@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, Blog" />
+  <meta name="keywords" content="JS中的算法与数据结构," />
 
 
 
@@ -95,16 +95,20 @@
 
 
 
-<meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cryptic&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="###前言   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。   随着现在互联网的飞速发展">
+<meta name="keywords" content="JS中的算法与数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6必知必会 （九）—— Module">
+<meta property="og:url" content="http://yoursite.com/2017/09/23/List/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta property="og:description" content="###前言   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。   随着现在互联网的飞速发展">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-5281e4b7eee93444.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-09-23T08:58:35.403Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cryptic&#39;s Blog">
-<meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta name="twitter:title" content="ES6必知必会 （九）—— Module">
+<meta name="twitter:description" content="###前言   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。   随着现在互联网的飞速发展">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-5281e4b7eee93444.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -134,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/23/List/"/>
 
 
 
 
 
-  <title>Cryptic's Blog</title>
+  <title>ES6必知必会 （九）—— Module | Cryptic's Blog</title>
   
 
 
@@ -169,8 +173,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,9 +266,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -295,9 +298,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/23/List/" itemprop="url">ES6必知必会 （九）—— Module</a></h2>
+          <h2 class="post-title" itemprop="name headline">ES6必知必会 （九）—— Module</h2>
         
 
         <div class="post-meta">
@@ -367,9 +368,7 @@
       
 
       
-        
-          
-            <p>###前言<br>   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。<br>   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。<br>   随着现在互联网的飞速发展，前端工程师已不是靠几个选择器操作加链接加事件就能应付的，越来越复杂的产品和基础库，需要坚实的数据结构与算法才能驾驭，所以我认为前端工程师也是应该要重视算法和数据结构，这对于自己的职业发展是有很大帮助的。<br>   当然，算法的学习也不是一朝一夕的事情，这是一个过程，得自己去摸索，去实践，去总结，我这里只是将一些常见的算法和数据结构用 JavaScript 去实现，起到一个抛砖引玉的作用。</p>
+        <p>###前言<br>   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。<br>   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。<br>   随着现在互联网的飞速发展，前端工程师已不是靠几个选择器操作加链接加事件就能应付的，越来越复杂的产品和基础库，需要坚实的数据结构与算法才能驾驭，所以我认为前端工程师也是应该要重视算法和数据结构，这对于自己的职业发展是有很大帮助的。<br>   当然，算法的学习也不是一朝一夕的事情，这是一个过程，得自己去摸索，去实践，去总结，我这里只是将一些常见的算法和数据结构用 JavaScript 去实现，起到一个抛砖引玉的作用。</p>
 <hr>
 <p>###列表(List)<br>  列表是计算机中一种常见的数据结构，日常生活中的购物清单，待办事项等都可以成为列表，它是一组有序的数据，每个列表中的数据项称为<strong>元素</strong>。在javascript中，列表中的元素可以是任意数据类型。列表中可以保存多少元素并没有限定（在实际使用时会受到程序内存的限制）。<br>  列表中会有一些常见属性或方法，比如列表中的元素个数，列表当前的位置，向列表末尾增加一个元素，从列表中删除一个元素，清空列表等一系列操作。<br>  接下来，我们抽象出一个列表的数据类型定义，并用JS中的数组去实现它。</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/6633377-5281e4b7eee93444.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="列表的数据类型定义"></p>
@@ -585,8 +584,6 @@ function contains( element ){
 console.log(fruits.contains(&apos;Watermelon&apos;));     // false
 </code></pre><p>大功告成！<br>我们自己用 javascript 实现了一个列表，至于后面如何拓展（比如做成循环列表），自己可以发散思维，多动手实践实践，一起加油！</p>
 
-          
-        
       
     </div>
     
@@ -601,314 +598,36 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/05/vue-clip/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/05/vue-clip/" itemprop="url">基于vue的移动端图片裁剪压缩处理</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-05T10:32:46+08:00">
-                2017-08-05
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/JS中的算法与数据结构/" rel="tag"># JS中的算法与数据结构</a>
           
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~</p>
-<p>废话不多说，先上效果图，无图无真相嘛~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip" alt="效果图"></p>
-<p>可以在控制台看出图片压缩的信息：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-3c5c4111e4df639b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="压缩信息"></p>
-<p>本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题；</p>
-<p>整个项目的核心 代码是 clipper.js ，其主要使用方式是直接给 input[file] 控件，添加change事件，并调用 methods 中的change方法，这里要传 event 对象， change 方法接收两个参数，第一个是 event 对象，第二个参数是一个对象，resultObj表示要展示的结果 img 对象，aspectRatio 表示宽高比，另外参数可以根据实际情况添加，主要参考<a href="http://blog.csdn.net/qq727013465/article/details/51823231" target="_blank" rel="external">cropper文档说明</a></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e90a928bbbe2e6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="使用方法"></p>
-<p>整个项目实现思路是，触发 change 事件后，动态添加 整个裁剪对象 ， 通过移动裁剪框，判断当前裁剪框的位置和大小，通过canvas将裁剪框范围内的图片信息提取出来，转成base64编码，放到 img 标签的 src 属性里，在此之前，会经过一次图片大小判断，如果上传的图片大于100K ，会通过 compress 函数对其经行压缩，压缩也是借助 canvas 对象，通过计算压缩比进行等比例的压缩，达到最终的效果；</p>
-<p>图片压缩后的上传放在 postImg 函数里，目前是本地模拟，实际开发中请自行根据需求进行编写，等到上传成功之后销毁整个裁剪对象就大功告成了。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7ea49a2ef17a893e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片上传"></p>
-<p>整个项目已经托管在github上，核心代码都有较为详细的注释，有需要的小伙伴可以自行下载看看，如果觉得不错的话，记得给个star哈~<br><a href="https://github.com/Chris-wei/vue-clip" target="_blank" rel="external">项目传送门</a></p>
-<p>ps：由于编辑器的问题，强迫症请忽略那些红色波浪线…</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/02/vue-music/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/02/vue-music/" itemprop="url">Vue初学者的福音——QQ音乐移动端官网</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-02T09:55:38+08:00">
-                2017-08-02
-              </time>
+              <a href="/2017/08/05/vue-clip/" rel="next" title="基于vue的移动端图片裁剪压缩处理">
+                <i class="fa fa-chevron-left"></i> 基于vue的移动端图片裁剪压缩处理
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>有不少的小伙伴在学习新框架后，感觉很迷茫，不知道如何正确使用该框架，没有实际的上手项目可以实战，就不清楚自己对新框架的掌握程度~<br>作为目前国内很火的MVVM框架——Vue，很多初学者跟我一样，在看完文档后表示不知道该框架正确的使用姿势，恰巧，最近做Vue项目有点心得，就顺手撸了一个Vue仿QQ音乐移动端官网的demo供初学者学习，让你掌握Vue正确的使用方法~</p>
-<p>项目地址为 <a href="https://github.com/Chris-wei/vue-music" target="_blank" rel="external">传送门</a></p>
-<p>不多说了，我们先看看最后的效果图~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cca85345688a05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="推荐"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-bd35457dfdd690ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排行榜"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-45863c4e860fa984.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="搜索"></p>
-<p>实际上整个项目并不复杂，但是麻雀虽小五脏俱全，小小的项目中包含了 Vue，Vuex，Vue-router 等一些常用的开发库，让你摆脱原来 jQuery 的繁琐的 dom 操作，深入了解vue的组件化编程，体会数据驱动带来的快感！</p>
-<p>ps：本项目中的数据全部来源于QQ音乐官方接口，但是由于QQ音乐官方接口的限制，本项目暂时采用的是zepto的jsonp模拟请求，实际项目开发中推荐使用axios；</p>
-<p>带你入坑了，接下来，请开始你们的表演~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -918,14 +637,11 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1165,6 +881,10 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
 
   
 
