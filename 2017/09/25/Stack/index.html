@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ECMAScript6," />
+  <meta name="keywords" content="JS中的算法与数据结构," />
 
 
 
@@ -95,18 +95,20 @@
 
 
 
-<meta name="description" content="Symbol 1.Symbol 是 ES6 引入了一种新的原始数据类型，表示独一无二的值。它是 JavaScript 语言的第七种数据类型，前六种分别是：undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object）； 2.Symbol 值通过Symbol函数生成，可以作为对象的属性名使用，保证不会与其他属性名产生冲突； let s =">
-<meta name="keywords" content="ECMAScript6">
+<meta name="description" content="###栈(Stack) 上一篇我们说到了列表，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。 栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删">
+<meta name="keywords" content="JS中的算法与数据结构">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ES6必知必会 （四）—— Symbol、Set和Map">
-<meta property="og:url" content="http://yoursite.com/2017/07/21/ES6-04/index.html">
+<meta property="og:title" content="JS中的算法与数据结构——栈(Stack)">
+<meta property="og:url" content="http://yoursite.com/2017/09/25/Stack/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="Symbol 1.Symbol 是 ES6 引入了一种新的原始数据类型，表示独一无二的值。它是 JavaScript 语言的第七种数据类型，前六种分别是：undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object）； 2.Symbol 值通过Symbol函数生成，可以作为对象的属性名使用，保证不会与其他属性名产生冲突； let s =">
+<meta property="og:description" content="###栈(Stack) 上一篇我们说到了列表，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。 栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-15T02:36:57.189Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-a6af49d57c9d204a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-09-25T06:14:50.511Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES6必知必会 （四）—— Symbol、Set和Map">
-<meta name="twitter:description" content="Symbol 1.Symbol 是 ES6 引入了一种新的原始数据类型，表示独一无二的值。它是 JavaScript 语言的第七种数据类型，前六种分别是：undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object）； 2.Symbol 值通过Symbol函数生成，可以作为对象的属性名使用，保证不会与其他属性名产生冲突； let s =">
+<meta name="twitter:title" content="JS中的算法与数据结构——栈(Stack)">
+<meta name="twitter:description" content="###栈(Stack) 上一篇我们说到了列表，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。 栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-a6af49d57c9d204a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -136,13 +138,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/21/ES6-04/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/09/25/Stack/"/>
 
 
 
 
 
-  <title>ES6必知必会 （四）—— Symbol、Set和Map | Cryptic's Blog</title>
+  <title>JS中的算法与数据结构——栈(Stack) | Cryptic's Blog</title>
   
 
 
@@ -279,7 +281,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/21/ES6-04/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/25/Stack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chris wei">
@@ -296,7 +298,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">ES6必知必会 （四）—— Symbol、Set和Map</h2>
+          <h2 class="post-title" itemprop="name headline">JS中的算法与数据结构——栈(Stack)</h2>
         
 
         <div class="post-meta">
@@ -308,8 +310,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-21T10:44:32+08:00">
-                2017-07-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-25T12:07:18+08:00">
+                2017-09-25
               </time>
             
 
@@ -331,8 +333,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
-                    <span itemprop="name">ECMAScript6</span>
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
                   </a>
                 </span>
 
@@ -366,195 +368,149 @@
       
 
       
-        <p><strong>Symbol</strong></p>
-<p>1.Symbol 是 ES6 引入了一种新的原始数据类型，表示独一无二的值。它是 JavaScript 语言的第七种数据类型，前六种分别是：undefined、null、布尔值（Boolean）、字符串（String）、数值（Number）、对象（Object）；</p>
-<p>2.Symbol 值通过Symbol函数生成，可以作为对象的属性名使用，保证不会与其他属性名产生冲突；</p>
-<pre><code>let s = Symbol();
-typeof s  // symbol
-</code></pre><p>ps：上面代码表示创建一个Symbol变量，值得注意的是，Symbol函数前不能使用new命令，否则会报错，也就是说Symbol 是一个原始类型的值，不是对象，也不能添加属性；</p>
-<p>3.Symbol函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述，主要用于区分不同的 Symbol 变量；</p>
-<pre><code>let s1 = Symbol(&apos;a&apos;);
-let s2 = Symbol(&apos;b&apos;);
+        <p>###栈(Stack)</p>
+<p>上一篇我们说到了<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。</p>
+<p>栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删除，遵循 先入后出(LIFO，last-in-first-out) 的原则，普遍运用于计算机的方方面面。</p>
+<p>对栈的操作主要有两种，一是将一个元素压入栈，push方法，另一个就是将栈顶元素出栈，pop方法。</p>
+<p>除此之外，栈还有其他的一些属性和方法：查看当前栈顶的元素值，我们使用 peek 方法，它仅仅返回栈顶元素值，并不删除它；clear 方法用于清空当前栈内的所有元素；top属性记录当前栈顶位置；length方法返回当前栈内元素总数等；接着我们定义栈的数据类型，并利用JS中的数组去实现它。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a6af49d57c9d204a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="栈数据类型定义"></p>
+<p>###栈的实现</p>
+<pre><code>//定义栈
 
-s1.toString()  // &apos;Symbol(a)&apos;
-s2.toString()  // &apos;Symbol(b)&apos;
-</code></pre><p>ps：Symbol函数的参数<strong>只是</strong>表示对当前 Symbol 值的描述，因此相同参数的Symbol函数的返回值是不相等的</p>
-<pre><code>let s1 = Symbol(&apos;a&apos;);
-let s2 = Symbol(&apos;a&apos;);
+function Stack () {
+    this.dataStore = [];    //初始化为空
+    this.top = 0;           //记录栈顶位置
+    this.pop = pop;         //出栈
+    this.push = push;       //入栈
+    this.peek = peek;       //查看栈顶元素
+    this.length = length;   //查看栈内元素总数
+    this.clear = clear;     //清空栈
+}
+</code></pre><p>我们利用 dataStore 来保存栈内元素，初始化为空数组，top 属性用于记录当前栈顶位置，初始化的时候为0，<br>表示栈顶对应数组的起始位置是0，如果有元素入栈，则该属性会随之反生变化。</p>
+<p>首先我们先来实现第一个入栈方法。</p>
+<p><strong>push：向栈内压入一个新的元素</strong></p>
+<pre><code>//该方法将一个新元素入栈，放到数组中 top 所对应的位置上，并将 top 的值加 1，让其指向数组的下一个空位置
 
-s1 === s2  //false
-</code></pre><p>4.Symbol 值不能与其他类型的值进行运算，但可以转为布尔值，但是不能转为数值；</p>
-<pre><code>let s = Symbol();
-s + &apos;2&apos;       // Cannot convert a Symbol value to a string
-Boolean(s)    // true
-!s            // false
-</code></pre><p>5.用于对象的属性名，可以保证不会出现同名的属性，对于一个对象由多个模块构成的情况非常有用，能防止某一个键被不小心改写或覆盖；<strong>值得注意的是</strong>，Symbol 值作为对象属性名时，不能用点运算符，因为点运算符后面是一个字符串；</p>
-<pre><code>let s = Symbol();
+function push( element ){
+    this.dataStore[this.top++] = element;
+}
+</code></pre><p>能入栈，就得可以出栈，接着我们来看出栈方法：</p>
+<p><strong>pop：取出栈顶元素</strong></p>
+<pre><code>//该方法与入栈相反，返回栈顶元素，并将 top 的值减 1
 
-let obj = {};
-obj[s] = &apos;hello world&apos;;
+function pop(){
+    return this.dataStore[--this.top];
+}
+</code></pre><p>如何查看栈顶元素呢，peek方法！</p>
+<p><strong>peek：查看栈顶元素</strong></p>
+<pre><code>//该方法返回的是栈顶元素，即 top - 1 个位置元素
 
-//或者
+function peek(){
+    if( this.top &gt; 0 ) return this.dataStore[this.top-1];
+    else return &apos;Empty&apos;;
+}
+</code></pre><p>这里我做了个判断，如果一个空栈调用了 peek 方法，因为栈内没有任何元素，所以我这里返回了一个 ‘Empty’;</p>
+<p>现在，我们已经有了基本的入栈、出栈、查看栈顶元素的方法，我们不妨试一试。</p>
+<pre><code>//初始化一个栈
+var stack = new Stack();
+console.log( stack.peek() );    // Empty
 
-let obj  = {
-    [s] : &apos;hello world&apos;
+//入栈
+stack.push(&apos;Apple&apos;);
+stack.push(&apos;Banana&apos;);
+stack.push(&apos;Pear&apos;);
+
+//查看当前栈顶元素
+console.log( stack.peek() );    // Pear
+console.log( stack.pop() );     // Pear    
+</code></pre><p>如果我放入了一些水果，吃掉了一个，我现在想知道我还剩多少个水果怎么办？length 方法可以实现</p>
+<p><strong>length：返回栈内元素总数</strong></p>
+<pre><code>//该方法通过返回 top 属性的值来返回栈内总的元素个数
+
+function length(){
+    return this.top;
+}
+</code></pre><p>我们把代码恢复到出栈前的状态，也就是里面已经放了三个水果，接着我们来看看</p>
+<pre><code>console.log( stack.length() );      // 3
+
+//出栈
+stack.pop();
+
+console.log( stack.length() );      // 2
+</code></pre><p>好了，我们还剩最后一个clear方法，我们来实现一下</p>
+<p><strong>clear：清空栈</strong></p>
+<pre><code>//该方法实现很简单，我们将 top 值置为 0 ， dataStore 数值清空即可
+
+function clear(){
+    delete this.dataStore;
+    this.dataStore = [];
+    this.top = 0;
+}
+</code></pre><p>我们将上面的栈清空试试</p>
+<pre><code>stack.clear();
+
+console.log( stack.length() );      // 0
+console.log( stack.peek() );        // Empty
+</code></pre><p>至此，我们已经可以用JS实现一个栈，但是你仍可能处于不知道如何正确使用的状态，接下来，我们举两个例子，一起看看栈的使用。</p>
+<p><strong>案例1：实现数制间的相互转换</strong></p>
+<p>我们可以利用栈将一个数字从一种数制转换成另一种数制。例如将数字 n 转换成以 b 为基数的数字，可以采用如下算法（该算法只针对基数为 2-9 的情况）：</p>
+<ol>
+<li>最高位为 n % b ， 直接压入栈;</li>
+<li>使用 n / b 来代替 n ;</li>
+<li>重复上面的步骤，知道 n 为 0 ，并且没有余数；</li>
+<li>以此将栈内元素弹出，直到栈空，并依次将这些元素排列，就得到了转换后的形式</li>
+</ol>
+<p>代码如下：</p>
+<pre><code>//进制转换（2-9）
+
+function mulBase ( num , base ) {
+    var s = new Stack();
+    do{
+        s.push( num % base );
+        num = Math.floor( num /= base );
+    }while ( num &gt; 0 );
+
+    var converted = &apos;&apos;;
+    while (s.length() &gt; 0){
+        converted += s.pop();
+    }
+    return converted;
 }
 
-obj.s   // undefined
-obj[s]  // hello world
-</code></pre><p>6.Symbol 作为属性名，不会被常规方法遍历得到，即该属性不会出现在for…in、for…of循环中，也不会被Object.keys()、Object.getOwnPropertyNames()、JSON.stringify()返回，但是，它并不是私有属性，可以使用 Object.getOwnPropertySymbols 方法，可以获取指定对象的所有 Symbol 属性名；</p>
-<pre><code>var obj = {};
-var a = Symbol(&apos;a&apos;);
-var b = Symbol(&apos;b&apos;);
+console.log( mulBase( 125 , 2 ) );      // 1111101
+console.log( mulBase( 125 , 8 ) );      // 175
+</code></pre><p><strong>案列2：判断一个字符串是不是回文</strong></p>
+<p>回文是指一个字符串，从前往后写和从后往前写结果都是一样的，比如单词 ‘level’ ， ‘racecar’，就是回文，数字 1001 也是回文。</p>
+<p>我们采用栈，可以很轻松判断一个字符串是否是回文，实现算法很简单，相信你们都猜到了。我们把字符串从左到右依次压入栈，这样，栈中保存了该字符串反转后的字符，我们再依次出栈，通过比较出栈后的字符串是否与原字符串是否相等，就可判断该字符串是否是回文。</p>
+<p>具体代码实现如下：</p>
+<pre><code>//回文判断
 
-obj[a] = &apos;Hello&apos;;
-obj[b] = &apos;World&apos;;
-obj.c  = &apos;Mine&apos;;
+function isPalindrome ( word ) {
+    var s = new Stack();
+    for( var i = 0 ; i &lt; word.length ; i ++ ){
+        s.push( word[i] );
+    }
+    var rword = &apos;&apos;;
+    while( s.length() &gt; 0 ){
+        rword += s.pop();
+    }
 
-for( let key in obj ){
-   console.log(key)         // c
+    if( word == rword ){
+        return true;
+    }else{
+        return false;
+    }
 }
 
-var objectSymbols = Object.getOwnPropertySymbols(obj);
-
-console.log(objectSymbols) // [Symbol(a), Symbol(b)]
-</code></pre><p>7.Symbol.for方法接受一个字符串作为参数，然后搜索有没有以该参数作为名称的Symbol值。如果有，就返回这个Symbol值，否则就新建并返回一个以该字符串为名称的Symbol值；它与Symbol()不同的是，Symbol.for()不会每次调用就返回一个新的 Symbol 类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值，而 Symbol()每次都会返回3不同的Symbol值；</p>
-<pre><code>Symbol.for(&quot;name&quot;) === Symbol.for(&quot;name&quot;)
-// true
-
-Symbol(&quot;name&quot;) === Symbol(&quot;name&quot;)
-// false
-</code></pre><p>8.Symbol.keyFor方法返回一个已登记的 Symbol 类型值的key，而Symbol()写法是没有登记机制的；</p>
-<pre><code>var s1 = Symbol.for(&quot;name&quot;);
-Symbol.keyFor(s1) // &quot;name&quot;
-
-var s2 = Symbol(&quot;name&quot;);
-Symbol.keyFor(s2) // undefined
-</code></pre><p>ps：Symbol.for为Symbol值登记的名字，是全局环境的，可以在不同的 iframe 或 service worker 中取到同一个值</p>
-<p><strong>Set 和 Map</strong></p>
-<p>1.ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值，它 本身是一个构造函数，用来生成 Set 数据结构。</p>
-<pre><code>let s = new Set([1,2,3,4,5,2,2,3,5]);
-s // [1,2,3,4,5]
-</code></pre><p>2.可以使用add(key)方法可以添加元素到Set中，可以重复添加，但不会有效果，值得注意的是向Set加入值的时候，不会发生类型转换，即 5 和 “5” 是两个不同的值，但在 Set 内部，两个NaN是相等</p>
-<pre><code>let s = new Set([1,2,3]);
-s.add(4)   //[1,2,3,4]
-s.add(4)   //[1,2,3,4]
-s.add(5)   //[1,2,3,4,5]
-s.add(&apos;5&apos;) //[1,2,3,4,5,&quot;5&quot;]
-s.add(NaN) //[1,2,3,4,5,&quot;5&quot;,NaN]
-s.add(NaN) //[1,2,3,4,5,&quot;5&quot;,NaN]
-</code></pre><p>3.可以利用Set数据不重复的特性，提供一种新的数组去重方法</p>
-<pre><code>// 去除数组的重复成员
-[...new Set(array)]
-
-[...new Set([1,2,2,3,3,4,5,5])]  //[1,2,3,4,5]
-</code></pre><p>4.Set常见的操作方法有：</p>
-<ul>
-<li>add(value)：添加某个值，返回Set结构本身。</li>
-<li>delete(value)：删除某个值，返回一个布尔值，表示删除是否成功。</li>
-<li>has(value)：返回一个布尔值，表示该值是否为Set的成员。</li>
-<li><p>clear()：清除所有成员，没有返回值。</p>
-<pre>
-s.add(1).add(2).add(2);
-// 注意2被加入了两次
-
-s.size // 2
-
-s.has(1) // true
-s.has(2) // true
-s.has(3) // false
-
-s.delete(2);
-s.has(2) // false
-</pre>
-
-</li>
-</ul>
-<p>5.Set 结构的实例有四个遍历方法，可以用于遍历成员。</p>
-<ul>
-<li>keys()：返回键名的遍历器</li>
-<li>values()：返回键值的遍历器</li>
-<li>entries()：返回键值对的遍历器</li>
-<li><p>forEach()：使用回调函数遍历每个成员<br>需要特别指出的是，Set的遍历顺序就是插入顺序。这个特性有时非常有用，比如使用Set保存一个回调函数列表，调用时就能保证按照添加顺序调用。</p>
-<pre>
-let set = new Set(['red', 'green', 'blue']);
-
-for (let item of set.keys()) {
-  console.log(item);
+console.log( isPalindrome(&apos;level&apos;) )    // true
+console.log( isPalindrome(&apos;1001&apos;) )     // true
+console.log( isPalindrome(&apos;word&apos;) )     // false
+</code></pre><p>本文主要讲的是栈的运用，所以采用上述方式判断字符串是否是回文，实际上，你完全可以采用以下方式更方便的判断一个字符串是否是回文：</p>
+<pre><code>function isPalindrome ( word ){
+    return String(word).split(&apos;&apos;).reverse().join(&apos;&apos;) == word ? true : false;
 }
-// red
-// green
-// blue
+</code></pre><p>到此，栈的内容也基本告一段落，希望你能有所收获，一起加油~</p>
 
-for (let item of set.values()) {
-  console.log(item);
-}
-// red
-// green
-// blue
-
-for (let item of set.entries()) {
-  console.log(item);
-}
-// ["red", "red"]
-// ["green", "green"]
-// ["blue", "blue"]
-</pre>
-
-</li>
-</ul>
-<p>6.ES6 提供了 Map 数据结构，它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值（包括对象）都可以当作键，是一种更完善的 Hash 结构实现。如果你需要“键值对”的数据结构，Map 比 Object 更合适；</p>
-<p>7.Map常见的操作方法有：</p>
-<ul>
-<li>set(key，val)：添加某个值，返回Map结构本身。</li>
-<li>get(key)：     读取某个键，如果该键未知，则返回undefined</li>
-<li>delete(key)：  删除某个键，返回一个布尔值，表示删除是否成功。</li>
-<li>has(key)：     返回一个布尔值，表示该值是否为Map的键。</li>
-<li>clear() :      清除所有成员，没有返回值。</li>
-</ul>
-<pre>
-    const m = new Map();
-    const o = { str : 'Hello World'};
-
-    m.set(o, 'content')
-    m.get(o) // "content"
-
-    m.has(o) // true
-    m.delete(o) // true
-    m.has(o) // false
-</pre>
-
-<p>8.只有对同一个对象的引用，Map 结构才将其视为同一个键</p>
-<pre><code>const map = new Map();
-
-const k1 = [&apos;a&apos;];
-const k2 = [&apos;a&apos;];
-
-map.set(k1, 111).set(k2, 222);
-
-map.get(k1) // 111
-map.get(k2) // 222
-</code></pre><p>上面例子表明，Map 的键实际上是跟内存地址绑定的，只要内存地址不一样，就视为两个键，因为 k1 和 k2 是两个不同的对象，放在不同的内存地址中，所以Map视为不同的键</p>
-<p>9.Map 结构原生提供三个遍历器生成函数和一个遍历方法。</p>
-<ul>
-<li>keys()：返回键名的遍历器。</li>
-<li>values()：返回键值的遍历器。</li>
-<li>entries()：返回所有成员的遍历器。</li>
-<li>forEach()：遍历 Map 的所有成员。</li>
-</ul>
-<p>ps：Map 的遍历顺序就是插入顺序，这里就不示例了，大家自己动手实践一下。</p>
-<p>10.可以使用扩展运算符（…）将Map转换为数组，反过来，将数组传入 Map 构造函数，就可以转为 Map了</p>
-<pre><code>//Map转数组
-const map = new Map();
-map.set(&apos;name&apos; , &apos;hello&apos;).set({},&apos;world&apos;);
-
-[...map] //[[&quot;name&quot;,&quot;hello&quot;],[{},&quot;world&quot;]]
-
-//数组转Map
-const map = new Map([[&quot;name&quot;,&quot;hello&quot;],[{},&quot;world&quot;]]);
-
-map // {&quot;name&quot; =&gt; &quot;hello&quot;, Object {} =&gt; &quot;world&quot;}
-</code></pre>
       
     </div>
     
@@ -571,7 +527,7 @@ map // {&quot;name&quot; =&gt; &quot;hello&quot;, Object {} =&gt; &quot;world&qu
       
         <div class="post-tags">
           
-            <a href="/tags/ECMAScript6/" rel="tag"># ECMAScript6</a>
+            <a href="/tags/JS中的算法与数据结构/" rel="tag"># JS中的算法与数据结构</a>
           
         </div>
       
@@ -584,8 +540,8 @@ map // {&quot;name&quot; =&gt; &quot;hello&quot;, Object {} =&gt; &quot;world&qu
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/07/20/ES6-03/" rel="next" title="ES6必知必会 （三）—— 数组和对象的拓展">
-                <i class="fa fa-chevron-left"></i> ES6必知必会 （三）—— 数组和对象的拓展
+              <a href="/2017/09/23/List/" rel="next" title="JS中的算法与数据结构——列表(List)">
+                <i class="fa fa-chevron-left"></i> JS中的算法与数据结构——列表(List)
               </a>
             
           </div>
@@ -593,10 +549,6 @@ map // {&quot;name&quot; =&gt; &quot;hello&quot;, Object {} =&gt; &quot;world&qu
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/22/ES6-05/" rel="prev" title="ES6必知必会 （五）—— Promise 对象">
-                ES6必知必会 （五）—— Promise 对象 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
