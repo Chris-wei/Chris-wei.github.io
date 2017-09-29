@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ECMAScript6," />
+  <meta name="keywords" content="Hexo, Blog" />
 
 
 
@@ -95,18 +95,16 @@
 
 
 
-<meta name="description" content="async 函数 1.ES2017 标准引入了 async 函数，它是对 Generator 函数的改进 ， 我们先看一个读取文件的例子： Generator 写法是这样的 ： var fs = require(&amp;apos;fs&amp;apos;);  var readFile = function (fileName) {   return new Promise(function (resolve,">
-<meta name="keywords" content="ECMAScript6">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ES6必知必会 （八）—— async 函数">
-<meta property="og:url" content="http://yoursite.com/2017/07/26/ES6-08/index.html">
+<meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cryptic&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/page/6/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="async 函数 1.ES2017 标准引入了 async 函数，它是对 Generator 函数的改进 ， 我们先看一个读取文件的例子： Generator 写法是这样的 ： var fs = require(&amp;apos;fs&amp;apos;);  var readFile = function (fileName) {   return new Promise(function (resolve,">
+<meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-15T02:38:36.331Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES6必知必会 （八）—— async 函数">
-<meta name="twitter:description" content="async 函数 1.ES2017 标准引入了 async 函数，它是对 Generator 函数的改进 ， 我们先看一个读取文件的例子： Generator 写法是这样的 ： var fs = require(&amp;apos;fs&amp;apos;);  var readFile = function (fileName) {   return new Promise(function (resolve,">
+<meta name="twitter:title" content="Cryptic&#39;s Blog">
+<meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
 
 
 
@@ -136,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/26/ES6-08/"/>
+  <link rel="canonical" href="http://yoursite.com/page/6/"/>
 
 
 
 
 
-  <title>ES6必知必会 （八）—— async 函数 | Cryptic's Blog</title>
+  <title>Cryptic's Blog</title>
   
 
 
@@ -171,7 +169,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -264,9 +263,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -279,7 +278,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/ES6-08/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/ES6-01/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chris wei">
@@ -296,7 +295,9 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">ES6必知必会 （八）—— async 函数</h2>
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/18/ES6-01/" itemprop="url">ES6必知必会 （一）—— 变量声明和结构赋值</a></h2>
         
 
         <div class="post-meta">
@@ -308,8 +309,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T11:36:48+08:00">
-                2017-07-26
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T16:19:23+08:00">
+                2017-07-18
               </time>
             
 
@@ -366,165 +367,51 @@
       
 
       
-        <p><strong>async 函数</strong></p>
-<p>1.ES2017 标准引入了 async 函数，它是对 Generator 函数的改进 ， 我们先看一个读取文件的例子：</p>
-<p>Generator 写法是这样的 ：</p>
-<pre><code>var fs = require(&apos;fs&apos;);
-
-var readFile = function (fileName) {
-  return new Promise(function (resolve, reject) {
-    fs.readFile(fileName, function(error, data) {
-      if (error) return reject(error);
-      resolve(data);
-    });
-  });
-};
-
-var gen = function* () {
-  var f1 = yield readFile(&apos;/etc/fstab&apos;);
-  var f2 = yield readFile(&apos;/etc/shells&apos;);
-  console.log(f1.toString());
-  console.log(f2.toString());
-};
-</code></pre><p>async 写法如下 ：</p>
-<pre><code>var asyncReadFile = async function () {
-  var f1 = await readFile(&apos;/etc/fstab&apos;);
-  var f2 = await readFile(&apos;/etc/shells&apos;);
-  console.log(f1.toString());
-  console.log(f2.toString());
-};
-</code></pre><p>比较发现，async 函数就是将 Generator 函数的星号（*）替换成 async，将 yield 替换成 await，同时不需要co模块，更加语义化；</p>
-<p>2.async 函数返回一个 Promise 对象，内部return语句返回的值，会成为then方法回调函数的参数；</p>
-<pre><code>async function f() {
-  return &apos;hello world&apos;;
+        
+          
+            <p>本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的<a href="http://es6.ruanyifeng.com//" target="_blank" rel="external">ECMAScript6入门</a> ，如有哪里理解不对或者不透彻的地方，还请批评指正~</p>
+<p>ps：推荐使用<a href="http://babeljs.cn/repl/#?experimental=false&amp;evaluate=true&amp;loose=false&amp;spec=false&amp;code=" target="_blank" rel="external">es6在线调试</a></p>
+<p><b>let 和 const</b></p>
+<p>1.let声明的变量只有在当前代码块成效，而且不具备变量提升（即代码块中有let声明的变量提前使用会报错）;</p>
+<pre><code>{
+   console.log(a)    // a is not defined
+   console.log(b)   //  2
+   let a = 1;
+   var b = 2;
 }
+</code></pre><p>2.let同一作用域内不允许重复声明;</p>
+<p>3.const声明一个只读常量，一旦声明，无法更改;</p>
+<p>4.const声明一个变量的时候，必须初始化，而且该变量只能在当前作用域有效;</p>
+<p>5.const声明一个符合类型的数据时（主要是对象和数组），保存的是变量的内存地址，只能保证这个地址固定，不能保证数据结构不变;</p>
+<pre><code>const o = {};
+o.name = &apos;hello&apos;;    //可以给对象添加属性
+console.log(o);      // { &quot;name&quot; : &quot;hello&quot; }
 
-f().then(res =&gt; console.log(res))
-// &quot;hello world&quot;
-</code></pre><p>3.async 函数返回的 Promise 对象，必须等到内部所有 await 命令后面的 Promise 对象执行完，才会发生状态改变，除非遇到 return 语句或者抛出错误。也就是说，只有 async 函数内部的异步操作执行完，才会执行 then 方法指定的回调函数；</p>
-<p>4.如果 async 函数内部抛出错误，会导致返回的 Promise 对象变为 reject 状态，抛出的错误对象会被catch方法回调函数接收到；</p>
-<pre><code>async function f() {
-  throw new Error(&apos;出错了&apos;);
-}
+o = {};             //报错，因为o的内存地址不能改变
+</code></pre><p>6.可以使用 Object.freeze()方法来冻结一个对象或者对象的某个属性;</p>
+<p>7.ES5声明变量的方式有两种 : var 和 function; ES6声明变量的方式有六种 : var let const function import class；</p>
+<p><b>变量的解构赋值 </b></p>
+<p>1.ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值；</p>
+<p>2.如果变量解构不成功就会返回 undefined；</p>
+<p>3.只要某种数据结构具有 Iterator 接口，都可以采用数组形式的解构赋值；</p>
+<p>4.解构赋值时可以指定默认值 （ let [ foo = true ] = [] ）；</p>
+<p>5.如果数组的某个成员不严格等于( === ) undefined ， 默认值就不会生效；</p>
+<pre><code>let [x, y = &apos;b&apos;] = [&apos;a&apos;]; // x=&apos;a&apos;, y=&apos;b&apos;
+let [x, y = &apos;b&apos;] = [&apos;a&apos;, &apos;undefined&apos;];  // x = &apos;a&apos; , y = &apos;undefined&apos; 
+</code></pre><p>6.如果指定的默认值是一个表达式，那么该表达式是惰性求值（即只有在使用到的时候才去求值）；</p>
+<p>7.默认值可以引用解构赋值的其他变量，但该变量必须已经声明；</p>
+<p>8.对象的解构中，变量必须与属性同名，才能取到正确的值，如果变量没有对应的同名属性，则会导致取不到值，最后等于undefined；</p>
+<p>9.对象的解构赋值是先找到同名属性，然后再赋给对应的变量。真正被赋值的是后者，而不是前者；</p>
+<pre><code>let { foo: baz , bar } = { foo: &quot;aaa&quot;, bar: &quot;bbb&quot; }; 
+foo // foo is not defined
+baz // &apos;aaa&apos;
+bar // &apos;bbb&apos;
+</code></pre><p>上述例子中 foo 是匹配的模式，baz才是变量。真正被赋值的是变量baz，而不是模式foo ， bar之所以能匹配，是因为对象的解构赋值是下面形式的简写</p>
+<pre><code>let { foo: foo, bar: bar } = { foo: &quot;aaa&quot;, bar: &quot;bbb&quot; }
+</code></pre><p>10.变量的解构赋值通常用于交换变量，函数参数定义，参数指定默认值等，虽然解构赋值虽然很方便，但是解析起来并不容易，如果使用不当就会产生与预期值不同的问题~</p>
 
-f().then(
-  res =&gt; console.log(res),
-  err =&gt; console.log(err)
-)
-// Error: 出错了
-</code></pre><p>5.await 命令后面是一个 Promise 对象。如果不是，会被转成一个立即 resolve 的 Promise 对象</p>
-<pre><code>async function f() {
-  return await &apos;Hello World&apos;;
-}
-
-f().then(res =&gt; console.log(res))
-// &apos;Hello World&apos;
-</code></pre><p>上述代码中，await命令的参数是 ‘Hello World’，它被转成 Promise 对象，并立即 resolved </p>
-<p>6.await 命令后面的 Promise 对象如果变为reject状态，则 reject 的参数会被 catch 方法的回调函数接收到</p>
-<pre><code>async function f() {
-  await Promise.reject(&apos;出错了&apos;);
-}
-
-f().then(res =&gt; console.log(res))
-   .catch(err =&gt; console.log(err))
-
-// 出错了
-</code></pre><p>7.async 函数中 ， 只要一个await语句后面的 Promise 变为reject，那么整个 async 函数都会中断执行；</p>
-<pre><code>async function f() {
-  await Promise.reject(&apos;出错了&apos;);
-  await Promise.resolve(&apos;hello world&apos;); // 不会执行
-}
-
-f();  // 出错了
-</code></pre><p>8.如果我们希望即使前一个异步操作失败，也不要中断后面的异步操作。那我们可以将第一个 await 放在 try…catch 结构里面，这样不管这个异步操作是否成功，第二个 await 都会执行；</p>
-<pre><code>async function f() {
-  try {
-    await Promise.reject(&apos;出错了&apos;);
-  } catch(e) {
-
-  }
-  return await Promise.resolve(&apos;hello world&apos;);
-}
-
-f().then(res =&gt; console.log(res))
-
-// hello world
-</code></pre><p>或者是 await 后面的 Promise 对象再跟一个 catch 方法，处理前面可能出现的错误：</p>
-<pre><code>async function f() {
-  await Promise.reject(&apos;出错了&apos;)
-    .catch(err =&gt; console.log(err));
-  return await Promise.resolve(&apos;hello world&apos;);
-}
-
-f()
-.then(res =&gt; console.log(res))
-// 出错了
-// hello world
-</code></pre><p>9.如果 await 后面的异步操作出错，那么等同于 asyn c函数返回的 Promise 对象被 rejected：</p>
-<pre><code>async function f() {
-  await new Promise(function (resolve, reject) {
-    throw new Error(&apos;出错了&apos;);
-  });
-}
-
-f().then(res =&gt; console.log(res))
-   .catch(err =&gt; console.log(err))
-// Error：出错了
-</code></pre><p>10.为了防止出错，做法也是将其放在try…catch代码块之中，并且如果有多个await命令，可以统一放在try…catch结构中。</p>
-<pre><code>async function f() {
-  try {
-    await new Promise(function (resolve, reject) {
-      throw new Error(&apos;出错了&apos;);
-    });
-  } catch(e) {
-  }
-  return await(&apos;hello world&apos;);
-}
-
-f().then( res =&gt; console.log(res) )
-// &apos;hello world&apos;
-</code></pre><p>11.使用 await 要注意以下几点 ：</p>
-<ul>
-<li><p>await 命令后面的 Promise 对象，运行结果可能是 rejected，所以最好把 await 命令放在 try…catch 代码块中</p>
-<pre><code>async function myFunction() {
-  try {
-    await operations();
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-// 另一种写法
-
-async function myFunction() {
-  await operations()
-  .catch(function (err) {
-    console.log(err);
-  });
-}   
-</code></pre></li>
-<li><p>多个 await 命令后面的异步操作，如果不存在继发关系（即互不依赖），最好让它们同时触发，缩短程序的执行时间</p>
-<pre><code>// 写法一
-let [foo, bar] = await Promise.all([getFoo(), getBar()]);
-
-// 写法二
-let fooPromise = getFoo();
-let barPromise = getBar();
-let foo = await fooPromise;
-let bar = await barPromise;
-</code></pre></li>
-<li><p>await 命令只能用在 async 函数之中，如果用在普通函数，就会报错</p>
-<pre><code>async function func(db) {
-  let docs = [{}, {}, {}];
-
-  // 报错
-  docs.forEach(function (doc) {
-    await db.post(doc);
-  });
-}
-</code></pre></li>
-</ul>
-
+          
+        
       
     </div>
     
@@ -539,40 +426,14 @@ let bar = await barPromise;
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/ECMAScript6/" rel="tag"># ECMAScript6</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/07/25/ES6-07/" rel="next" title="ES6必知必会 （七）—— Generator 函数">
-                <i class="fa fa-chevron-left"></i> ES6必知必会 （七）—— Generator 函数
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/27/ES6-09/" rel="prev" title="ES6必知必会 （九）—— Module">
-                ES6必知必会 （九）—— Module <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -582,11 +443,14 @@ let bar = await barPromise;
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span>
+  </nav>
+
 
 
           </div>
@@ -826,10 +690,6 @@ let bar = await barPromise;
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
-
-
 
   
 
