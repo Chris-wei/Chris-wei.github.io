@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, Blog" />
+  <meta name="keywords" content="JS中的算法与数据结构," />
 
 
 
@@ -95,16 +95,24 @@
 
 
 
-<meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cryptic&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="二叉查找树（Binary Sort Tree）我们之前所学到的列表，栈等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（Tree），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。 在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的根结点，简称树的根（r">
+<meta name="keywords" content="JS中的算法与数据结构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS中的算法与数据结构——二叉查找树（Binary Sort Tree）">
+<meta property="og:url" content="http://yoursite.com/2017/10/17/BST/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta property="og:description" content="二叉查找树（Binary Sort Tree）我们之前所学到的列表，栈等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（Tree），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。 在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的根结点，简称树的根（r">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d146521142eed203.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-8a6483d23d6fb05a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-cd6922046694dd42.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-6df2ba6abbb901c0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-10-17T10:46:51.799Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cryptic&#39;s Blog">
-<meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta name="twitter:title" content="JS中的算法与数据结构——二叉查找树（Binary Sort Tree）">
+<meta name="twitter:description" content="二叉查找树（Binary Sort Tree）我们之前所学到的列表，栈等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（Tree），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。 在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的根结点，简称树的根（r">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -134,13 +142,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/17/BST/"/>
 
 
 
 
 
-  <title>Cryptic's Blog</title>
+  <title>JS中的算法与数据结构——二叉查找树（Binary Sort Tree） | Cryptic's Blog</title>
   
 
 
@@ -169,8 +177,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,9 +270,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -295,9 +302,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/17/BST/" itemprop="url">JS中的算法与数据结构——二叉查找树（Binary Sort Tree）</a></h2>
+          <h2 class="post-title" itemprop="name headline">JS中的算法与数据结构——二叉查找树（Binary Sort Tree）</h2>
         
 
         <div class="post-meta">
@@ -367,9 +372,7 @@
       
 
       
-        
-          
-            <h2 id="二叉查找树（Binary-Sort-Tree）"><a href="#二叉查找树（Binary-Sort-Tree）" class="headerlink" title="二叉查找树（Binary Sort Tree）"></a>二叉查找树（Binary Sort Tree）</h2><p>我们之前所学到的<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（<strong>Tree</strong>），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。</p>
+        <h2 id="二叉查找树（Binary-Sort-Tree）"><a href="#二叉查找树（Binary-Sort-Tree）" class="headerlink" title="二叉查找树（Binary Sort Tree）"></a>二叉查找树（Binary Sort Tree）</h2><p>我们之前所学到的<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（<strong>Tree</strong>），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。</p>
 <p>在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的<strong>根结点</strong>，简称树的<strong>根</strong>（root）。每一个结点可以有多个后件，称为该结点的子结点。没有后件的结点称为叶子结点。一个结点所拥有的子结点的个数称为该结点的度，所有结点中最大的度称为树的度。树的最大层次称为树的深度。</p>
 <h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>二叉树是一种特殊的树，它的子节点个数不超过两个，且分别称为该结点的左子树（left subtree）与右子树（right subtree），二叉树常被用作二叉查找树和二叉堆或是二叉排序树（BST）。</p>
 <p><img src="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="二叉树"></p>
@@ -650,8 +653,6 @@ inOrder(nums.root);
 </code></pre><p>成功了！<br>现在，我们的BST算是完整了。</p>
 <p>我们现在已经可以利用js是实现一个简单的BST了，实际中树的使用会很广泛，希望大家能多去了解了解树的数据结构，多动手实践，相信你会有不少的收获！</p>
 
-          
-        
       
     </div>
     
@@ -666,636 +667,36 @@ inOrder(nums.root);
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/Set/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/08/Set/" itemprop="url">JS中的算法与数据结构——集合(Set)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-08T11:18:28+08:00">
-                2017-10-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/JS中的算法与数据结构/" rel="tag"># JS中的算法与数据结构</a>
           
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>愉快的假期告一段落，继续我们的学习~</p>
-<h2 id="集合-Set"><a href="#集合-Set" class="headerlink" title="集合(Set)"></a>集合(Set)</h2><p>同数学中所学的一样，集合(Set)是由一组无序但彼此之间又有一定关系性的成员构成，每个成员在集合中只能出现一次，不同于我们之前说的<a href="http://www.jianshu.com/p/eece86baec10" target="_blank" rel="external">字典</a>，<a href="http://www.jianshu.com/p/f254ec665e57" target="_blank" rel="external">链表</a>之类的，它是一种包含了不同元素的数据结构(集合中的元素称为成员)，从其定义中我们可以看出它具有两个很重要的特征：首先，集合中的成员是无序的，其次，集合中的成员是不相同的，即集合中不存在相同的成员。</p>
-<p>实际上，很多编程语言中，集合并不是一种数据类型，但是如果你需要创建一个数据结构用来保存一些独一无二的元素时，集合就变得很有用了，接下来我们一起来看看JS中如何实现一个集合。</p>
-<h2 id="集合的定义"><a href="#集合的定义" class="headerlink" title="集合的定义"></a>集合的定义</h2><p>我们要实现一个集合，首先要对其一些定义做了解</p>
-<ul>
-<li>不包含任何成员的集合称为<strong>空集</strong>，包含一切可能成员的集合称为<strong>全集</strong>。</li>
-<li>如果两个集合里的成员都完全相同，则称两个集合相等。</li>
-<li>如果一个集合所有成员都包含于另一个集合，则前一集合称为后一集合的一个<strong>子集</strong>。</li>
-</ul>
-<h2 id="集合的操作"><a href="#集合的操作" class="headerlink" title="集合的操作"></a>集合的操作</h2><p>通常来说，集合的基本操作有以下三种：</p>
-<ul>
-<li>并集：将两个集合中的成员进行合并，得到一个新的集合</li>
-<li>交集：将两个集合中共同存在的成员组成的一个新的集合</li>
-<li>补集：属于一个集合而不属于另一个集合的成员组成的新的集合</li>
-</ul>
-<h2 id="集合的实现"><a href="#集合的实现" class="headerlink" title="集合的实现"></a>集合的实现</h2><p>集合（Set）的实现我们这里基于数组，用数组来存储数据，根据我们之前学习的以及上面提到的一些方法，我们可以将集合的构造函数定义如下（为了区别ES6的 set 类型，我们这里选择用 MySet 命名）：</p>
-<pre><code>//构造函数
-
-function MySet () {
-    this.dataStore = [];            // 数据存储
-    this.add = add;                 // 添加成员
-    this.remove = remove;           // 删除成员
-    this.size = size;               // 集合元素个数
-    this.union = union;             // 集合求并集
-    this.intersect = intersect;     // 集合求交集
-    this.subset = subset;           // 判断一个集合是否是另一集合的子集
-    this.difference = difference;   // 集合求补集
-    this.contains = contains;       // 判断某成员是否属于该集合
-    this.show = show;               // 显示当前集合
-}
-</code></pre><p>我们第一个要实现的方法就是向集合中添加一个成员，即 add 方法</p>
-<p><strong>add：向集合中添加一个成员</strong></p>
-<pre><code>//添加元素
-
-function add (data) {
-    //判断元素是否存在集合当中
-    if( this.dataStore.indexOf( data )  &lt; 0 ){
-        this.dataStore.push(data);
-        return true;
-    }else{
-        console.warn( &apos;Can not add &apos; + data + &apos;, must already be in set&apos;);
-        return false;
-    }
-}
-</code></pre><p>我们之前提到，集合中的元素是独一无二的，因此，我们在将数据存储到数组之前，首先就是要确保该集合不存在该数据，因此，我们先用 indexOf 方法检查新加入的元素是否存在，如果找到了就返回该成员在数组中的位置；否则，就返回 -1 ，那么对应的 add 方法就可以定义返回布尔值，添加成功我们返回 true ， 否则返回 false ，这样就可以明确告诉我们是否正确的插入了一个元素。</p>
-<p><strong>remove：删除集合中某个成员</strong></p>
-<pre><code>//删除元素
-
-function remove (data) {
-    //判断元素是否存在集合当中
-    var pos = this.dataStore.indexOf(data);
-    if( pos &gt; -1 ){
-        this.dataStore.splice(pos,1);
-        return true;
-    }else{
-        console.warn( data + &apos; is not in set&apos;);
-        return false;
-    }
-}
-</code></pre><p>这里，我们顺理成章的实现了删除方法，它跟 add 方法很类似，首先要检查待删除元素是否存在于数组中，如果存在，我们调用数组的 splice() 方法删除该元素并返回 true ，否则，直接返回 false ，表示集合中不存在该元素。</p>
-<p>现在，我们可以完成集合的添加和删除，要测试这些方法之前，我们首先得定义 show 方法，该方法用来显示集合中的成员，该方法的实现很简答，只需返回我们定义的数组即可：</p>
-<p><strong>show：显示集合中的成员</strong></p>
-<pre><code>// 显示集合成员
-
-function show(){
-    console.log(this.dataStore);
-    return this.dataStore;
-}
-</code></pre><p>接着，我们这会来测试一下：</p>
-<pre><code>var fruits = new MySet();
-
-// 添加成员
-fruits.add(&apos;Apple&apos;);
-fruits.add(&apos;Banana&apos;);
-fruits.add(&apos;Pear&apos;);
-fruits.show();              // [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Pear&quot;]
-
-// 添加重复成员
-fruits.add(&apos;Apple&apos;);        // Can not add Apple, must already be in set
-
-// 删除成员
-fruits.remove(&apos;Banana&apos;);
-fruits.show();              // [&quot;Apple&quot;, &quot;Pear&quot;]
-
-// 删除不存在的成员
-fruits.remove(&apos;Banana&apos;);    // Banana is not in set
-</code></pre><p>嗯，一切正常，我们可以来实现集合的一些高级操作了，我们先来看看 union （并集）的实现。</p>
-<p><strong>union：求集合并集</strong></p>
-<p>求集合的并集，就是要将两个集合合并成一个，并除去重复的元素，我们实现思路就是将第一个集合成员放到一个临时集合中，判断第二个集合的成员是否也属于第一个集合，如果为真，代表为重复元素，我们直接跳过该成员，否则将该成员加入临时集合，最后返回该集合即可；</p>
-<p>那么，问题来了，我们要如何判断一个成员是否存在于该集合中？因此，我们需要一个辅助方法 contains()，它的实现也非常简单，直接用 indexOf 判断即可</p>
-<pre><code>//判断元素是否属于该集合
-
-function contains (data) {
-    if( this.dataStore.indexOf(data) &gt; -1 ){
-        return true;
-    }else{
-        return false;
-    }
-}
-</code></pre><p>现在，我们可以定义 union 方法了</p>
-<pre><code>//求集合的并集
-
-function union ( set ) {
-    var tempSet = new MySet();
-    for( var i = 0 ; i &lt; this.dataStore.length ; i++ ){
-        tempSet.add(this.dataStore[i]);
-    }
-    for( var i = 0 ; i&lt; set.dataStore.length ; i++ ){
-        if( !tempSet.contains(set.dataStore[i])){
-            tempSet.dataStore.push(set.dataStore[i]);
-        }
-    }
-    return tempSet;
-}
-</code></pre><p>这样，我们就可以就集合的并集了，</p>
-<pre><code>var fruits1 = new MySet();
-fruits1.add(&apos;Apple&apos;);
-fruits1.add(&apos;Banana&apos;);
-fruits1.add(&apos;Pear&apos;);
-
-var fruits2 = new MySet();
-fruits2.add(&apos;Grape&apos;);
-fruits2.add(&apos;Banana&apos;);
-fruits2.add(&apos;Pear&apos;);
-fruits2.add(&apos;Orange&apos;);
-
-var union = fruits1.union( fruits2 );
-union.show();                           // [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Pear&quot;, &quot;Grape&quot;, &quot;Orange&quot;]
-</code></pre><p>成功了！我们可以来看看求集合的交集了。</p>
-<p><strong>intersect：求集合的交集</strong></p>
-<p>有了上面求并集的思路，那么交集的定义来说也相对简单，思路就是发现第一个集合的成员也属于第二个集合时，就将该成员加入到新的集合，最后返回新的集合即可；</p>
-<pre><code>//求集合的交集
-
-function intersect (set) {
-    var tempSet = new MySet();
-    for(var i = 0 ; i &lt; this.dataStore.length ; i++ ){
-        if( set.contains(this.dataStore[i])){
-            tempSet.add(this.dataStore[i]);
-        }
-    }
-    return tempSet;
-}
-</code></pre><p>我们还是利用上面的两个集合接着求其交集：</p>
-<pre><code>var intersect = fruits1.intersect( fruits2 );
-intersect.show();                               // [&quot;Banana&quot;, &quot;Pear&quot;]
-</code></pre><p>下一个定义的操作是 subset ；</p>
-<p><strong>subset：判断集合是否是另一集合的子集</strong></p>
-<p>该方法首先要确定 该集合的长度是否小于待比较的集合。如果该集合比待比较集合还要大，那么肯定不是待比较集合的一个子集。只要当，待比较集合比较大时，才去判断集合类的成员是否都属于待比较集合，如果有一个不是，直接返回 false ， 只有当所有元素都属于待比较集合的时候，我们才能说该集合是待比较集合的一个子集，该方法才会返回 true , 为了方便查看，我加入了console打印；</p>
-<pre><code>//子集判断
-
-function subset (set) {
-    if( this.size() &gt; set.size() ){
-        console.log(&apos;not a subset&apos;);
-        return false;
-    }else{
-        for ( var i = 0 ; i &lt; this.dataStore.length ; i++ ){
-            if( !set.contains(this.dataStore[i])){
-                console.log(&apos;not a subset&apos;);
-                return false;
-            }
-        }
-    }
-    console.log(&apos; a subset&apos;);
-    return true;
-}
-</code></pre><p>我们看到上面用到了 size 方法，它的定义如下：</p>
-<pre><code>//返回集合长度
-
-function size () {
-    return this.dataStore.length;
-}
-</code></pre><p>我们保留上面的 fruits1 和 fruits2 ， 新建一个 fruits3 来演示 subset 方法</p>
-<pre><code>var fruits3  = new MySet();
-fruits3.add(&apos;Apple&apos;);
-fruits3.add(&apos;Banana&apos;);
-fruits3.add(&apos;Pear&apos;);
-fruits3.add(&apos;Grape&apos;);
-fruits3.add(&apos;Orange&apos;);
-
-//子集判断
-
-fruits1.subset( fruits2 );      // not a subset
-fruits2.subset( fruits2 );      // a subset
-fruits1.subset( fruits3 );      // a subset
-</code></pre><p>看起来一切都很顺利，我们只剩最后一个 difference 方法，该方法返回一个新集合，该集合是由属于第一个集合而不属于第二个集合的成员组成的。</p>
-<p><strong>difference：补集</strong></p>
-<p>有了交集的思路，补集的实现就显得很自然了。</p>
-<pre><code>//补集
-
-function difference (set) {
-    var tempSet = new  MySet();
-    for( var i = 0 ; i &lt; this.dataStore.length ; i ++ ){
-        if( !set.contains(this.dataStore[i])){
-            tempSet.dataStore.push( this.dataStore[i] );
-        }
-    }
-    return tempSet;
-}
-</code></pre><p>我们测试一下：</p>
-<pre><code>fruits1.difference(fruits2).show();     // [&apos;Apple&apos;]
-fruits1.difference(fruits3).show();     // []
-fruits2.difference(fruits1).show();     // [&quot;Grape&quot;, &quot;Orange&quot;]
-</code></pre><p>ok，到现在，我们完成了一个完整的 set 集合，是不是很棒！</p>
-<p>本篇介绍的集合和 ES6 的集合略微有点差别，ES6 提供的 Set 数据结构，有很多现成的方法可以直接调用，很是方法，不是很了解的小伙伴可以参考我之前的一篇博文，关于<a href="http://www.jianshu.com/p/4da037782be9" target="_blank" rel="external">ES6中Symbol 、Set 和 Map</a> 一文，相信会有不错的收获~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/29/Stack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/29/Stack/" itemprop="url">JS中的算法与数据结构——栈(Stack)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-29T10:17:18+08:00">
-                2017-09-29
-              </time>
+              <a href="/2017/10/08/Set/" rel="next" title="JS中的算法与数据结构——集合(Set)">
+                <i class="fa fa-chevron-left"></i> JS中的算法与数据结构——集合(Set)
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h2 id="栈-Stack"><a href="#栈-Stack" class="headerlink" title="栈(Stack)"></a>栈(Stack)</h2><p>上一篇我们说到了<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。</p>
-<p>栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删除，遵循 先入后出(LIFO，last-in-first-out) 的原则，普遍运用于计算机的方方面面。</p>
-<p>对栈的操作主要有两种，一是将一个元素压入栈，push方法，另一个就是将栈顶元素出栈，pop方法。</p>
-<p>除此之外，栈还有其他的一些属性和方法：查看当前栈顶的元素值，我们使用 peek 方法，它仅仅返回栈顶元素值，并不删除它；clear 方法用于清空当前栈内的所有元素；top属性记录当前栈顶位置；length方法返回当前栈内元素总数等；接着我们定义栈的数据类型，并利用JS中的数组去实现它。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a6af49d57c9d204a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="栈数据类型定义"></p>
-<h2 id="栈的实现"><a href="#栈的实现" class="headerlink" title="栈的实现"></a>栈的实现</h2><pre><code>//定义栈
-
-function Stack () {
-    this.dataStore = [];    //初始化为空
-    this.top = 0;           //记录栈顶位置
-    this.pop = pop;         //出栈
-    this.push = push;       //入栈
-    this.peek = peek;       //查看栈顶元素
-    this.length = length;   //查看栈内元素总数
-    this.clear = clear;     //清空栈
-}
-</code></pre><p>我们利用 dataStore 来保存栈内元素，初始化为空数组，top 属性用于记录当前栈顶位置，初始化的时候为0，<br>表示栈顶对应数组的起始位置是0，如果有元素入栈，则该属性会随之反生变化。</p>
-<p>首先我们先来实现第一个入栈方法。</p>
-<p><strong>push：向栈内压入一个新的元素</strong></p>
-<pre><code>//该方法将一个新元素入栈，放到数组中 top 所对应的位置上，并将 top 的值加 1，让其指向数组的下一个空位置
-
-function push( element ){
-    this.dataStore[this.top++] = element;
-}
-</code></pre><p>能入栈，就得可以出栈，接着我们来看出栈方法：</p>
-<p><strong>pop：取出栈顶元素</strong></p>
-<pre><code>//该方法与入栈相反，返回栈顶元素，并将 top 的值减 1
-
-function pop(){
-    return this.dataStore[--this.top];
-}
-</code></pre><p>如何查看栈顶元素呢，peek方法！</p>
-<p><strong>peek：查看栈顶元素</strong></p>
-<pre><code>//该方法返回的是栈顶元素，即 top - 1 个位置元素
-
-function peek(){
-    if( this.top &gt; 0 ) return this.dataStore[this.top-1];
-    else return &apos;Empty&apos;;
-}
-</code></pre><p>这里我做了个判断，如果一个空栈调用了 peek 方法，因为栈内没有任何元素，所以我这里返回了一个 ‘Empty’;</p>
-<p>现在，我们已经有了基本的入栈、出栈、查看栈顶元素的方法，我们不妨试一试。</p>
-<pre><code>//初始化一个栈
-var stack = new Stack();
-console.log( stack.peek() );    // Empty
-
-//入栈
-stack.push(&apos;Apple&apos;);
-stack.push(&apos;Banana&apos;);
-stack.push(&apos;Pear&apos;);
-
-//查看当前栈顶元素
-console.log( stack.peek() );    // Pear
-console.log( stack.pop() );     // Pear    
-</code></pre><p>如果我放入了一些水果，吃掉了一个，我现在想知道我还剩多少个水果怎么办？length 方法可以实现</p>
-<p><strong>length：返回栈内元素总数</strong></p>
-<pre><code>//该方法通过返回 top 属性的值来返回栈内总的元素个数
-
-function length(){
-    return this.top;
-}
-</code></pre><p>我们把代码恢复到出栈前的状态，也就是里面已经放了三个水果，接着我们来看看</p>
-<pre><code>console.log( stack.length() );      // 3
-
-//出栈
-stack.pop();
-
-console.log( stack.length() );      // 2
-</code></pre><p>好了，我们还剩最后一个clear方法，我们来实现一下</p>
-<p><strong>clear：清空栈</strong></p>
-<pre><code>//该方法实现很简单，我们将 top 值置为 0 ， dataStore 数值清空即可
-
-function clear(){
-    delete this.dataStore;
-    this.dataStore = [];
-    this.top = 0;
-}
-</code></pre><p>我们将上面的栈清空试试</p>
-<pre><code>stack.clear();
-
-console.log( stack.length() );      // 0
-console.log( stack.peek() );        // Empty
-</code></pre><p>至此，我们已经可以用JS实现一个栈，但是你仍可能处于不知道如何正确使用的状态，接下来，我们举两个例子，一起看看栈的使用。</p>
-<p><strong>案例1：实现数制间的相互转换</strong></p>
-<p>我们可以利用栈将一个数字从一种数制转换成另一种数制。例如将数字 n 转换成以 b 为基数的数字，可以采用如下算法（该算法只针对基数为 2-9 的情况）：</p>
-<ol>
-<li>最高位为 n % b ， 直接压入栈;</li>
-<li>使用 n / b 来代替 n ;</li>
-<li>重复上面的步骤，知道 n 为 0 ，并且没有余数；</li>
-<li>以此将栈内元素弹出，直到栈空，并依次将这些元素排列，就得到了转换后的形式</li>
-</ol>
-<p>代码如下：</p>
-<pre><code>//进制转换（2-9）
-
-function mulBase ( num , base ) {
-    var s = new Stack();
-    do{
-        s.push( num % base );
-        num = Math.floor( num /= base );
-    }while ( num &gt; 0 );
-
-    var converted = &apos;&apos;;
-    while (s.length() &gt; 0){
-        converted += s.pop();
-    }
-    return converted;
-}
-
-console.log( mulBase( 125 , 2 ) );      // 1111101
-console.log( mulBase( 125 , 8 ) );      // 175
-</code></pre><p><strong>案列2：判断一个字符串是不是回文</strong></p>
-<p>回文是指一个字符串，从前往后写和从后往前写结果都是一样的，比如单词 ‘level’ ， ‘racecar’，就是回文，数字 1001 也是回文。</p>
-<p>我们采用栈，可以很轻松判断一个字符串是否是回文，实现算法很简单，相信你们都猜到了。我们把字符串从左到右依次压入栈，这样，栈中保存了该字符串反转后的字符，我们再依次出栈，通过比较出栈后的字符串是否与原字符串是否相等，就可判断该字符串是否是回文。</p>
-<p>具体代码实现如下：</p>
-<pre><code>//回文判断
-
-function isPalindrome ( word ) {
-    var s = new Stack();
-    for( var i = 0 ; i &lt; word.length ; i ++ ){
-        s.push( word[i] );
-    }
-    var rword = &apos;&apos;;
-    while( s.length() &gt; 0 ){
-        rword += s.pop();
-    }
-
-    if( word == rword ){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-console.log( isPalindrome(&apos;level&apos;) )    // true
-console.log( isPalindrome(&apos;1001&apos;) )     // true
-console.log( isPalindrome(&apos;word&apos;) )     // false
-</code></pre><p>本文主要讲的是栈的运用，所以采用上述方式判断字符串是否是回文，实际上，你完全可以采用以下方式更方便的判断一个字符串是否是回文：</p>
-<pre><code>function isPalindrome ( word ){
-    return String(word).split(&apos;&apos;).reverse().join(&apos;&apos;) == word ? true : false;
-}
-</code></pre><p>到此，栈的内容也基本告一段落，希望你能有所收获，一起加油~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -1305,14 +706,11 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1340,8 +738,17 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -1432,6 +839,22 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉查找树（Binary-Sort-Tree）"><span class="nav-number">1.</span> <span class="nav-text">二叉查找树（Binary Sort Tree）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树"><span class="nav-number">2.</span> <span class="nav-text">二叉树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉查找树（BST）"><span class="nav-number">3.</span> <span class="nav-text">二叉查找树（BST）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉查找树的实现"><span class="nav-number">4.</span> <span class="nav-text">二叉查找树的实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉查找树的查找运算"><span class="nav-number">5.</span> <span class="nav-text">二叉查找树的查找运算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉查找树的删除运算"><span class="nav-number">6.</span> <span class="nav-text">二叉查找树的删除运算</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1552,6 +975,10 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
 
   
 

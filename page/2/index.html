@@ -278,6 +278,272 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Dictionary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/27/Dictionary/" itemprop="url">JS中的算法与数据结构——字典(Dictionary)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T17:31:28+08:00">
+                2017-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="字典-Dictionary"><a href="#字典-Dictionary" class="headerlink" title="字典(Dictionary)"></a>字典(Dictionary)</h2><p>字典(Dictionary)是一种以 <strong>键-值对</strong> 形式存储数据的数据结构 ，就如同我们平时查看通讯录一样，要找一个电话，首先先找到该号码的机主名字，名字找到了，紧接着电话号码也就有了。这里的键就是你用来查找的东西，本例中指代的就是名字，值就是查找得到的结果，也就是对应的电话号码。</p>
+<p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
+<h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
+<p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cbda4fe5fdd62c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据类型定义"></p>
+<p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
+<pre><code>//字典类
+
+function Dictionary () {
+    this.dataStore = [];
+    this.add = add;         // 添加元素
+    this.find = find;       // 查找元素
+    this.remove = remove;   // 删除元素
+    this.count = count;     // 字典中元素个数
+    this.showAll = showAll; // 显示字典元素
+    this.clear = clear;     // 清空字典
+}
+</code></pre><p><strong>add：向字典添加一个元素</strong></p>
+<p>上面我们也提到，字典是以 键值对 的方式存储数据的，因此，add 方法就需要接受两个参数，分别是 键和值 ，其中键表示其在字典中的索引，实现如下</p>
+<pre><code>//向字典添加元素
+
+function add( key , value ){
+    this.dataStore[key] = value;
+}
+</code></pre><p>没错，就是这么简单！接着我们来看看 find 方法</p>
+<p><strong>find：查找字典中的元素</strong></p>
+<p>我们是以键值对方式存储的，因此我们只需要传入需要查找的键，就可以顺理成章的取到对应的值，这对应于JS中的数组也是十分简单的；</p>
+<pre><code>//查找字典中的元素
+
+function find( key ){
+    return this.dataStore[key];
+}
+</code></pre><p>有了添加和查找，接下来就是删除了！</p>
+<p><strong>remove：删除字典中的一个元素</strong></p>
+<p>要想删除字典中的一个元素，即删除一个 键值对 ， 我们需要借助 JS 提供的一个内置的函数 ： delete ，这个函数我们并不陌生，它可以同时删除键和与其对应的值，那么 remove 方法定义就很简单了</p>
+<pre><code>//删除一个元素
+
+function remove( key ){
+    if( this.dataStore[key] ) delete this.dataStore[key];
+    else return &apos;Not Found&apos;;
+}
+</code></pre><p>除此之外，我们还想显示字典中的所有键值对，showAll 方法来完成。</p>
+<p><strong>showAll：显示字典中所以键值对</strong></p>
+<pre><code>//显示字典元素
+
+function showAll () {
+    for( var key in this.dataStore ){
+        console.log( key + &apos;-&gt;&apos; + this.dataStore[key] );
+    }
+}
+</code></pre><p>我们已经完成了字典的基本操作，现在我们做个小测试，</p>
+<pre><code>//实例化字典类
+
+var directory = new Dictionary();
+
+//添加元素
+
+directory.add( &apos;Jack&apos; , &apos;138****5505&apos; );
+directory.add( &apos;Alice&apos; , &apos;156****6606&apos;);
+directory.add( &apos;Tom&apos; , &apos;180****8808&apos;);
+
+//显示字典
+
+directory.showAll();         // Jack-&gt;138****5505
+                             // Alice-&gt;156****6606
+                             // Tom-&gt;180****8808
+
+directory.remove( &apos;Tom&apos; );
+directory.showAll();         // Jack-&gt;138****5505
+                             // Alice-&gt;156****6606
+</code></pre><p> 我们定义的时候看到了还有两个方法没有实现呢，一个是 count ， 另一个是 clear ，下面我们一起来实现。</p>
+<p> <strong>count：查看字典中元素的个数</strong></p>
+<p> 该方法有时候会很有用，不过实现起来可能会跟你想的不太一样，我们先看看如何实现的</p>
+<pre><code>//查看字典中元素的个数
+
+function count(){
+    var n = 0 ;
+    for ( var key in this.dataStore ){
+        ++n;
+    }
+    return n;
+}
+</code></pre><p>怎么样，是不是跟想的不太一样，为什么不用 length 属性，不是很简单么？其实不然，我们的键为字符串的时候，数组的 length 属性就不起作用了，请看下面的例子：</p>
+<pre><code>var nums = [ 0 , 1 , 2 ] ;
+
+console.log(nums.length)        // 3
+
+var directory = [];
+directory[&apos;Jack&apos;] = &apos;138****5505&apos;;
+directory[&apos;Alice&apos;] = &apos;156****6606&apos;;
+directory[&apos;Tom&apos;] = &apos;180****8808&apos;;
+
+console.log(directory.length)   // 0
+</code></pre><p>现在是不是又了解了一个坑！哈哈，我们把最后一个clear方法实现一下。</p>
+<p><strong>clear：清空字典</strong></p>
+<pre><code>//清空字典
+
+function clear(){
+    for( var key in this.dataStore ){
+        delete this.dataStore[key];
+    }
+}
+</code></pre><p>至此，字典的功能已基本完成了，我们利用上述的代码继续走下去，测试测试</p>
+<pre><code>console.log(directory.count());     // 2
+directory.clear();
+console.log(directory.count());     // 0
+</code></pre><p>字典中我们通常都是用键来取值，所以我们无须关心s数据在字典中的实际存储顺序，但我们希望能看到显示字典内容的时候是有序的，这也很简单，我们只需稍微改造一下我们的 showAll 方法即可。</p>
+<pre><code>//改造后的showAll
+
+function showAll(){
+    var sortKeys = Object.keys(this.dataStore).sort();
+    for( var key in sortKeys ){
+        console.log( sortKeys[key] + &apos;-&gt;&apos; + this.dataStore[sortKeys[key]] );
+    }
+}
+</code></pre><p>和我们之前的方法唯一的区别就是，我们拿到了键之后，对其进行了一次 sort 排序，下面我们看看新方法的输出。</p>
+<pre><code>// 重新打印上述字典
+
+directory.showAll();        //  Alice-&gt;156****6606
+                            //  Jack-&gt;138****5505
+                            //  Tom-&gt;180****8808
+</code></pre><p>要注意的是，上述 showAll 方法中，进行 Object.keys().sort()排序后，返回的是新的一个数组，类似下面的形式，</p>
+<pre><code>//sortKeys
+
+[&quot;Alice&quot;, &quot;Jack&quot;, &quot;Tom&quot;]
+</code></pre><p>此时，数组的 key 是 0、1、2，这样是不是就清晰很多了呢？</p>
+<p>至此，我们已基本了解了字典的一些内容，并且我们可以用JS自己去实现一个字典了，有木有很棒！接下来，大家加油~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Linked-List/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -972,359 +1238,6 @@ after radix sort: 16,26,29,33,38,54,55,62,65,76
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/23/List/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/23/List/" itemprop="url">JS中的算法与数据结构——列表(List)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-23T16:47:38+08:00">
-                2017-09-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。<br>   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。<br>   随着现在互联网的飞速发展，前端工程师已不是靠几个选择器操作加链接加事件就能应付的，越来越复杂的产品和基础库，需要坚实的数据结构与算法才能驾驭，所以我认为前端工程师也是应该要重视算法和数据结构，这对于自己的职业发展是有很大帮助的。<br>   当然，算法的学习也不是一朝一夕的事情，这是一个过程，得自己去摸索，去实践，去总结，我这里只是将一些常见的算法和数据结构用 JavaScript 去实现，起到一个抛砖引玉的作用。</p>
-<hr>
-<h2 id="列表-List"><a href="#列表-List" class="headerlink" title="列表(List)"></a>列表(List)</h2><p>  列表是计算机中一种常见的数据结构，日常生活中的购物清单，待办事项等都可以成为列表，它是一组有序的数据，每个列表中的数据项称为<strong>元素</strong>。在javascript中，列表中的元素可以是任意数据类型。列表中可以保存多少元素并没有限定（在实际使用时会受到程序内存的限制）。<br>  列表中会有一些常见属性或方法，比如列表中的元素个数，列表当前的位置，向列表末尾增加一个元素，从列表中删除一个元素，清空列表等一系列操作。<br>  接下来，我们抽象出一个列表的数据类型定义，并用JS中的数组去实现它。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5281e4b7eee93444.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="列表的数据类型定义"></p>
-<h2 id="列表类"><a href="#列表类" class="headerlink" title="列表类"></a>列表类</h2><pre><code>/*定义List类*/
- function List () {
-    this.listSize = 0;   //初始化元素个数为0
-    this.pos = 0;        //初始化位置为0
-    this.dataStore = []; //初始化空数组来保存列表元素
-    this.clear = clear;
-    this.find = find;    //寻找元素
-    this.toString = toString; //显示列表中的元素
-    this.insert = insert;
-    this.append = append;
-    this.remove = remove;
-    this.front = front;
-    this.end = end;
-    this.prev = prev;
-    this.next = next;
-    this.length = length;  //列表中的元素总数
-    this.currPos = currPos;
-    this.moveTo = moveTo;
-    this.getElement = getElement;
-    this.contains = contains; //判断给定值是否在列表中
-}
-</code></pre><p>接着我们来实现这些方法。</p>
-<p>首先得可以添加元素，所以我们先来编写 append 方法</p>
-<p> <strong>append：向列表中添加一个元素</strong></p>
-<pre><code>//该方法给列表的最后一个位置添加一个新的元素，待插入成功后，更新列表中的元素个数
-
-function append ( element ) {
-    this.dataStore[this.listSize++] = element;
-}
-</code></pre><p>这样我们就可以往列表里面添加元素了，接着我们来看查找 find 方法</p>
-<p> <strong>find：查找列表中的某一个元素</strong></p>
-<pre><code>//该方法通过循环查找给定元素是否在列表中，如果存在返回元素的位置，否则返回 -1
-
-function find(element){
-    for( var i = 0 ; i &lt; this.dataStore.length ; i ++ ){
-            if( this.dataStore[i] == element ){
-                return i;
-            }
-        }
-    return -1;
-}
-</code></pre><p>可以插入元素，那总得可以删除了，我们利用 remove 方法删除一个元素</p>
-<p><strong>remove：删除列表中的某一元素</strong></p>
-<pre><code>//该方法通过使用find()方法返回元素的位置对 dataStore 数组进行截取，如果删除成功，返回 true , 并将 listSize 的值减1，更新列表长度，否则返回 false
-
-function remove ( element ) {
-    var foundAt = this.find(element);
-    if( foundAt &gt; -1 ){
-        this.dataStore.splice( foundAt , 1 );
-        --this.listSize;
-        return true;
-    }
-    return false;
-}
-</code></pre><p>我想知道我的列表还有多少个元素的时候，就得构建 length 方法，</p>
-<p><strong>length：返回列表中总的元素个数</strong></p>
-<pre><code>//该方法直接将 listSize 返回即可
-
-function length(){
-    return this.listSize;
-}
-</code></pre><p>如果能显示我的列表元素就好了，这个可以有，我们来看看 toString 方法，</p>
-<p><strong>toString：显示列表的元素</strong></p>
-<pre><code>//该方法直接返回了列表数组，显示出当前列表内容
-
-function toString(){
-    return this.dataStore;
-}
-</code></pre><p>现在我们的列表已经有了基本的一些功能，不妨下试试</p>
-<pre><code>//构造列表对象
-var fruits = new List();
-//添加三个元素
-fruits.append(&apos;Apple&apos;);
-fruits.append(&apos;Grape&apos;);
-fruits.append(&apos;Banana&apos;);
-
-//打印列表
-console.log( fruits.toString() )      // [&quot;Apple&quot;, &quot;Grape&quot;, &quot;Banana&quot;]
-//查看列表长度
-console.log( fruits.length() )        // 3
-//查找 Banana 的位置
-console.log( fruits.find(&apos;Banana&apos;) )  // 2
-//删除 Grape 
-fruits.remove(&apos;Grape&apos;);
-console.log( fruits.toString() )      // [&quot;Apple&quot;, &quot;Banana&quot;]
-</code></pre><p>如果我们删除了 Grape 元素 ， 我们还想将它放回到原来的位置 ，这时候我们就需要调用 insert 方法</p>
-<p><strong>insert：向列表某个位置添加一个元素</strong></p>
-<pre><code>//该方法需要传入两个参数，第一个参数表示待插入的元素，第二个参数表示待插入元素的前一个元素，用于确定插入元素的位置，并调用 splice 方法更改列表数组，插入成功后更新 listSize 并返回 true ， 否则返回 false；
-function insert( element , after ){
-    var insertPos = this.find( after );
-    if( insertPos &gt; -1 ){
-        this.dataStore.splice( insertPos + 1 , 0 , element );
-        this.listSize ++;
-        return true;
-    }
-    return false;
-}
-</code></pre><p>现在，我们把 Grape 放到原来的位置上去;</p>
-<pre><code>fruits.insert( &apos;Grape&apos; , &apos;Apple&apos; );
-console.log( fruits.toString() )        // [&quot;Apple&quot;, &quot;Grape&quot;, &quot;Banana&quot;]
-</code></pre><p>ok，现在已经能够把 Grape 插入到原来的位置了。</p>
-<p>如果我吃完了所有水果，我现在想要清空列表，我们就需要一个 clear 方法；</p>
-<p><strong>clear：清空列表</strong></p>
-<pre><code>//该方法使用 delete 操作符删除 dataStore 数组 ， 接着创建新的数组，并将其 listSize 和 pos 初始化设为 1 。
-
-function clear(){
-    delete this.dataStore;
-    this.dataStore = [];
-    this.listSize = this.pos = 0;
-}
-</code></pre><p>我们不妨试一试。</p>
-<pre><code>fruits.clear();
-console.log( fruits.toString() );      // []
-</code></pre><p>成功了！</p>
-<p>上面我们看到了列表中有个 pos 属性，表示当前列表所在的位置，我们接下来就围绕它做点事情，让用户可以自由操作列表</p>
-<p><strong>front：将列表的位置移到第一个位置上</strong></p>
-<pre><code>//该方法只要将 pos 置为 0 即可
-
-function front(){
-    this.pos = 0 ;
-}
-</code></pre><p><strong>end：将列表的位置移到最后一个位置上</strong></p>
-<pre><code>//同上，该方法只要将 pos 置为列表长度减 1 即可，因为数组下标从 0 开始嘛
-
-function end(){
-    this.pos = this.listSize - 1;
-}
-</code></pre><p><strong>prev：将当前位置前移一位</strong></p>
-<pre><code>//只要将 pos 的位置减 1 即可，但要主要不能越界
-
-function prev(){
-    if( this.pos &gt; 0 ){
-        this.pos --;
-    }else{
-        console.log(&apos;您当前已在首位&apos;);
-    }
-}
-</code></pre><p><strong>next：将当前位置后移一位</strong></p>
-<pre><code>//同理，只要将 pos 的位置加 1 即可，但要主要不能越界
-
-function next(){
-    if( this.pos &lt; this.listSize - 1 ){
-        ++this.pos;
-    }else{
-        console.log(&apos;您当前已在末尾&apos;);
-    }
-}
-</code></pre><p><strong>moveTo：将当前位置移动到指定位置</strong></p>
-<pre><code>//直接改变 pos 的值即可，注意输入的合法性
-
-function moveTo( position ){
-    if( position &lt; 0 || position &gt; (this.listSize - 1) ){
-        console.log(&apos;请输入正确的位置&apos;);
-    }else{
-        this.pos = position;
-    }
-}
-</code></pre><p>我既然可以随意改变我的列表位置，那我总得知道我当前位置在哪里啊，因此我们需要 currPos 和 getElement 两个方法分别返回当前的位置和元素;</p>
-<p><strong>currPos：返回列表的当前位置</strong></p>
-<pre><code>//只需将 pos 直接返回即可
-
-function currPos(){
-    return this.pos;
-}
-</code></pre><p><strong>getElement：返回当前位置的元素</strong></p>
-<pre><code>//直接取对应的元素就好
-
-function getElement(){
-    return this.dataStore[this.pos];
-}
-</code></pre><p>接着，我们测试一下，首先将列表恢复到清空前的样子，然后我们在多添加几个元素进去。</p>
-<pre><code>//再添加几个
-fruits.append(&apos;Pear&apos;);
-fruits.append(&apos;Orange&apos;);
-fruits.append(&apos;Strawberry&apos;);
-console.log( fruits.toString() );    // [&quot;Apple&quot;, &quot;Grape&quot;, &quot;Banana&quot;, &quot;Pear&quot;, &quot;Orange&quot;, &quot;Strawberry&quot;]
-
-//我们先看当前的位置和元素
-console.log( fruits.currPos() );     // 0
-console.log( fruits.getElement() );  // Apple
-
-//我们尝试改变一下
-fruits.moveTo( 2 );
-fruits.next();
-console.log( fruits.currPos() );     // 3
-console.log( fruits.getElement() );  // Pear
-fruits.end();
-fruits.prev();
-console.log( fruits.currPos() );     // 4
-console.log( fruits.getElement() );  // Orange
-</code></pre><p>至此，我们已经基本完成了列表的所有功能，还差最后一个，判断给定元素是否在列表内，我们这里采用 contains 方法</p>
-<p><strong>contains：判断给定值是否在列表中</strong></p>
-<pre><code>//我们直接利用利用 indexOf() 或者采用跟为高级的 ES6 中的 includes 方法来判断
-
-//ES5
-function contains( element ){
-    if( this.dataStore.indexOf( element ) &gt; -1 ) return true;
-    else return false;
-}
-
-//ES6
-
-function contains( element ){
-    return this.dataStore.includes( element );
-}
-</code></pre><p>( ps：对 ES6 不太熟悉的同学，也可以参考我的另一系列博客 <a href="http://www.jianshu.com/c/4c4cf5f2c626" target="_blank" rel="external">ES6那些事儿</a> )</p>
-<p>写完测试一下，</p>
-<pre><code>console.log(fruits.contains(&apos;Banana&apos;));         // true
-console.log(fruits.contains(&apos;Watermelon&apos;));     // false
-</code></pre><p>大功告成！<br>我们自己用 javascript 实现了一个列表，至于后面如何拓展，自己可以发散思维，多动手实践实践，一起加油！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1378,7 +1291,7 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
