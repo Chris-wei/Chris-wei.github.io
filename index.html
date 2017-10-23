@@ -278,6 +278,389 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/Sort/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/21/Sort/" itemprop="url">JS中的算法与数据结构——JS中的算法与数据结构——排序（Sort）</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T19:47:25+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="排序算法（Sort）"><a href="#排序算法（Sort）" class="headerlink" title="排序算法（Sort）"></a>排序算法（Sort）</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>我们平时对计算机中存储的数据执行的两种最常见的操作就是排序和查找，对于计算机的排序和查找的研究，自计算机诞生以来就没有停止过。如今又是大数据，云计算的时代，对数据的排序和查找的速度、效率要求更高，因此要对排序和查找的算法进行专门的数据结构设计，（例如我们上一篇聊到的<a href="http://www.jianshu.com/p/6a4b7f261e99" target="_blank" rel="external">二叉查找树</a>就是其中一种），以便让我们对数据的操作更加简洁高效。</p>
+<p>这一篇我们将会介绍一些数据排序的基本算法和高级算法并利用JavaScript来逐一实现，让大伙对计算机中常见的排序算法的思想和实现有基本的了解，起到一个抛砖引玉的作用。</p>
+<h3 id="关于排序算法的说明"><a href="#关于排序算法的说明" class="headerlink" title="关于排序算法的说明"></a>关于排序算法的说明</h3><p>在介绍各个算法之前，我们有必要了解一下评估算法优劣的一些术语：</p>
+<p> <strong>稳定</strong>：如果a原本在b前面，当a=b时，排序之后a仍然在b的前面<br> <strong>不稳定</strong>：如果a原本在b的前面，当a=b时，排序之后a可能会出现在b的后面</p>
+<p> <strong>内排序</strong>：所有排序操作都在内存中完成<br> <strong>外排序</strong>：由于数据太大，因此把数据放在磁盘中，而排序通过磁盘和内存的数据传输才能进行</p>
+<p> <strong>时间复杂度</strong>：一个算法执行所耗费的时间<br> <strong>空间复杂度</strong>：运行完一个程序所需内存的大小</p>
+<p> 有想要了解更多，关于时间空间复杂度的，我推荐一篇文章，请戳这里<a href="http://blog.csdn.net/booirror/article/details/7707551/" target="_blank" rel="external">这里</a></p>
+<h2 id="基本排序算法"><a href="#基本排序算法" class="headerlink" title="基本排序算法"></a>基本排序算法</h2><p>基本排序算法的核心思想就是对一组数据按照一定的顺序重新排序，其中重排时一般都会用到一组嵌套的 for 循环，外循环会遍历数组的每一项元素，内循环则用于进行元素直接的比较。</p>
+<p><strong>1.冒泡排序（BubbleSort）</strong></p>
+<p>冒泡排序是比较经典的算法之一，也是排序最慢的算法之一，因为它的实现是非常的容易的。</p>
+<p>冒泡排序的算法思想如下（升序排序）：</p>
+<ol>
+<li>比较相邻的元素。如果第一个比第二个大，就交换它们两个；</li>
+<li>对每一对相邻元素作同样的工作，从开始第一对到结尾的最后一对，这样最终最大数被交换到最后的位置</li>
+<li>除了最后一个元素以外，针对所有的元素重复以上的步骤</li>
+<li>重复步骤1~3，直到排序完成</li>
+</ol>
+<p>下面我借用网上一张动图，来展示冒泡排序的过程：</p>
+<p><img src="http://img.blog.csdn.net/20160916160748389" alt="冒泡排序"></p>
+<p>具体的JS实现如下：</p>
+<pre><code>//冒泡排序
+function bubbleSort ( data ) {
+    var temp = 0;
+    for ( var i = data.length ; i &gt; 0 ; i -- ){
+        for( var j = 0 ; j &lt; i - 1 ; j++){
+           if( data[j] &gt; data[j + 1] ){
+               temp = data[j];
+               data[j] = data [j+1];
+               data[j+1] = temp;
+           }
+        }
+    }
+    return data;
+}
+</code></pre><p>我们先设定一组数据，后面我们将都用这组数据来测试 :</p>
+<pre><code>var dataStore = [ 72 , 1 , 68 , 95 , 75 , 54 , 58 , 10 , 35 , 6 , 28 , 45 , 69 , 13 , 88 , 99 , 24 , 28 , 30 , 31 , 78 , 2 , 77 , 82 , 72 ];
+
+console.log( &apos;原始数据:&apos; + dataStore );
+console.log( &apos;冒泡排序:&apos; + bubbleSort( dataStore) );
+
+// 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
+// 冒泡排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
+</code></pre><p><strong>2.选择排序（SelctionSort）</strong></p>
+<p>选择排序是一种比较简单直观的排序算法。它的算法思想是，从数组的开头开始遍历，将第一个元素和其他元素分别进行比较，记录最小的元素，等循环结束之后，将最小的元素放到数组的第一个位置上，然后从数组的第二个位置开始继续执行上述步骤。当进行到数组倒数第二个位置的时候，所有的数据就完成了排序。</p>
+<p>选择排序同样会用到嵌套循环，外循环从数组第一个位置移到倒数第二个位置；内循环从第二个位置移动到数组最后一个位置，查找比当前外循环所指向的元素还要小的元素，每次内循环结束后，都会将最小的值放到合适的位置上。</p>
+<p>同样，我借用网上一张动图，来展示选择排序的过程 ：</p>
+<p><img src="http://img.blog.csdn.net/20160916164754013" alt="选择排序"></p>
+<p>了解了算法思想，具体实现应该也不成问题：</p>
+<pre><code>//选择排序
+function selectionSort( data ) {
+    for( var i = 0; i&lt; data.length ; i++){
+        var min = data[i];
+        var temp;
+        var index = i;
+        for( var j = i + 1; j&lt; data.length; j++){
+            if( data[j] &lt; min ){
+                min = data[j];
+                index = j;
+            }
+        }
+
+        temp = data[i];
+        data[i] = min;
+        data[index]= temp;
+    }
+    return data;
+}
+</code></pre><p>它的测试结果如下：</p>
+<pre><code>console.log( &apos;原始数据:&apos; + dataStore );
+console.log( &apos;选择排序:&apos; + selectionSort( dataStore) );
+
+// 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
+// 选择排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
+</code></pre><p><strong>3.插入排序（insertionSort）</strong></p>
+<p>插入排序有点类似人类按字母顺序对数据进行排序，就如同你打扑克牌一样，将摸来的扑克按大小放到合适的位置一样。它的原理就是通过嵌套循环，外循环将数组元素挨个移动，而内循环则对外循环中选中的元素及它后面的元素进行比较；如果外循环中选中的元素比内循环中选中的元素小，那么数组元素会向右移动，为内循环中的这个元素腾出位置。</p>
+<p>实现步骤如下：</p>
+<ol>
+<li>从第一个元素开始，该元素默认已经被排序</li>
+<li>取出下一个元素，在已经排序的元素序列中从后向前扫描</li>
+<li>如果该元素（已排序）大于新元素，将该元素移到下一位置</li>
+<li>重复步骤3，直到找到已排序的元素小于或者等于新元素的位置</li>
+<li>将新元素插入到该位置</li>
+<li>重复步骤2~5，直到排序完成</li>
+</ol>
+<p>它的实现效果图如下：</p>
+<p><img src="http://img.blog.csdn.net/20160916173802597" alt="插入排序"></p>
+<p>具体实现代码如下：</p>
+<pre><code>//插入排序
+
+function insertionSort( data ) {
+    var len = data.length;
+    for (var i = 1; i &lt; len; i++) {
+        var key = data[i];
+        var j = i - 1;
+        while ( j &gt;= 0 &amp;&amp; data[j] &gt; key) {
+            data[j + 1] = data[j];
+            j--;
+        }
+        data[j + 1] = key;
+    }
+    return data;
+}
+</code></pre><p>排序结果如下：</p>
+<pre><code>console.log( &apos;原始数据:&apos; + dataStore );
+console.log( &apos;插入排序:&apos; + insertionSort( dataStore) );
+
+// 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
+// 插入排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
+</code></pre><p>我们已经学习了三种基本的排序算法，其中冒泡排序是最慢的，插入排序是最快的，我们可以在运行的过程中通过 console.time(‘sortName’) 和 console.timeEnd(‘sortName’) 两个输出来看他们的效率如何，我这里给出一组值作为参考，实际中需要大量的数据测试和反复实验，进行数理统计后才能被视为有效的统计；</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-14cc62576597097d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排序时间比较"></p>
+<h2 id="高级排序算法"><a href="#高级排序算法" class="headerlink" title="高级排序算法"></a>高级排序算法</h2><p><strong>4.希尔排序（Shell Sort）</strong></p>
+<p>我们首先要学习的就是希尔排序，又称缩小增量排序，这个算法是在插入排序的基础上做了很大的改善，与插入排序不同的是，它首先会比较位置较远的元素，而非相邻的元素。这种方案可以使离正确位置很远的元素能够快速回到合适的位置，当算法进行遍历时，所有元素的间距会不断的减小，直到数据的末尾，此时比较的就是相邻元素了。</p>
+<p>该方法的基本思想是：先将整个待排元素序列分割成若干个子序列（由相隔某个“增量”的元素组成的）分别进行直接插入排序，然后依次缩减增量再进行排序，待整个序列中的元素基本有序（增量足够小）时，再对全体元素进行一次直接插入排序。因为直接插入排序在元素基本有序的情况下（接近最好情况），效率是很高的，因此希尔排序在时间效率上有较大提高。</p>
+<p>好吧，我还是用个案例来解释，这样会更清晰，我们以下面一组数据为例：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-94a6272f64e5718d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据集"></p>
+<ul>
+<li>第一次 gap(增量) = 10 / 2 = 5 , 会按照下面进行分组得到五组数据（49，13）、（38，27）、（65，49）、（97，55）、（26，4），这样进行组内排序之后（13，49）、（27，38）、（49，65）、（55，97）、（4，26）</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-43826cb5648b511e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次分组"></p>
+<p>此时，数据会排成如下结构</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-12d6be73db344ad3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次排序"></p>
+<ul>
+<li>第二次 gap = 5 / 2 = 2 , 此时可以得到两个分组，如下</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6dc7281cb69ae834.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次分组"></p>
+<p>再通过组内排序之后，可以得到</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6b4cc5b3a8a51913.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次排序"></p>
+<ul>
+<li>第三次 gap = 2 / 2 = 1 ， 即不用分组，进行排序后</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第三次排序"></p>
+<ul>
+<li>第四次 gap = 1 / 2 = 0 ，即可得到排序完成的数组</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排序完成"></p>
+<p>现在，可能对希尔排序有了一定得了解了，用JS实现如下：</p>
+<pre><code>//希尔排序
+
+function shallSort(array) {
+    var increment = array.length;
+    var i
+    var temp; //暂存
+    do {
+        //设置增量
+        increment = Math.floor(increment / 3) + 1;
+        for (i = increment ; i &lt; array.length; i++) {
+            if ( array[i] &lt; array[i - increment]) {
+                temp = array[i];
+                for (var j = i - increment; j &gt;= 0 &amp;&amp; temp &lt; array[j]; j -= increment) {
+                    array[j + increment] = array[j];
+                }
+                array[j + increment] = temp;
+            }
+        }
+    }
+    while (increment &gt; 1)
+
+    return array;
+}
+</code></pre><p>效果如下：</p>
+<pre><code>console.log( &apos;原始数据:&apos; + dataStore );
+console.log( &apos;希尔排序:&apos; + shallSort( dataStore) );
+
+// 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
+// 希尔排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
+</code></pre><p><strong>5.归并排序（Merge Sort）</strong></p>
+<p>将两个的有序数列合并成一个有序数列，我们称之为”归并”，归并排序的思想就是将一系列排序好的子序列合并成一个大的完整有序的序列。</p>
+<p>实现步骤如下：</p>
+<ol>
+<li>把长度为n的输入序列分成两个长度为n/2的子序列；</li>
+<li>对这两个子序列分别采用归并排序；</li>
+<li>将两个排序好的子序列合并成一个最终的排序序列</li>
+</ol>
+<p>一张动图来说明归并排序的过程：</p>
+<p><img src="http://img.blog.csdn.net/20160917001326254" alt="归并排序"></p>
+<p>具体的JS代码实现如下：</p>
+<pre><code>//归并排序
+
+function mergeSort ( array ) {
+    var len = array.length;
+    if( len &lt; 2 ){
+        return array;
+    }
+    var middle = Math.floor(len / 2),
+        left = array.slice(0, middle),
+        right = array.slice(middle);
+    return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(left, right)
+{
+    var result = [];
+    while (left.length &amp;&amp; right.length) {
+        if (left[0] &lt;= right[0]) {
+            result.push(left.shift());
+        } else {
+            result.push(right.shift());
+        }
+    }
+    while (left.length)
+        result.push(left.shift());
+    while (right.length)
+        result.push(right.shift());
+    return result;
+}
+</code></pre><p>测试结果如下 ：</p>
+<pre><code>console.log( &apos;原始数据:&apos; + dataStore );
+console.log( &apos;希尔排序:&apos; + mergeSort( dataStore) );
+
+// 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
+// 希尔排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
+</code></pre><p><strong>6.快速排序（Quicksort）</strong></p>
+<p>快速排序是处理大数据最快的排序算法之一，它也是一种分而治之的算法，通过递归方式将数据依次分解为包含较小元素和较大元素的不同子序列，会不断重复这个步骤，直到所有的序列全部为有序的，最后将这些子序列一次拼接起来，就可得到排序好的数据。</p>
+<p>该算法首先要从数列中选出一个元素作为基数（pivot）。接着所有的数据都将围绕这个基数进行，将小于改基数的元素放在它的左边，大于或等于它的数全部放在它的右边，对左右两个小数列重复上述步骤，直至各区间只有1个数。</p>
+<p>整个排序过程如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ba8b8cc60e3df1a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="快速排序"></p>
+<p>具体实现如下：</p>
+<pre><code>//快速排序
+
+function quickSort( arr ){
+    console.time(&apos;quickSort&apos;)
+    if ( arr.length == 0) {
+        return [];
+    }
+    var left = [];
+    var right = [];
+    var pivot = arr[0];
+    for (var i = 1; i &lt; arr.length; i++) {
+        if (arr[i] &lt; pivot) {
+            left.push( arr[i] );
+        } else {
+            right.push( arr[i] );
+        }
+    }
+    console.timeEnd(&apos;quickSort&apos;);
+    return quickSort( left ).concat( pivot, quickSort( right ));
+}
+</code></pre><p>测试结果如下：</p>
+<pre><code>console.log( &apos;原始数据:&apos; + dataStore );
+console.log( &apos;快速排序:&apos; + quickSort( dataStore) );
+
+// 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
+// 快速排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
+</code></pre><p>至此，我们已基本介绍过一些常见的排序算法的思想和具体实现（基数排序在之前的文章已经介绍过，想要了解<a href="http://www.jianshu.com/p/1157aaccad36" target="_blank" rel="external">戳这里</a>），排序算法博大精深，我们不仅要学习理论，也要不断去实践，大家加油！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/17/BST/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1027,290 +1410,11 @@ fruits2.difference(fruits1).show();     // [&quot;Grape&quot;, &quot;Orange&quot
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/29/Stack/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/29/Stack/" itemprop="url">JS中的算法与数据结构——栈(Stack)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-29T10:17:18+08:00">
-                2017-09-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="栈-Stack"><a href="#栈-Stack" class="headerlink" title="栈(Stack)"></a>栈(Stack)</h2><p>上一篇我们说到了<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。</p>
-<p>栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删除，遵循 先入后出(LIFO，last-in-first-out) 的原则，普遍运用于计算机的方方面面。</p>
-<p>对栈的操作主要有两种，一是将一个元素压入栈，push方法，另一个就是将栈顶元素出栈，pop方法。</p>
-<p>除此之外，栈还有其他的一些属性和方法：查看当前栈顶的元素值，我们使用 peek 方法，它仅仅返回栈顶元素值，并不删除它；clear 方法用于清空当前栈内的所有元素；top属性记录当前栈顶位置；length方法返回当前栈内元素总数等；接着我们定义栈的数据类型，并利用JS中的数组去实现它。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a6af49d57c9d204a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="栈数据类型定义"></p>
-<h2 id="栈的实现"><a href="#栈的实现" class="headerlink" title="栈的实现"></a>栈的实现</h2><pre><code>//定义栈
-
-function Stack () {
-    this.dataStore = [];    //初始化为空
-    this.top = 0;           //记录栈顶位置
-    this.pop = pop;         //出栈
-    this.push = push;       //入栈
-    this.peek = peek;       //查看栈顶元素
-    this.length = length;   //查看栈内元素总数
-    this.clear = clear;     //清空栈
-}
-</code></pre><p>我们利用 dataStore 来保存栈内元素，初始化为空数组，top 属性用于记录当前栈顶位置，初始化的时候为0，<br>表示栈顶对应数组的起始位置是0，如果有元素入栈，则该属性会随之反生变化。</p>
-<p>首先我们先来实现第一个入栈方法。</p>
-<p><strong>push：向栈内压入一个新的元素</strong></p>
-<pre><code>//该方法将一个新元素入栈，放到数组中 top 所对应的位置上，并将 top 的值加 1，让其指向数组的下一个空位置
-
-function push( element ){
-    this.dataStore[this.top++] = element;
-}
-</code></pre><p>能入栈，就得可以出栈，接着我们来看出栈方法：</p>
-<p><strong>pop：取出栈顶元素</strong></p>
-<pre><code>//该方法与入栈相反，返回栈顶元素，并将 top 的值减 1
-
-function pop(){
-    return this.dataStore[--this.top];
-}
-</code></pre><p>如何查看栈顶元素呢，peek方法！</p>
-<p><strong>peek：查看栈顶元素</strong></p>
-<pre><code>//该方法返回的是栈顶元素，即 top - 1 个位置元素
-
-function peek(){
-    if( this.top &gt; 0 ) return this.dataStore[this.top-1];
-    else return &apos;Empty&apos;;
-}
-</code></pre><p>这里我做了个判断，如果一个空栈调用了 peek 方法，因为栈内没有任何元素，所以我这里返回了一个 ‘Empty’;</p>
-<p>现在，我们已经有了基本的入栈、出栈、查看栈顶元素的方法，我们不妨试一试。</p>
-<pre><code>//初始化一个栈
-var stack = new Stack();
-console.log( stack.peek() );    // Empty
-
-//入栈
-stack.push(&apos;Apple&apos;);
-stack.push(&apos;Banana&apos;);
-stack.push(&apos;Pear&apos;);
-
-//查看当前栈顶元素
-console.log( stack.peek() );    // Pear
-console.log( stack.pop() );     // Pear    
-</code></pre><p>如果我放入了一些水果，吃掉了一个，我现在想知道我还剩多少个水果怎么办？length 方法可以实现</p>
-<p><strong>length：返回栈内元素总数</strong></p>
-<pre><code>//该方法通过返回 top 属性的值来返回栈内总的元素个数
-
-function length(){
-    return this.top;
-}
-</code></pre><p>我们把代码恢复到出栈前的状态，也就是里面已经放了三个水果，接着我们来看看</p>
-<pre><code>console.log( stack.length() );      // 3
-
-//出栈
-stack.pop();
-
-console.log( stack.length() );      // 2
-</code></pre><p>好了，我们还剩最后一个clear方法，我们来实现一下</p>
-<p><strong>clear：清空栈</strong></p>
-<pre><code>//该方法实现很简单，我们将 top 值置为 0 ， dataStore 数值清空即可
-
-function clear(){
-    delete this.dataStore;
-    this.dataStore = [];
-    this.top = 0;
-}
-</code></pre><p>我们将上面的栈清空试试</p>
-<pre><code>stack.clear();
-
-console.log( stack.length() );      // 0
-console.log( stack.peek() );        // Empty
-</code></pre><p>至此，我们已经可以用JS实现一个栈，但是你仍可能处于不知道如何正确使用的状态，接下来，我们举两个例子，一起看看栈的使用。</p>
-<p><strong>案例1：实现数制间的相互转换</strong></p>
-<p>我们可以利用栈将一个数字从一种数制转换成另一种数制。例如将数字 n 转换成以 b 为基数的数字，可以采用如下算法（该算法只针对基数为 2-9 的情况）：</p>
-<ol>
-<li>最高位为 n % b ， 直接压入栈;</li>
-<li>使用 n / b 来代替 n ;</li>
-<li>重复上面的步骤，知道 n 为 0 ，并且没有余数；</li>
-<li>以此将栈内元素弹出，直到栈空，并依次将这些元素排列，就得到了转换后的形式</li>
-</ol>
-<p>代码如下：</p>
-<pre><code>//进制转换（2-9）
-
-function mulBase ( num , base ) {
-    var s = new Stack();
-    do{
-        s.push( num % base );
-        num = Math.floor( num /= base );
-    }while ( num &gt; 0 );
-
-    var converted = &apos;&apos;;
-    while (s.length() &gt; 0){
-        converted += s.pop();
-    }
-    return converted;
-}
-
-console.log( mulBase( 125 , 2 ) );      // 1111101
-console.log( mulBase( 125 , 8 ) );      // 175
-</code></pre><p><strong>案列2：判断一个字符串是不是回文</strong></p>
-<p>回文是指一个字符串，从前往后写和从后往前写结果都是一样的，比如单词 ‘level’ ， ‘racecar’，就是回文，数字 1001 也是回文。</p>
-<p>我们采用栈，可以很轻松判断一个字符串是否是回文，实现算法很简单，相信你们都猜到了。我们把字符串从左到右依次压入栈，这样，栈中保存了该字符串反转后的字符，我们再依次出栈，通过比较出栈后的字符串是否与原字符串是否相等，就可判断该字符串是否是回文。</p>
-<p>具体代码实现如下：</p>
-<pre><code>//回文判断
-
-function isPalindrome ( word ) {
-    var s = new Stack();
-    for( var i = 0 ; i &lt; word.length ; i ++ ){
-        s.push( word[i] );
-    }
-    var rword = &apos;&apos;;
-    while( s.length() &gt; 0 ){
-        rword += s.pop();
-    }
-
-    if( word == rword ){
-        return true;
-    }else{
-        return false;
-    }
-}
-
-console.log( isPalindrome(&apos;level&apos;) )    // true
-console.log( isPalindrome(&apos;1001&apos;) )     // true
-console.log( isPalindrome(&apos;word&apos;) )     // false
-</code></pre><p>本文主要讲的是栈的运用，所以采用上述方式判断字符串是否是回文，实际上，你完全可以采用以下方式更方便的判断一个字符串是否是回文：</p>
-<pre><code>function isPalindrome ( word ){
-    return String(word).split(&apos;&apos;).reverse().join(&apos;&apos;) == word ? true : false;
-}
-</code></pre><p>到此，栈的内容也基本告一段落，希望你能有所收获，一起加油~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1359,7 +1463,7 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
