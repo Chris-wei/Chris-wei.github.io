@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="ECMAScript6," />
+  <meta name="keywords" content="Hexo, Blog" />
 
 
 
@@ -95,18 +95,16 @@
 
 
 
-<meta name="description" content="本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的ECMAScript6入门 ，如有哪里理解不对或者不透彻的地方，还请批评指正~ ps：推荐使用es6在线调试 let 和 const 1.let声明的变量只有在当前代码块成效，而且不具备变量提升（即代码块中有let声明的变量提前使用会报错）; {    console.log(a)    // a is not define">
-<meta name="keywords" content="ECMAScript6">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ES6必知必会 （一）—— 变量声明和结构赋值">
-<meta property="og:url" content="http://yoursite.com/2017/07/18/ES6-01/index.html">
+<meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Cryptic&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/page/8/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的ECMAScript6入门 ，如有哪里理解不对或者不透彻的地方，还请批评指正~ ps：推荐使用es6在线调试 let 和 const 1.let声明的变量只有在当前代码块成效，而且不具备变量提升（即代码块中有let声明的变量提前使用会报错）; {    console.log(a)    // a is not define">
+<meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-15T02:35:55.774Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ES6必知必会 （一）—— 变量声明和结构赋值">
-<meta name="twitter:description" content="本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的ECMAScript6入门 ，如有哪里理解不对或者不透彻的地方，还请批评指正~ ps：推荐使用es6在线调试 let 和 const 1.let声明的变量只有在当前代码块成效，而且不具备变量提升（即代码块中有let声明的变量提前使用会报错）; {    console.log(a)    // a is not define">
+<meta name="twitter:title" content="Cryptic&#39;s Blog">
+<meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
 
 
 
@@ -136,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/07/18/ES6-01/"/>
+  <link rel="canonical" href="http://yoursite.com/page/8/"/>
 
 
 
 
 
-  <title>ES6必知必会 （一）—— 变量声明和结构赋值 | Cryptic's Blog</title>
+  <title>Cryptic's Blog</title>
   
 
 
@@ -171,7 +169,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -264,9 +263,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -296,7 +295,9 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">ES6必知必会 （一）—— 变量声明和结构赋值</h2>
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/18/ES6-01/" itemprop="url">ES6必知必会 （一）—— 变量声明和结构赋值</a></h2>
         
 
         <div class="post-meta">
@@ -366,7 +367,9 @@
       
 
       
-        <p>本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的<a href="http://es6.ruanyifeng.com//" target="_blank" rel="external">ECMAScript6入门</a> ，如有哪里理解不对或者不透彻的地方，还请批评指正~</p>
+        
+          
+            <p>本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的<a href="http://es6.ruanyifeng.com//" target="_blank" rel="external">ECMAScript6入门</a> ，如有哪里理解不对或者不透彻的地方，还请批评指正~</p>
 <p>ps：推荐使用<a href="http://babeljs.cn/repl/#?experimental=false&amp;evaluate=true&amp;loose=false&amp;spec=false&amp;code=" target="_blank" rel="external">es6在线调试</a></p>
 <p><b>let 和 const</b></p>
 <p>1.let声明的变量只有在当前代码块成效，而且不具备变量提升（即代码块中有let声明的变量提前使用会报错）;</p>
@@ -407,6 +410,8 @@ bar // &apos;bbb&apos;
 <pre><code>let { foo: foo, bar: bar } = { foo: &quot;aaa&quot;, bar: &quot;bbb&quot; }
 </code></pre><p>10.变量的解构赋值通常用于交换变量，函数参数定义，参数指定默认值等，虽然解构赋值虽然很方便，但是解析起来并不容易，如果使用不当就会产生与预期值不同的问题~</p>
 
+          
+        
       
     </div>
     
@@ -421,36 +426,14 @@ bar // &apos;bbb&apos;
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/ECMAScript6/" rel="tag"># ECMAScript6</a>
-          
-        </div>
+
+      
+
       
 
       
       
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/07/19/ES6-02/" rel="prev" title="ES6必知必会 （二）—— 字符串和函数的拓展">
-                ES6必知必会 （二）—— 字符串和函数的拓展 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -460,11 +443,14 @@ bar // &apos;bbb&apos;
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/7/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><span class="page-number current">8</span>
+  </nav>
+
 
 
           </div>
@@ -704,10 +690,6 @@ bar // &apos;bbb&apos;
 
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
-
-
 
   
 
