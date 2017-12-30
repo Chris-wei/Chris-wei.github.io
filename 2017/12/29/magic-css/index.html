@@ -95,54 +95,54 @@
 
 
 
-<meta name="description" content="CSS3 奇思妙想 前几天看了一篇文章 ， 颠覆了我对 CSS 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …  于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~ 装逼指南本文中，所有的图形都是在单个标签内实现的，大量使用了 CSS3 中的 ::before 、::after 伪元素，transparent 、border，多重线性与径">
+<meta name="description" content="CSS3 奇思妙想 前几天看了一篇文章 ， 颠覆了我对 CSS 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …  于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~  ps：本文原创不是我，我只是搬运工，看到好东西与大家分享而已，作者 github 主页请戳 这里~ 装逼指南本文中，所有的图形都是在单个标签内实现的，大量使用了 CSS3">
 <meta name="keywords" content="CSS">
 <meta property="og:type" content="article">
-<meta property="og:title" content="你以为 CSS3 只是个简单的布局？">
+<meta property="og:title" content="你以为 CSS 只是个简单的布局？">
 <meta property="og:url" content="http://yoursite.com/2017/12/29/magic-css/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="CSS3 奇思妙想 前几天看了一篇文章 ， 颠覆了我对 CSS 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …  于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~ 装逼指南本文中，所有的图形都是在单个标签内实现的，大量使用了 CSS3 中的 ::before 、::after 伪元素，transparent 、border，多重线性与径">
+<meta property="og:description" content="CSS3 奇思妙想 前几天看了一篇文章 ， 颠覆了我对 CSS 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …  于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~  ps：本文原创不是我，我只是搬运工，看到好东西与大家分享而已，作者 github 主页请戳 这里~ 装逼指南本文中，所有的图形都是在单个标签内实现的，大量使用了 CSS3">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609b4a25453943f?w=289&h=261&f=png&s=4408">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609bc49342281b1?w=403&h=247&f=png&s=4821">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609bcfc3fb6ab17?w=344&h=202&f=png&s=2628">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609bd960a8abe5c?w=399&h=237&f=png&s=3843">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609bedfbc4f9e4e?w=408&h=213&f=png&s=3823">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609bf61246a04d0?w=339&h=249&f=png&s=7235">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c0352dacd9b9?w=380&h=220&f=png&s=3468">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c0974bbd2eff?w=360&h=272&f=png&s=5370">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c0f767ce7bc6?w=365&h=276&f=png&s=3843">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c1260cb55808?w=373&h=282&f=png&s=3717">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c1c08d51999a?w=307&h=267&f=png&s=5324">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c2bc6f0c78c7?w=316&h=260&f=png&s=5738">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c3045511cb71?w=322&h=270&f=png&s=5492">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c32894bab7b7?w=409&h=266&f=png&s=103981">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb0a29b83907?w=294&h=289&f=gif&s=181664">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb292be61801?w=294&h=289&f=gif&s=308777">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb387b64eb76?w=294&h=289&f=gif&s=363884">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb4becbf5596?w=294&h=289&f=gif&s=147929">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb5cd8e6d262?w=294&h=289&f=gif&s=159736">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb6a409c0973?w=294&h=289&f=gif&s=529974">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb7c1751450a?w=294&h=289&f=gif&s=186277">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb8bcf96f93e?w=294&h=289&f=gif&s=123563">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609cb9204a92b1e?w=294&h=289&f=gif&s=254492">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c60c3b3523d7?w=234&h=258&f=png&s=14649">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c62e88dda173?w=273&h=262&f=png&s=6678">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c654fe2e1e5b?w=267&h=279&f=png&s=38717">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c66d6b7f7ca4?w=253&h=237&f=png&s=35711">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c68ed206684a?w=278&h=263&f=png&s=15422">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c6ad7311175f?w=253&h=255&f=png&s=12915">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c6c9d941f7cb?w=314&h=267&f=png&s=9100">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c996a8c00cbd?w=302&h=276&f=png&s=19722">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c9c9d255ca6a?w=303&h=262&f=png&s=15080">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609c9d800b66778?w=304&h=267&f=png&s=17833">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609caaf1fcb43b8?w=433&h=233&f=gif&s=275994">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/29/160a05b024f6d86e?w=220&h=220&f=png&s=39877">
-<meta property="og:updated_time" content="2017-12-29T04:04:34.306Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-5b0e56dd2ab749b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-a621cfb27feb9600.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-fa6dafe8b12dc0f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-7cd828820c9e8617.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-868b1d2051055221.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-cfc801a948271548.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-f50a26bc347e7040.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-b8f707c49dda7eef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-c3c7f7b408d7b354.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-c3e575153cf8dcbf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-35446807bfa3fd95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-670bbeaa760b3633.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-2cb36ce717f66002.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-555bedb9b2fbd955.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-84dddeff933767db.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-2ed4375f300a221e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-fb56babd4485d41a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-72e8cfef646db51c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-0262ac2d34403f74.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-faa858c17bb2dcfb.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-ecf0d54a1e689a4b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-ef93fc387d275632.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-eab2cbfcb6a1828e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-265dd2c623f66132.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-0da6c30a2deaa42c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d3d31b50d62865bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-772f3f1a22b982e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-34de6e5e8041163b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d3870c6e755e9d3e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-e1f96b4221685e49.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-f404f40b6d660b00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-04323b5ed519694e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-be223815f5207aac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-a15c0abb03bb598c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d87933c8ddfb0ab2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-12-30T08:47:48.242Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="你以为 CSS3 只是个简单的布局？">
-<meta name="twitter:description" content="CSS3 奇思妙想 前几天看了一篇文章 ， 颠覆了我对 CSS 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …  于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~ 装逼指南本文中，所有的图形都是在单个标签内实现的，大量使用了 CSS3 中的 ::before 、::after 伪元素，transparent 、border，多重线性与径">
-<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/12/28/1609b4a25453943f?w=289&h=261&f=png&s=4408">
+<meta name="twitter:title" content="你以为 CSS 只是个简单的布局？">
+<meta name="twitter:description" content="CSS3 奇思妙想 前几天看了一篇文章 ， 颠覆了我对 CSS 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …  于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~  ps：本文原创不是我，我只是搬运工，看到好东西与大家分享而已，作者 github 主页请戳 这里~ 装逼指南本文中，所有的图形都是在单个标签内实现的，大量使用了 CSS3">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-5b0e56dd2ab749b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -178,7 +178,7 @@
 
 
 
-  <title>你以为 CSS3 只是个简单的布局？ | Cryptic's Blog</title>
+  <title>你以为 CSS 只是个简单的布局？ | Cryptic's Blog</title>
   
 
 
@@ -332,7 +332,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">你以为 CSS3 只是个简单的布局？</h2>
+          <h2 class="post-title" itemprop="name headline">你以为 CSS 只是个简单的布局？</h2>
         
 
         <div class="post-meta">
@@ -404,6 +404,7 @@
       
         <h2 id="CSS3-奇思妙想"><a href="#CSS3-奇思妙想" class="headerlink" title="CSS3 奇思妙想"></a>CSS3 奇思妙想</h2><p> 前几天看了一篇文章 ， 颠覆了我对 <code>CSS</code> 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …</p>
 <p> 于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~</p>
+<p> ps：本文原创不是我，我只是搬运工，看到好东西与大家分享而已，作者 github 主页请戳 <a href="https://github.com/chokcoco" target="_blank" rel="external">这里</a>~</p>
 <h3 id="装逼指南"><a href="#装逼指南" class="headerlink" title="装逼指南"></a>装逼指南</h3><p>本文中，所有的图形都是在单个标签内实现的，大量使用了 <code>CSS3</code> 中的 <code>::before</code> 、<code>::after</code> 伪元素，<code>transparent</code> 、<code>border</code>，多重线性与径向渐变，多重内外阴影，如果你的效果不尽人意，请尝试在 <code>Chrome</code> 浏览器下预览。</p>
 <h3 id="装逼技巧"><a href="#装逼技巧" class="headerlink" title="装逼技巧"></a>装逼技巧</h3><p>本文所有图形都会有个容器 <code>&lt;div class=&quot;css-cell&quot;&gt;&lt;/div&gt;</code>包裹，其样式结构如下：</p>
 <pre><code>.css-cell{
@@ -426,7 +427,7 @@
 <h3 id="装逼实战"><a href="#装逼实战" class="headerlink" title="装逼实战"></a>装逼实战</h3><ul>
 <li>爱心</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609b4a25453943f?w=289&amp;h=261&amp;f=png&amp;s=4408" alt="爱心"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5b0e56dd2ab749b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="爱心"></p>
 <p>利用 <code>div</code> 的正方形和伪类的圆型组合而成，具体代码如下：</p>
 <pre><code>/*heart*/
 .heart{
@@ -457,7 +458,7 @@
 </code></pre><ul>
 <li>气泡悬浮框</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609bc49342281b1?w=403&amp;h=247&amp;f=png&amp;s=4821" alt="气泡悬浮框"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a621cfb27feb9600.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="气泡悬浮框"></p>
 <p>利用 <code>border</code> 结合 <code>transparent</code> 特性实现，代码如下：</p>
 <pre><code>/*bubbly*/
 .bubbly{
@@ -487,7 +488,7 @@
 </code></pre><ul>
 <li>切角</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609bcfc3fb6ab17?w=344&amp;h=202&amp;f=png&amp;s=2628" alt="切角"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-fa6dafe8b12dc0f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="切角"></p>
 <p>利用使用线性渐变实现的，代码如下：</p>
 <pre><code>/*notching*/
 .notching{
@@ -514,7 +515,7 @@
 </code></pre><ul>
 <li>弧形切角</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609bd960a8abe5c?w=399&amp;h=237&amp;f=png&amp;s=3843" alt="弧形切角"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7cd828820c9e8617.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="弧形切角"></p>
 <p>使用径向渐变实现，具体实现如下：</p>
 <pre><code>/*arc*/
 .arc{
@@ -541,7 +542,7 @@
 </code></pre><ul>
 <li>梯形</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609bedfbc4f9e4e?w=408&amp;h=213&amp;f=png&amp;s=3823" alt="梯形"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-868b1d2051055221.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="梯形"></p>
 <p>利用伪类加旋转透视实现，具体实现如下：</p>
 <pre><code>/*trapezoid*/
 .trapezoid{
@@ -567,7 +568,7 @@
 </code></pre><ul>
 <li>饼图</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609bf61246a04d0?w=339&amp;h=249&amp;f=png&amp;s=7235" alt="饼图"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-cfc801a948271548.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="饼图"></p>
 <p>利用伪类、线性渐变、旋转实现，具体代码如下：</p>
 <pre><code>/*pie*/
 .pie{
@@ -603,7 +604,7 @@
 </code></pre><ul>
 <li>平行四边形</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c0352dacd9b9?w=380&amp;h=220&amp;f=png&amp;s=3468" alt="平行四边形"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-f50a26bc347e7040.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="平行四边形"></p>
 <p>利用伪类、拉伸实现，实现过程如下：</p>
 <pre><code>/*parallelogram*/
 .parallelogram{
@@ -629,7 +630,7 @@
 </code></pre><ul>
 <li>折角</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c0974bbd2eff?w=360&amp;h=272&amp;f=png&amp;s=5370" alt="折角"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-b8f707c49dda7eef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="折角"></p>
 <p>利用切角、伪类、渐变、旋转实现，代码如下：</p>
 <pre><code>/*corner*/
 .corner{
@@ -658,9 +659,9 @@
 </code></pre><ul>
 <li>纯 CSS 方案实现背景变暗效果（hover按钮触发）</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c0f767ce7bc6?w=365&amp;h=276&amp;f=png&amp;s=3843" alt="hover之前"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-c3c7f7b408d7b354.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hover之前"></p>
 <p>鼠标移入</p>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c1260cb55808?w=373&amp;h=282&amp;f=png&amp;s=3717" alt="hover之后"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-c3e575153cf8dcbf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hover之后"></p>
 <p>利用 <code>box-shadow</code> 实现，具体代码如下：</p>
 <pre><code>/*spectiveBlur*/
 .spectiveBlur{
@@ -684,7 +685,7 @@
 <li>条纹背景图</li>
 </ul>
 <p>主要是利用渐变实现，具体实现如下：</p>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c1c08d51999a?w=307&amp;h=267&amp;f=png&amp;s=5324" alt="条纹背景图"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-35446807bfa3fd95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="条纹背景图"></p>
 <pre><code>/*stripe*/
 .stripe{
     position: absolute;
@@ -697,7 +698,7 @@
     border-radius:.5em;
     background:repeating-linear-gradient(45deg,#CC9999, #CC9999 15px, #CCCCCC 0, #CCCCCC 30px)
 }
-</code></pre><p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c2bc6f0c78c7?w=316&amp;h=260&amp;f=png&amp;s=5738" alt="条纹背景图"></p>
+</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/6633377-670bbeaa760b3633.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="条纹背景图"></p>
 <pre><code>/*wave-stripe*/
 .wave-stripe{
     position: absolute;
@@ -714,7 +715,7 @@
             linear-gradient(45deg, deeppink 25%, transparent 25%);
     background-size: 40px 40px;
 }
-</code></pre><p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c3045511cb71?w=322&amp;h=270&amp;f=png&amp;s=5492" alt="条纹背景图"></p>
+</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/6633377-2cb36ce717f66002.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="条纹背景图"></p>
 <pre><code>/*arrow-stripe*/
 .arrow-stripe{
     position: absolute;
@@ -734,7 +735,7 @@
 </code></pre><ul>
 <li>混合模式背景图</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c32894bab7b7?w=409&amp;h=266&amp;f=png&amp;s=103981" alt="混合模式背景图"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-555bedb9b2fbd955.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="混合模式背景图"></p>
 <pre><code>.colorful-stripe {
     position: absolute;
     top: 50%;
@@ -753,7 +754,7 @@
 </code></pre><ul>
 <li>太阳</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb0a29b83907?w=294&amp;h=289&amp;f=gif&amp;s=181664" alt="sun"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-84dddeff933767db.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="sun"></p>
 <p>利用线性渐变、阴影、旋转实现，具体代码如下：</p>
 <pre><code>/*sun*/
 .sun{
@@ -807,7 +808,7 @@
 </code></pre><ul>
 <li>多云</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb292be61801?w=294&amp;h=289&amp;f=gif&amp;s=308777" alt="cloud"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-2ed4375f300a221e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cloud"><br>)</p>
 <p>利用线性渐变、阴影、缩放实现，具体实现如下：</p>
 <pre><code>/*cloudy*/
 .cloudy{
@@ -874,7 +875,7 @@
         background:rgba(0,0,0,.5);
     }
 }
-</code></pre><p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb387b64eb76?w=294&amp;h=289&amp;f=gif&amp;s=363884" alt="cloud2"></p>
+</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/6633377-fb56babd4485d41a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cloud2"></p>
 <pre><code>/*cloudy2*/
 .cloudy2{
     position: absolute;
@@ -932,7 +933,7 @@
 </code></pre><ul>
 <li>雨</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb4becbf5596?w=294&amp;h=289&amp;f=gif&amp;s=147929" alt="rain"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-72e8cfef646db51c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="rain"></p>
 <p>利用线性渐变、阴影、缩放实现，具体代码如下：</p>
 <pre><code>/*rainy*/
 .rainy {
@@ -1018,7 +1019,7 @@
 </code></pre><ul>
 <li>微风</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb5cd8e6d262?w=294&amp;h=289&amp;f=gif&amp;s=159736" alt="wind"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-0262ac2d34403f74.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="wind"></p>
 <p>利用border、transparent、实现，这个会多一层 <code>div.breeze-container</code> 包裹，样式代码如下：</p>
 <pre><code>/*breeze*/
 .breeze-container{
@@ -1082,7 +1083,7 @@
 </code></pre><ul>
 <li>彩虹</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb6a409c0973?w=294&amp;h=289&amp;f=gif&amp;s=529974" alt="rainbow"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-faa858c17bb2dcfb.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="rainbow"></p>
 <p>主要是利用border、box-shadow 实现，具体实现如下：</p>
 <pre><code>/*rainbow*/
 .rainbow-container{
@@ -1152,7 +1153,7 @@
 </code></pre><ul>
 <li>夜空</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb7c1751450a?w=294&amp;h=289&amp;f=gif&amp;s=186277" alt="moon"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ecf0d54a1e689a4b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="moon"></p>
 <p>主要是利用 box-shadow 实现 ， 实现方式如下：</p>
 <pre><code>/*starry*/
 .starry-container{
@@ -1225,7 +1226,7 @@
 </code></pre><ul>
 <li>雷电</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb8bcf96f93e?w=294&amp;h=289&amp;f=gif&amp;s=123563" alt="thunder"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ef93fc387d275632.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="thunder"></p>
 <p>主要是利用阴影、border实现，代码如下：</p>
 <pre><code>/*thunder*/
 .thunder-container {
@@ -1302,7 +1303,7 @@
 </code></pre><ul>
 <li>大雪</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609cb9204a92b1e?w=294&amp;h=289&amp;f=gif&amp;s=254492" alt="snow"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-eab2cbfcb6a1828e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="snow"></p>
 <p>利用阴影实现 ， 代码如下：</p>
 <pre><code>/*snow*/
 .snowy-container {
@@ -1471,7 +1472,7 @@
 </code></pre><ul>
 <li>五角星</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c60c3b3523d7?w=234&amp;h=258&amp;f=png&amp;s=14649" alt="五角星"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-265dd2c623f66132.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="五角星"></p>
 <p>主要是利用border、transparent、旋转实现，代码如下：</p>
 <pre><code>/*star*/
 .five-star{
@@ -1521,7 +1522,7 @@
 </code></pre><ul>
 <li>太极八卦</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c62e88dda173?w=273&amp;h=262&amp;f=png&amp;s=6678" alt="太极八卦"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-0da6c30a2deaa42c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="太极八卦"></p>
 <p>利用 box-shadow 实现 ， 代码很简单：</p>
 <pre><code>/*TaiChi*/
 .TaiChi{
@@ -1544,7 +1545,7 @@
 </code></pre><ul>
 <li>美队盾牌</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c654fe2e1e5b?w=267&amp;h=279&amp;f=png&amp;s=38717" alt="美队盾牌"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d3d31b50d62865bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="美队盾牌"></p>
 <p>利用 渐变 实现 ， 代码如下：</p>
 <pre><code>/*captainAmerica*/
 .captainAmerica{
@@ -1582,7 +1583,7 @@
 </code></pre><ul>
 <li>纽扣</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c66d6b7f7ca4?w=253&amp;h=237&amp;f=png&amp;s=35711" alt="纽扣"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-772f3f1a22b982e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="纽扣"></p>
 <p>利用 渐变、阴影 实现 ， 实现方法如下：</p>
 <pre><code>/*button*/
 .button{
@@ -1639,7 +1640,7 @@
 </code></pre><ul>
 <li>Chrome</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c68ed206684a?w=278&amp;h=263&amp;f=png&amp;s=15422" alt="Chrome"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-34de6e5e8041163b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Chrome"></p>
 <p>利用渐变实现 , 具体如下：</p>
 <pre><code>/*chrome*/
 .Chrome{
@@ -1666,7 +1667,7 @@
 </code></pre><ul>
 <li>Opera</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c6ad7311175f?w=253&amp;h=255&amp;f=png&amp;s=12915" alt="Opera"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d3870c6e755e9d3e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Opera"></p>
 <p>利用渐变实现 , 代码如下：</p>
 <pre><code>/*Opera*/
 .Opera{
@@ -1700,7 +1701,7 @@
 </code></pre><ul>
 <li>IE</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c6c9d941f7cb?w=314&amp;h=267&amp;f=png&amp;s=9100" alt="IE"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e1f96b4221685e49.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="IE"></p>
 <p>利用渐变、多重阴影实现 ， 代码实现如下：</p>
 <pre><code>/*IE*/
 .IE{
@@ -1746,7 +1747,7 @@
 </code></pre><ul>
 <li>safari</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c996a8c00cbd?w=302&amp;h=276&amp;f=png&amp;s=19722" alt="safari"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-f404f40b6d660b00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="safari"></p>
 <p>利用渐变、border、旋转实现 ， 具体代码如下：</p>
 <pre><code>/*safari*/
 .safari{
@@ -1805,7 +1806,7 @@
 </code></pre><ul>
 <li>firefox</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c9c9d255ca6a?w=303&amp;h=262&amp;f=png&amp;s=15080" alt="firefox"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-04323b5ed519694e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="firefox"></p>
 <p>利用多重阴影实现 , 代码如下：</p>
 <pre><code>/*firefox*/
 .firefox{
@@ -1871,7 +1872,7 @@
 </code></pre><ul>
 <li>搜狗</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609c9d800b66778?w=304&amp;h=267&amp;f=png&amp;s=17833" alt="搜狗"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-be223815f5207aac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="搜狗"></p>
 <p>利用文字、阴影实现 , 具体代码如下：</p>
 <pre><code>/*sougou*/
 .sogou{
@@ -1909,7 +1910,7 @@
 </code></pre><ul>
 <li>利用滤镜实现混合效果</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/28/1609caaf1fcb43b8?w=433&amp;h=233&amp;f=gif&amp;s=275994" alt="filter-mix"></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a15c0abb03bb598c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="filter-mix"></p>
 <p>利用 <code>fliter:blur()</code> 、<code>filter:contrast()</code> 实现 ， 代码如下：</p>
 <pre><code>/*filter-mix*/
 .filter-mix{
@@ -1977,10 +1978,11 @@
 </code></pre><h3 id="装逼总结"><a href="#装逼总结" class="headerlink" title="装逼总结"></a>装逼总结</h3><p>怎么样，是不是颠覆了你对 <code>CSS3</code> 的认识？</p>
 <p>实际上 <code>CSS3</code> 带给我们的远不止这些东西，没有做不到，只有想不到，只有你脑洞够大，各种黑科技、酷炫的 <code>CSS</code> 必然也是手到擒来~</p>
 <p>虽然你给不了 <code>CSS3</code> 全部，但它却把全部给了你，骚年，加油吧~</p>
-<p><img src="https://user-gold-cdn.xitu.io/2017/12/29/160a05b024f6d86e?w=220&amp;h=220&amp;f=png&amp;s=39877" alt="end"></p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>本文主要参考以下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d87933c8ddfb0ab2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="end"></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>本文主要来源以下文章：</p>
 <p><a href="https://github.com/chokcoco/magicCss" target="_blank" rel="external">magicCss</a></p>
 <p><a href="https://github.com/cssmagic/CSS-Secrets" target="_blank" rel="external">CSS Secrets</a></p>
+<p>对 <code>CSS</code> 感兴趣的同学可以去作者的 <a href="https://github.com/chokcoco" target="_blank" rel="external">github</a> 点个赞~</p>
 
       
     </div>
