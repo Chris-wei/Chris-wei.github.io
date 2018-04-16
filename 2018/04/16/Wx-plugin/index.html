@@ -79,7 +79,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, Blog" />
+  <meta name="keywords" content="小程序," />
 
 
 
@@ -95,16 +95,30 @@
 
 
 
-<meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cryptic&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="微信小程序插件前言继上次手把手教你实现微信小程序中的自定义组件已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序「插件」功能，以及开发者工具新增「代码片段」功能，即在小程序基础库 1.9.6 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~">
+<meta name="keywords" content="小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手把手教你开发微信小程序中的插件">
+<meta property="og:url" content="http://yoursite.com/2018/04/16/Wx-plugin/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
-<meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta property="og:description" content="微信小程序插件前言继上次手把手教你实现微信小程序中的自定义组件已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序「插件」功能，以及开发者工具新增「代码片段」功能，即在小程序基础库 1.9.6 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-96e87ee925688cbc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-6a285d51fa176f72.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-772d6c10f689b4e3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-588f37b9f67ee63a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-0c78a4e0d6225f64.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-f16e9a44947d7224.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-0ef7cefc81ee4700.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-bdfe050d391b3071.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-de558c20dd5d0603.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-d0003503d6151910.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-04-16T10:26:21.676Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cryptic&#39;s Blog">
-<meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
+<meta name="twitter:title" content="手把手教你开发微信小程序中的插件">
+<meta name="twitter:description" content="微信小程序插件前言继上次手把手教你实现微信小程序中的自定义组件已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序「插件」功能，以及开发者工具新增「代码片段」功能，即在小程序基础库 1.9.6 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -134,13 +148,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/04/16/Wx-plugin/"/>
 
 
 
 
 
-  <title>Cryptic's Blog</title>
+  <title>手把手教你开发微信小程序中的插件 | Cryptic's Blog</title>
   
 
 
@@ -169,8 +183,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,9 +276,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -295,9 +308,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/16/Wx-plugin/" itemprop="url">手把手教你开发微信小程序中的插件</a></h2>
+          <h2 class="post-title" itemprop="name headline">手把手教你开发微信小程序中的插件</h2>
         
 
         <div class="post-meta">
@@ -367,9 +378,7 @@
       
 
       
-        
-          
-            <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
+        <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
 <h3 id="小程序插件接入"><a href="#小程序插件接入" class="headerlink" title="小程序插件接入"></a>小程序插件接入</h3><p>小程序插件不像自定义组件那样，很方便的就可以嵌在自己的代码中了，它是需要去官网开通小程序插件功能才能使用的，详细的接入流程和文档可以阅读官方的 <a href="https://developers.weixin.qq.com/miniprogram/introduction/plugin.html#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" target="_blank" rel="external">小程序插件接入指南</a>，当然这不是我们本篇文章的重点，本篇文章重点是教你如何开发一个微信小程序插件~</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>建立模板</strong></p>
@@ -455,8 +464,6 @@
 <p><img src="https://upload-images.jianshu.io/upload_images/6633377-d0003503d6151910.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="13.jpg"></p>
 <p>哦，对了，代码已托管在<a href="https://github.com/Chris-wei/wx-pungin" target="_blank" rel="external">github</a>上，有需要的小伙伴自行下载~</p>
 
-          
-        
       
     </div>
     
@@ -471,570 +478,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/Crypto-js/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/13/Crypto-js/" itemprop="url">前端 crypto-js aes 加解密</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T11:30:10+08:00">
-                2018-04-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/小程序/" rel="tag"># 小程序</a>
           
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前端-crypto-js-aes-加解密"><a href="#前端-crypto-js-aes-加解密" class="headerlink" title="前端 crypto-js aes 加解密"></a>前端 crypto-js aes 加解密</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前段时间公司做项目，该项目涉及到的敏感数据比较多，经过的一波讨论之后，决定前后端进行接口加密处理，采用的是 <code>AES</code> + <code>BASE64</code> 算法加密~</p>
-<p>网上关于 <code>AES</code> 对称加密的算法介绍挺多的，对这一块还不是特别理解的小伙伴可自行百度，这里我推荐一篇<a href="https://blog.csdn.net/qq_28205153/article/details/55798628" target="_blank" rel="external">AES加密算法的详细介绍与实现</a>，讲的还是蛮详细的~</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>其实搞懂了是怎么一回事，做起来还是挺简单的，因为库都是现成的，我们只需要会用就好啦，这里我在推荐一篇<a href="https://blog.csdn.net/vieri_32/article/details/48345023" target="_blank" rel="external">理解AES加密解密的使用方法</a>，加深大家对 <code>AES</code> 算法的理解~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-83da40c9171c17a8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>这里我以 <code>Vue</code> 作为例子，其他的也就大同小异了~</p>
-<ul>
-<li><p>要用 <code>AES</code> 算法加密，首先我们要引入 <code>crypto-js</code> ，<code>crypto-js</code> 是一个纯 <code>javascript</code> 写的加密算法类库 ，可以非常方便地在 <code>javascript</code> 进行 <code>MD5</code>、<code>SHA1</code>、<code>SHA2</code>、<code>SHA3</code>、<code>RIPEMD-160</code> 哈希散列，进行 <code>AES</code>、<code>DES</code>、<code>Rabbit</code>、<code>RC4</code>、<code>Triple DES</code> 加解密，我们可以采用 <code>npm install crypto-js --save</code> 进行下载安装，也可以直接去 <a href="https://github.com/brix/crypto-js" target="_blank" rel="external">GitHub</a>下载源码~</p>
-</li>
-<li><p>其次我们需要定义两个方法 ，分别是用于加密和解密，这里我将它放在了 <code>utils</code> 文件夹下，命名为 <code>secret.js</code> ，其具体代码如下：</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">const CryptoJS = require(&apos;crypto-js&apos;);  //引用AES源码js</div><div class="line"></div><div class="line">const key = CryptoJS.enc.Utf8.parse(&quot;1234123412ABCDEF&quot;);  //十六位十六进制数作为密钥</div><div class="line">const iv = CryptoJS.enc.Utf8.parse(&apos;ABCDEF1234123412&apos;);   //十六位十六进制数作为密钥偏移量</div><div class="line"></div><div class="line">//解密方法</div><div class="line">function Decrypt(word) &#123;</div><div class="line">    let encryptedHexStr = CryptoJS.enc.Hex.parse(word);</div><div class="line">    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);</div><div class="line">    let decrypt = CryptoJS.AES.decrypt(srcs, key, &#123; iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 &#125;);</div><div class="line">    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);</div><div class="line">    return decryptedStr.toString();</div><div class="line">&#125;</div><div class="line"></div><div class="line">//加密方法</div><div class="line">function Encrypt(word) &#123;</div><div class="line">    let srcs = CryptoJS.enc.Utf8.parse(word);</div><div class="line">    let encrypted = CryptoJS.AES.encrypt(srcs, key, &#123; iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 &#125;);</div><div class="line">    return encrypted.ciphertext.toString().toUpperCase();</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">	Decrypt ,</div><div class="line">	Encrypt</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的代码中的 <code>key</code> 是密钥 ，<code>iv</code> 是密钥偏移量，这个一般是接口返回的，为了方便，我们这里就直接在这里定义了。</p>
-<p>值得注意的是密钥的长度，由于对称解密使用的算法是 <code>AES-128-CBC</code>算法，数据采用 <code>PKCS#7</code> 填充 ， 因此这里的 <code>key</code> 需要为16位！</p>
-<p>接着我们定义了 <strong>解密方法<code>Decrypt</code></strong> 和 <strong>加密方法 <code>Encrypt</code></strong> ，最后通过 <code>export default</code> 将其暴露出去，方便在需要的时候进行引入~</p>
-<p>ok，核心代码就这么多，是不是很简单啊，其实也么有你想的那么复杂哈，剩下的就是展示一下如何使用咯~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0afabfa57699d966.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这里我定义了一个 <code>index.vue</code> 用来展示数据加解密的操作~</p>
-<p><strong>加密操作：</strong> 假设我们现在要给后端发送一段文字，暂且定义为 <code>This is a clear text</code> ， 在发送之前我们需要对其进行加密操作，这时候我们可以调用上面介绍的 <code>Encrypt</code> 方法，通过加密后我们可以得到密文为：<code>4ACEA01505ADAF9FB59A03B22FC1EF1B244AE28DDACFDFAEFA7E263655C44357</code></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-381239f35b58ed37.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p><strong>解密操作：</strong> 假设我们请求后端接口，后端返回了我们一堆如下的字符串 <code>BBFE62335C28821AD2F4043B715BB0C3E45734908254666526DCFD86A605F3AF</code> , 这让我很蒙蔽啊，这时候就要调用 <code>Decrypt</code> 方法，<br>通过解密我们可以拿到后端返回的信息其实是：<code>{&quot;name&quot;:&quot;Chris&quot;,&quot;sex&quot;:&quot;male&quot;}</code></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-eb7249069436efac.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>至此，你已经 <code>get</code> 了前端 <code>AES</code> 加解密的方法，是不是感觉很简单啊，用起来很简单，原理可不简单，况且这也只是其中的一种方案，关于加解密的方法还有很多，感兴趣的小伙伴们可以继续做一些深入的研究哈~</p>
-<p>至于我呢。。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f2929a9ed881a394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>对了，代码已上传到 <a href="https://github.com/Chris-wei/vue-crypto" target="_blank" rel="external">GitHub</a>，有需要的小伙伴自行下载~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/10/vue-slide/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/03/10/vue-slide/" itemprop="url">Vue 仿QQ左滑删除组件</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T16:05:20+08:00">
-                2018-03-10
-              </time>
+              <a href="/2018/04/13/Crypto-js/" rel="next" title="前端 crypto-js aes 加解密">
+                <i class="fa fa-chevron-left"></i> 前端 crypto-js aes 加解密
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <h2 id="Vue-仿QQ左滑删除组件"><a href="#Vue-仿QQ左滑删除组件" class="headerlink" title="Vue 仿QQ左滑删除组件"></a>Vue 仿QQ左滑删除组件</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前几天在做Vue项目开发的时候，因为之前别人写的代码有点小 bug，有人反应 IOS 上面的滑动点击有点问题，于是让我来帮忙解决，我看了看以前的代码实现比较繁琐，冗余，索性就直接自己重新写了一套，供大家参考，如有更好的方式，欢迎及时交流~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0b76f3f02a990515.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>我们先看看效果图吧，毕竟无图无真相啊~</p>
-<h3 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h3><p><img src="https://upload-images.jianshu.io/upload_images/6633377-23f94155957cfd91.gif?imageMogr2/auto-orient/strip" alt="slider.gif"></p>
-<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><p>具体实现思路如下：</p>
-<ul>
-<li>布局方面我采用的是 rem + flex 布局，具体如何结构和样式可以参考我的代码，值得注意的是后面的删除按钮是我通过定位放在了每一行的最后，超出隐藏了而已</li>
-<li>左滑和右滑是通过 <code>touchstart</code> 和 <code>touchend</code> 事件，通过判断滑动开始和结束，水平方向<code>x</code>的偏移量，如果大于一定得阈值认为是左滑动，小于一定的阈值则认为是右滑动</li>
-<li>左滑动和右滑动分别都是通过父级<code>li</code>元素的 <code>translate</code> 偏移量进行变化的，这里我的实现方式是提前声明好样式，通过改变当前父级<code>li</code>的<code>type</code>值，进行样式切换</li>
-<li>点击某一个滑块的时候，首先判断当前所有的滑块是否有处于<strong>滑出状态的</strong>，如果有，则必须先将所有的滑块状态还原，如果没有，则点击生效，我这里只是弹出一个<code>alter</code>，具体业务可以根据实际填写</li>
-<li>删除相对简单，当滑块画出后，出现删除按钮，点击按钮，拿到当前的数组索引值，通过数组的<code>splice</code>方法，删除对应的数组值即可</li>
-</ul>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>Html代码</strong></p>
-<pre><code>&lt;div class=&quot;container&quot;&gt;
-    &lt;div class=&quot;page-title&quot;&gt;滑动组件&lt;/div&gt;
-    &lt;ul&gt;
-        &lt;li class=&quot;list-item &quot; v-for=&quot;(item,index) in list &quot; data-type=&quot;0&quot;&gt;
-            &lt;div class=&quot;list-box&quot; @touchstart.capture=&quot;touchStart&quot; @touchend.capture=&quot;touchEnd&quot; @click=&quot;skip&quot;&gt;
-                &lt;img class=&quot;list-img&quot; :src=&quot;item.imgUrl&quot; alt=&quot;&quot;&gt;
-                &lt;div class=&quot;list-content&quot;&gt;
-                    &lt;p class=&quot;title&quot;&gt;{{item.title}}&lt;/p&gt;
-                    &lt;p class=&quot;tips&quot;&gt;{{item.tips}}&lt;/p&gt;
-                    &lt;p class=&quot;time&quot;&gt;{{item.time}}&lt;/p&gt;
-                &lt;/div&gt;
-            &lt;/div&gt;
-            &lt;div class=&quot;delete&quot; @click=&quot;deleteItem&quot; :data-index=&quot;index&quot;&gt;删除&lt;/div&gt;
-        &lt;/li&gt;
-    &lt;/ul&gt;
-&lt;/div&gt;
-</code></pre><p>注意：我这里的数据全是本地 <code>mock</code> 的~</p>
-<p><strong>Css样式代码</strong></p>
-<pre><code>.page-title{
-    text-align: center;
-    font-size: 17px;
-    padding: 10px 15px;
-    position: relative;
-}
-.page-title:after{
-    content: &quot; &quot;;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 1px;
-    border-bottom: 1px solid #ccc;
-    color: #ccc;
-    -webkit-transform-origin: 0 100%;
-    transform-origin: 0 100%;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-    z-index: 2;
-}
-.list-item{
-    position: relative;
-    height: 1.6rem;
-    -webkit-transition: all 0.2s;
-    transition: all 0.2s;
-}
-.list-item[data-type=&quot;0&quot;]{
-    transform: translate3d(0,0,0);
-}
-.list-item[data-type=&quot;1&quot;]{
-    transform: translate3d(-2rem,0,0);
-}
-.list-item:after{
-    content: &quot; &quot;;
-    position: absolute;
-    left: 0.2rem;
-    bottom: 0;
-    right: 0;
-    height: 1px;
-    border-bottom: 1px solid #ccc;
-    color: #ccc;
-    -webkit-transform-origin: 0 100%;
-    transform-origin: 0 100%;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-    z-index: 2;
-}
-.list-box{
-    padding: 0.2rem;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    justify-content: flex-end;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    font-size: 0;
-}
-.list-item .list-img{
-    display: block;
-    width: 1rem;
-    height: 1rem;
-}
-.list-item .list-content{
-    padding: 0.1rem 0 0.1rem 0.2rem;
-    position: relative;
-    flex: 1;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    overflow: hidden;
-}
-.list-item .title{
-    display: block;
-    color: #333;
-    overflow: hidden;
-    font-size: 15px;
-    font-weight: bold;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.list-item .tips{
-    display: block;
-    overflow: hidden;
-    font-size: 12px;
-    color: #999;
-    line-height: 20px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-.list-item .time{
-    display: block;
-    font-size: 12px;
-    position: absolute;
-    right: 0;
-    top: 0.1rem;
-    color: #666;
-}
-.list-item .delete{
-    width: 2rem;
-    height: 1.6rem;
-    background: #ff4949;
-    font-size: 17px;
-    color: #fff;
-    text-align: center;
-    line-height: 1.6rem;
-    position: absolute;
-    top:0;
-    right: -2rem;
-}
-</code></pre><p>这是核心的样式代码，还有部分样式重置代码放在了 <code>App.vue</code> 里，通过计算根节点<code>html</code>的字体大小的脚本我放在了 <code>index.html</code> 中~</p>
-<p> <strong>js代码</strong></p>
-<pre><code> export default{
-    name: &apos;index&apos;,
-    data () {
-        return {
-            list : [
-                {
-                    title : &apos;Chrome更新了&apos; ,
-                    imgUrl : &apos;./static/images/Chrome.png&apos; ,
-                    tips : &apos;不再支持Flash视频播放&apos; ,
-                    time : &apos;上午 8:30&apos;
-                },
-                {
-                    title : &apos;电影新资讯&apos; ,
-                    imgUrl : &apos;./static/images/Sina.png&apos; ,
-                    tips : &apos;电影《红海行动》上映以来票房暴涨，很多国人表示对国产电影有了新的改观&apos; ,
-                    time : &apos;上午 12:00&apos;
-                },
-                {
-                    title : &apos;聚焦两会·共筑中国梦&apos; ,
-                    imgUrl : &apos;./static/images/video.png&apos; ,
-                    tips : &apos;习近平代表的两会故事&apos; ,
-                    time : &apos;下午 17:45&apos;
-                },
-                {
-                    title : &apos;微信团队&apos; ,
-                    imgUrl : &apos;./static/images/Wechat.png&apos; ,
-                    tips : &apos;您的帐号有异常登录，如非本人操作，请及时修改密码&apos; ,
-                    time : &apos;昨天&apos;
-                }
-            ],
-            startX : 0 ,
-            endX : 0 ,
-        }
-    },
-    methods : {
-        //跳转
-        skip(){
-            if( this.checkSlide() ){
-                this.restSlide();
-            }else{
-                alert(&apos;You click the slide!&apos;)
-            }
-        },
-        //滑动开始
-        touchStart(e){
-            // 记录初始位置
-            this.startX = e.touches[0].clientX;
-        },
-        //滑动结束
-        touchEnd(e){
-                        // 当前滑动的父级元素
-            let parentElement = e.currentTarget.parentElement;
-            // 记录结束位置
-            this.endX = e.changedTouches[0].clientX;
-
-                        // 左滑
-            if( parentElement.dataset.type == 0 &amp;&amp; this.startX - this.endX &gt; 30  ){
-                this.restSlide();
-                parentElement.dataset.type = 1;
-            }
-
-                        // 右滑
-            if( parentElement.dataset.type == 1 &amp;&amp; this.startX - this.endX &lt; -30 ){
-                this.restSlide();
-                parentElement.dataset.type = 0;
-            }
-
-            this.startX = 0;
-            this.endX = 0;
-        },
-        //判断当前是否有滑块处于滑动状态
-        checkSlide(){
-            let listItems = document.querySelectorAll(&apos;.list-item&apos;);
-
-            for( let i = 0 ; i &lt; listItems.length ; i++){
-                if( listItems[i].dataset.type == 1 ) {
-                    return true;
-                }
-            }
-            return false;
-        },
-        //复位滑动状态
-        restSlide(){
-            let listItems = document.querySelectorAll(&apos;.list-item&apos;);
-                         // 复位
-            for( let i = 0 ; i &lt; listItems.length ; i++){
-                listItems[i].dataset.type = 0;
-            }
-        },
-        //删除
-        deleteItem(e){
-            // 当前索引
-            let index = e.currentTarget.dataset.index;
-            // 复位
-            this.restSlide();
-            // 删除
-            this.list.splice(index,1);
-        }
-    }
-}
-</code></pre><p>  js代码就这么一些，每个函数都有注释说明， 相信都能看得懂， 就不多解释了。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>怎么样，是不是也米有想象中的那么难，只要理清思路即可，实现起来也并不是那么困难，当然我这里写的只是我的一个实现思路而已，可能你们自己会有更好的实现方式，为什么不拿出来分享呢？</p>
-<p>完整代码我已经托管到 <a href="https://github.com/Chris-wei/vue-slider" target="_blank" rel="external">github</a> 上了，欢迎 <code>star</code> 和 <code>issue</code></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-9fa2a8f3db99106d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -1044,14 +517,11 @@
   </article>
 
 
-    
-  </section>
 
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/">9</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -1079,8 +549,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -1171,6 +650,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#微信小程序插件"><span class="nav-number">1.</span> <span class="nav-text">微信小程序插件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序插件接入"><span class="nav-number">1.2.</span> <span class="nav-text">小程序插件接入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">1.3.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">1.4.</span> <span class="nav-text">总结</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -1291,6 +786,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
 
   
 
