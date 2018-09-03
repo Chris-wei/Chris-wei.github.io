@@ -278,6 +278,349 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/Set/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/08/Set/" itemprop="url">JS中的算法与数据结构——集合(Set)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-08T11:18:28+08:00">
+                2017-10-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>愉快的假期告一段落，继续我们的学习~</p>
+<h2 id="集合-Set"><a href="#集合-Set" class="headerlink" title="集合(Set)"></a>集合(Set)</h2><p>同数学中所学的一样，集合(Set)是由一组无序但彼此之间又有一定关系性的成员构成，每个成员在集合中只能出现一次，不同于我们之前说的<a href="http://www.jianshu.com/p/eece86baec10" target="_blank" rel="external">字典</a>，<a href="http://www.jianshu.com/p/f254ec665e57" target="_blank" rel="external">链表</a>之类的，它是一种包含了不同元素的数据结构(集合中的元素称为成员)，从其定义中我们可以看出它具有两个很重要的特征：首先，集合中的成员是无序的，其次，集合中的成员是不相同的，即集合中不存在相同的成员。</p>
+<p>实际上，很多编程语言中，集合并不是一种数据类型，但是如果你需要创建一个数据结构用来保存一些独一无二的元素时，集合就变得很有用了，接下来我们一起来看看JS中如何实现一个集合。</p>
+<h2 id="集合的定义"><a href="#集合的定义" class="headerlink" title="集合的定义"></a>集合的定义</h2><p>我们要实现一个集合，首先要对其一些定义做了解</p>
+<ul>
+<li>不包含任何成员的集合称为<strong>空集</strong>，包含一切可能成员的集合称为<strong>全集</strong>。</li>
+<li>如果两个集合里的成员都完全相同，则称两个集合相等。</li>
+<li>如果一个集合所有成员都包含于另一个集合，则前一集合称为后一集合的一个<strong>子集</strong>。</li>
+</ul>
+<h2 id="集合的操作"><a href="#集合的操作" class="headerlink" title="集合的操作"></a>集合的操作</h2><p>通常来说，集合的基本操作有以下三种：</p>
+<ul>
+<li>并集：将两个集合中的成员进行合并，得到一个新的集合</li>
+<li>交集：将两个集合中共同存在的成员组成的一个新的集合</li>
+<li>补集：属于一个集合而不属于另一个集合的成员组成的新的集合</li>
+</ul>
+<h2 id="集合的实现"><a href="#集合的实现" class="headerlink" title="集合的实现"></a>集合的实现</h2><p>集合（Set）的实现我们这里基于数组，用数组来存储数据，根据我们之前学习的以及上面提到的一些方法，我们可以将集合的构造函数定义如下（为了区别ES6的 set 类型，我们这里选择用 MySet 命名）：</p>
+<pre><code>//构造函数
+
+function MySet () {
+    this.dataStore = [];            // 数据存储
+    this.add = add;                 // 添加成员
+    this.remove = remove;           // 删除成员
+    this.size = size;               // 集合元素个数
+    this.union = union;             // 集合求并集
+    this.intersect = intersect;     // 集合求交集
+    this.subset = subset;           // 判断一个集合是否是另一集合的子集
+    this.difference = difference;   // 集合求补集
+    this.contains = contains;       // 判断某成员是否属于该集合
+    this.show = show;               // 显示当前集合
+}
+</code></pre><p>我们第一个要实现的方法就是向集合中添加一个成员，即 add 方法</p>
+<p><strong>add：向集合中添加一个成员</strong></p>
+<pre><code>//添加元素
+
+function add (data) {
+    //判断元素是否存在集合当中
+    if( this.dataStore.indexOf( data )  &lt; 0 ){
+        this.dataStore.push(data);
+        return true;
+    }else{
+        console.warn( &apos;Can not add &apos; + data + &apos;, must already be in set&apos;);
+        return false;
+    }
+}
+</code></pre><p>我们之前提到，集合中的元素是独一无二的，因此，我们在将数据存储到数组之前，首先就是要确保该集合不存在该数据，因此，我们先用 indexOf 方法检查新加入的元素是否存在，如果找到了就返回该成员在数组中的位置；否则，就返回 -1 ，那么对应的 add 方法就可以定义返回布尔值，添加成功我们返回 true ， 否则返回 false ，这样就可以明确告诉我们是否正确的插入了一个元素。</p>
+<p><strong>remove：删除集合中某个成员</strong></p>
+<pre><code>//删除元素
+
+function remove (data) {
+    //判断元素是否存在集合当中
+    var pos = this.dataStore.indexOf(data);
+    if( pos &gt; -1 ){
+        this.dataStore.splice(pos,1);
+        return true;
+    }else{
+        console.warn( data + &apos; is not in set&apos;);
+        return false;
+    }
+}
+</code></pre><p>这里，我们顺理成章的实现了删除方法，它跟 add 方法很类似，首先要检查待删除元素是否存在于数组中，如果存在，我们调用数组的 splice() 方法删除该元素并返回 true ，否则，直接返回 false ，表示集合中不存在该元素。</p>
+<p>现在，我们可以完成集合的添加和删除，要测试这些方法之前，我们首先得定义 show 方法，该方法用来显示集合中的成员，该方法的实现很简答，只需返回我们定义的数组即可：</p>
+<p><strong>show：显示集合中的成员</strong></p>
+<pre><code>// 显示集合成员
+
+function show(){
+    console.log(this.dataStore);
+    return this.dataStore;
+}
+</code></pre><p>接着，我们这会来测试一下：</p>
+<pre><code>var fruits = new MySet();
+
+// 添加成员
+fruits.add(&apos;Apple&apos;);
+fruits.add(&apos;Banana&apos;);
+fruits.add(&apos;Pear&apos;);
+fruits.show();              // [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Pear&quot;]
+
+// 添加重复成员
+fruits.add(&apos;Apple&apos;);        // Can not add Apple, must already be in set
+
+// 删除成员
+fruits.remove(&apos;Banana&apos;);
+fruits.show();              // [&quot;Apple&quot;, &quot;Pear&quot;]
+
+// 删除不存在的成员
+fruits.remove(&apos;Banana&apos;);    // Banana is not in set
+</code></pre><p>嗯，一切正常，我们可以来实现集合的一些高级操作了，我们先来看看 union （并集）的实现。</p>
+<p><strong>union：求集合并集</strong></p>
+<p>求集合的并集，就是要将两个集合合并成一个，并除去重复的元素，我们实现思路就是将第一个集合成员放到一个临时集合中，判断第二个集合的成员是否也属于第一个集合，如果为真，代表为重复元素，我们直接跳过该成员，否则将该成员加入临时集合，最后返回该集合即可；</p>
+<p>那么，问题来了，我们要如何判断一个成员是否存在于该集合中？因此，我们需要一个辅助方法 contains()，它的实现也非常简单，直接用 indexOf 判断即可</p>
+<pre><code>//判断元素是否属于该集合
+
+function contains (data) {
+    if( this.dataStore.indexOf(data) &gt; -1 ){
+        return true;
+    }else{
+        return false;
+    }
+}
+</code></pre><p>现在，我们可以定义 union 方法了</p>
+<pre><code>//求集合的并集
+
+function union ( set ) {
+    var tempSet = new MySet();
+    for( var i = 0 ; i &lt; this.dataStore.length ; i++ ){
+        tempSet.add(this.dataStore[i]);
+    }
+    for( var i = 0 ; i&lt; set.dataStore.length ; i++ ){
+        if( !tempSet.contains(set.dataStore[i])){
+            tempSet.dataStore.push(set.dataStore[i]);
+        }
+    }
+    return tempSet;
+}
+</code></pre><p>这样，我们就可以就集合的并集了，</p>
+<pre><code>var fruits1 = new MySet();
+fruits1.add(&apos;Apple&apos;);
+fruits1.add(&apos;Banana&apos;);
+fruits1.add(&apos;Pear&apos;);
+
+var fruits2 = new MySet();
+fruits2.add(&apos;Grape&apos;);
+fruits2.add(&apos;Banana&apos;);
+fruits2.add(&apos;Pear&apos;);
+fruits2.add(&apos;Orange&apos;);
+
+var union = fruits1.union( fruits2 );
+union.show();                           // [&quot;Apple&quot;, &quot;Banana&quot;, &quot;Pear&quot;, &quot;Grape&quot;, &quot;Orange&quot;]
+</code></pre><p>成功了！我们可以来看看求集合的交集了。</p>
+<p><strong>intersect：求集合的交集</strong></p>
+<p>有了上面求并集的思路，那么交集的定义来说也相对简单，思路就是发现第一个集合的成员也属于第二个集合时，就将该成员加入到新的集合，最后返回新的集合即可；</p>
+<pre><code>//求集合的交集
+
+function intersect (set) {
+    var tempSet = new MySet();
+    for(var i = 0 ; i &lt; this.dataStore.length ; i++ ){
+        if( set.contains(this.dataStore[i])){
+            tempSet.add(this.dataStore[i]);
+        }
+    }
+    return tempSet;
+}
+</code></pre><p>我们还是利用上面的两个集合接着求其交集：</p>
+<pre><code>var intersect = fruits1.intersect( fruits2 );
+intersect.show();                               // [&quot;Banana&quot;, &quot;Pear&quot;]
+</code></pre><p>下一个定义的操作是 subset ；</p>
+<p><strong>subset：判断集合是否是另一集合的子集</strong></p>
+<p>该方法首先要确定 该集合的长度是否小于待比较的集合。如果该集合比待比较集合还要大，那么肯定不是待比较集合的一个子集。只要当，待比较集合比较大时，才去判断集合类的成员是否都属于待比较集合，如果有一个不是，直接返回 false ， 只有当所有元素都属于待比较集合的时候，我们才能说该集合是待比较集合的一个子集，该方法才会返回 true , 为了方便查看，我加入了console打印；</p>
+<pre><code>//子集判断
+
+function subset (set) {
+    if( this.size() &gt; set.size() ){
+        console.log(&apos;not a subset&apos;);
+        return false;
+    }else{
+        for ( var i = 0 ; i &lt; this.dataStore.length ; i++ ){
+            if( !set.contains(this.dataStore[i])){
+                console.log(&apos;not a subset&apos;);
+                return false;
+            }
+        }
+    }
+    console.log(&apos; a subset&apos;);
+    return true;
+}
+</code></pre><p>我们看到上面用到了 size 方法，它的定义如下：</p>
+<pre><code>//返回集合长度
+
+function size () {
+    return this.dataStore.length;
+}
+</code></pre><p>我们保留上面的 fruits1 和 fruits2 ， 新建一个 fruits3 来演示 subset 方法</p>
+<pre><code>var fruits3  = new MySet();
+fruits3.add(&apos;Apple&apos;);
+fruits3.add(&apos;Banana&apos;);
+fruits3.add(&apos;Pear&apos;);
+fruits3.add(&apos;Grape&apos;);
+fruits3.add(&apos;Orange&apos;);
+
+//子集判断
+
+fruits1.subset( fruits2 );      // not a subset
+fruits2.subset( fruits2 );      // a subset
+fruits1.subset( fruits3 );      // a subset
+</code></pre><p>看起来一切都很顺利，我们只剩最后一个 difference 方法，该方法返回一个新集合，该集合是由属于第一个集合而不属于第二个集合的成员组成的。</p>
+<p><strong>difference：补集</strong></p>
+<p>有了交集的思路，补集的实现就显得很自然了。</p>
+<pre><code>//补集
+
+function difference (set) {
+    var tempSet = new  MySet();
+    for( var i = 0 ; i &lt; this.dataStore.length ; i ++ ){
+        if( !set.contains(this.dataStore[i])){
+            tempSet.dataStore.push( this.dataStore[i] );
+        }
+    }
+    return tempSet;
+}
+</code></pre><p>我们测试一下：</p>
+<pre><code>fruits1.difference(fruits2).show();     // [&apos;Apple&apos;]
+fruits1.difference(fruits3).show();     // []
+fruits2.difference(fruits1).show();     // [&quot;Grape&quot;, &quot;Orange&quot;]
+</code></pre><p>ok，到现在，我们完成了一个完整的 set 集合，是不是很棒！</p>
+<p>本篇介绍的集合和 ES6 的集合略微有点差别，ES6 提供的 Set 数据结构，有很多现成的方法可以直接调用，很是方法，不是很了解的小伙伴可以参考我之前的一篇博文，关于<a href="http://www.jianshu.com/p/4da037782be9" target="_blank" rel="external">ES6中Symbol 、Set 和 Map</a> 一文，相信会有不错的收获~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/29/Stack/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -939,272 +1282,6 @@ console.log( fruits.dispReverse() );    // Grape
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Dictionary/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/27/Dictionary/" itemprop="url">JS中的算法与数据结构——字典(Dictionary)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T17:31:28+08:00">
-                2017-09-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="字典-Dictionary"><a href="#字典-Dictionary" class="headerlink" title="字典(Dictionary)"></a>字典(Dictionary)</h2><p>字典(Dictionary)是一种以 <strong>键-值对</strong> 形式存储数据的数据结构 ，就如同我们平时查看通讯录一样，要找一个电话，首先先找到该号码的机主名字，名字找到了，紧接着电话号码也就有了。这里的键就是你用来查找的东西，本例中指代的就是名字，值就是查找得到的结果，也就是对应的电话号码。</p>
-<p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
-<h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
-<p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cbda4fe5fdd62c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据类型定义"></p>
-<p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
-<pre><code>//字典类
-
-function Dictionary () {
-    this.dataStore = [];
-    this.add = add;         // 添加元素
-    this.find = find;       // 查找元素
-    this.remove = remove;   // 删除元素
-    this.count = count;     // 字典中元素个数
-    this.showAll = showAll; // 显示字典元素
-    this.clear = clear;     // 清空字典
-}
-</code></pre><p><strong>add：向字典添加一个元素</strong></p>
-<p>上面我们也提到，字典是以 键值对 的方式存储数据的，因此，add 方法就需要接受两个参数，分别是 键和值 ，其中键表示其在字典中的索引，实现如下</p>
-<pre><code>//向字典添加元素
-
-function add( key , value ){
-    this.dataStore[key] = value;
-}
-</code></pre><p>没错，就是这么简单！接着我们来看看 find 方法</p>
-<p><strong>find：查找字典中的元素</strong></p>
-<p>我们是以键值对方式存储的，因此我们只需要传入需要查找的键，就可以顺理成章的取到对应的值，这对应于JS中的数组也是十分简单的；</p>
-<pre><code>//查找字典中的元素
-
-function find( key ){
-    return this.dataStore[key];
-}
-</code></pre><p>有了添加和查找，接下来就是删除了！</p>
-<p><strong>remove：删除字典中的一个元素</strong></p>
-<p>要想删除字典中的一个元素，即删除一个 键值对 ， 我们需要借助 JS 提供的一个内置的函数 ： delete ，这个函数我们并不陌生，它可以同时删除键和与其对应的值，那么 remove 方法定义就很简单了</p>
-<pre><code>//删除一个元素
-
-function remove( key ){
-    if( this.dataStore[key] ) delete this.dataStore[key];
-    else return &apos;Not Found&apos;;
-}
-</code></pre><p>除此之外，我们还想显示字典中的所有键值对，showAll 方法来完成。</p>
-<p><strong>showAll：显示字典中所以键值对</strong></p>
-<pre><code>//显示字典元素
-
-function showAll () {
-    for( var key in this.dataStore ){
-        console.log( key + &apos;-&gt;&apos; + this.dataStore[key] );
-    }
-}
-</code></pre><p>我们已经完成了字典的基本操作，现在我们做个小测试，</p>
-<pre><code>//实例化字典类
-
-var directory = new Dictionary();
-
-//添加元素
-
-directory.add( &apos;Jack&apos; , &apos;138****5505&apos; );
-directory.add( &apos;Alice&apos; , &apos;156****6606&apos;);
-directory.add( &apos;Tom&apos; , &apos;180****8808&apos;);
-
-//显示字典
-
-directory.showAll();         // Jack-&gt;138****5505
-                             // Alice-&gt;156****6606
-                             // Tom-&gt;180****8808
-
-directory.remove( &apos;Tom&apos; );
-directory.showAll();         // Jack-&gt;138****5505
-                             // Alice-&gt;156****6606
-</code></pre><p> 我们定义的时候看到了还有两个方法没有实现呢，一个是 count ， 另一个是 clear ，下面我们一起来实现。</p>
-<p> <strong>count：查看字典中元素的个数</strong></p>
-<p> 该方法有时候会很有用，不过实现起来可能会跟你想的不太一样，我们先看看如何实现的</p>
-<pre><code>//查看字典中元素的个数
-
-function count(){
-    var n = 0 ;
-    for ( var key in this.dataStore ){
-        ++n;
-    }
-    return n;
-}
-</code></pre><p>怎么样，是不是跟想的不太一样，为什么不用 length 属性，不是很简单么？其实不然，我们的键为字符串的时候，数组的 length 属性就不起作用了，请看下面的例子：</p>
-<pre><code>var nums = [ 0 , 1 , 2 ] ;
-
-console.log(nums.length)        // 3
-
-var directory = [];
-directory[&apos;Jack&apos;] = &apos;138****5505&apos;;
-directory[&apos;Alice&apos;] = &apos;156****6606&apos;;
-directory[&apos;Tom&apos;] = &apos;180****8808&apos;;
-
-console.log(directory.length)   // 0
-</code></pre><p>现在是不是又了解了一个坑！哈哈，我们把最后一个clear方法实现一下。</p>
-<p><strong>clear：清空字典</strong></p>
-<pre><code>//清空字典
-
-function clear(){
-    for( var key in this.dataStore ){
-        delete this.dataStore[key];
-    }
-}
-</code></pre><p>至此，字典的功能已基本完成了，我们利用上述的代码继续走下去，测试测试</p>
-<pre><code>console.log(directory.count());     // 2
-directory.clear();
-console.log(directory.count());     // 0
-</code></pre><p>字典中我们通常都是用键来取值，所以我们无须关心s数据在字典中的实际存储顺序，但我们希望能看到显示字典内容的时候是有序的，这也很简单，我们只需稍微改造一下我们的 showAll 方法即可。</p>
-<pre><code>//改造后的showAll
-
-function showAll(){
-    var sortKeys = Object.keys(this.dataStore).sort();
-    for( var key in sortKeys ){
-        console.log( sortKeys[key] + &apos;-&gt;&apos; + this.dataStore[sortKeys[key]] );
-    }
-}
-</code></pre><p>和我们之前的方法唯一的区别就是，我们拿到了键之后，对其进行了一次 sort 排序，下面我们看看新方法的输出。</p>
-<pre><code>// 重新打印上述字典
-
-directory.showAll();        //  Alice-&gt;156****6606
-                            //  Jack-&gt;138****5505
-                            //  Tom-&gt;180****8808
-</code></pre><p>要注意的是，上述 showAll 方法中，进行 Object.keys().sort()排序后，返回的是新的一个数组，类似下面的形式，</p>
-<pre><code>//sortKeys
-
-[&quot;Alice&quot;, &quot;Jack&quot;, &quot;Tom&quot;]
-</code></pre><p>此时，数组的 key 是 0、1、2，这样是不是就清晰很多了呢？</p>
-<p>至此，我们已基本了解了字典的一些内容，并且我们可以用JS自己去实现一个字典了，有木有很棒！接下来，大家加油~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1258,7 +1335,7 @@ directory.showAll();        //  Alice-&gt;156****6606
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1269,7 +1346,7 @@ directory.showAll();        //  Alice-&gt;156****6606
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1280,7 +1357,7 @@ directory.showAll();        //  Alice-&gt;156****6606
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

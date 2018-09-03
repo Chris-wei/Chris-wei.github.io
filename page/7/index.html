@@ -278,6 +278,158 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/05/vue-clip/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/05/vue-clip/" itemprop="url">基于vue的移动端图片裁剪压缩处理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-05T10:32:46+08:00">
+                2017-08-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~</p>
+<p>废话不多说，先上效果图，无图无真相嘛~</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip" alt="效果图"></p>
+<p>可以在控制台看出图片压缩的信息：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-3c5c4111e4df639b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="压缩信息"></p>
+<p>本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题；</p>
+<p>整个项目的核心 代码是 clipper.js ，其主要使用方式是直接给 input[file] 控件，添加change事件，并调用 methods 中的change方法，这里要传 event 对象， change 方法接收两个参数，第一个是 event 对象，第二个参数是一个对象，resultObj表示要展示的结果 img 对象，aspectRatio 表示宽高比，另外参数可以根据实际情况添加，主要参考<a href="http://blog.csdn.net/qq727013465/article/details/51823231" target="_blank" rel="external">cropper文档说明</a></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e90a928bbbe2e6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="使用方法"></p>
+<p>整个项目实现思路是，触发 change 事件后，动态添加 整个裁剪对象 ， 通过移动裁剪框，判断当前裁剪框的位置和大小，通过canvas将裁剪框范围内的图片信息提取出来，转成base64编码，放到 img 标签的 src 属性里，在此之前，会经过一次图片大小判断，如果上传的图片大于100K ，会通过 compress 函数对其经行压缩，压缩也是借助 canvas 对象，通过计算压缩比进行等比例的压缩，达到最终的效果；</p>
+<p>图片压缩后的上传放在 postImg 函数里，目前是本地模拟，实际开发中请自行根据需求进行编写，等到上传成功之后销毁整个裁剪对象就大功告成了。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7ea49a2ef17a893e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片上传"></p>
+<p>整个项目已经托管在github上，核心代码都有较为详细的注释，有需要的小伙伴可以自行下载看看，如果觉得不错的话，记得给个star哈~<br><a href="https://github.com/Chris-wei/vue-clip" target="_blank" rel="external">项目传送门</a></p>
+<p>ps：由于编辑器的问题，强迫症请忽略那些红色波浪线…</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/02/vue-music/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -726,303 +878,6 @@ console.log(B); // 2
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/ES6-08/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/26/ES6-08/" itemprop="url">ES6必知必会 （八）—— async 函数</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-26T11:36:48+08:00">
-                2017-07-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
-                    <span itemprop="name">ECMAScript6</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>async 函数</strong></p>
-<p>1.ES2017 标准引入了 async 函数，它是对 Generator 函数的改进 ， 我们先看一个读取文件的例子：</p>
-<p>Generator 写法是这样的 ：</p>
-<pre><code>var fs = require(&apos;fs&apos;);
-
-var readFile = function (fileName) {
-  return new Promise(function (resolve, reject) {
-    fs.readFile(fileName, function(error, data) {
-      if (error) return reject(error);
-      resolve(data);
-    });
-  });
-};
-
-var gen = function* () {
-  var f1 = yield readFile(&apos;/etc/fstab&apos;);
-  var f2 = yield readFile(&apos;/etc/shells&apos;);
-  console.log(f1.toString());
-  console.log(f2.toString());
-};
-</code></pre><p>async 写法如下 ：</p>
-<pre><code>var asyncReadFile = async function () {
-  var f1 = await readFile(&apos;/etc/fstab&apos;);
-  var f2 = await readFile(&apos;/etc/shells&apos;);
-  console.log(f1.toString());
-  console.log(f2.toString());
-};
-</code></pre><p>比较发现，async 函数就是将 Generator 函数的星号（*）替换成 async，将 yield 替换成 await，同时不需要co模块，更加语义化；</p>
-<p>2.async 函数返回一个 Promise 对象，内部return语句返回的值，会成为then方法回调函数的参数；</p>
-<pre><code>async function f() {
-  return &apos;hello world&apos;;
-}
-
-f().then(res =&gt; console.log(res))
-// &quot;hello world&quot;
-</code></pre><p>3.async 函数返回的 Promise 对象，必须等到内部所有 await 命令后面的 Promise 对象执行完，才会发生状态改变，除非遇到 return 语句或者抛出错误。也就是说，只有 async 函数内部的异步操作执行完，才会执行 then 方法指定的回调函数；</p>
-<p>4.如果 async 函数内部抛出错误，会导致返回的 Promise 对象变为 reject 状态，抛出的错误对象会被catch方法回调函数接收到；</p>
-<pre><code>async function f() {
-  throw new Error(&apos;出错了&apos;);
-}
-
-f().then(
-  res =&gt; console.log(res),
-  err =&gt; console.log(err)
-)
-// Error: 出错了
-</code></pre><p>5.await 命令后面是一个 Promise 对象。如果不是，会被转成一个立即 resolve 的 Promise 对象</p>
-<pre><code>async function f() {
-  return await &apos;Hello World&apos;;
-}
-
-f().then(res =&gt; console.log(res))
-// &apos;Hello World&apos;
-</code></pre><p>上述代码中，await命令的参数是 ‘Hello World’，它被转成 Promise 对象，并立即 resolved </p>
-<p>6.await 命令后面的 Promise 对象如果变为reject状态，则 reject 的参数会被 catch 方法的回调函数接收到</p>
-<pre><code>async function f() {
-  await Promise.reject(&apos;出错了&apos;);
-}
-
-f().then(res =&gt; console.log(res))
-   .catch(err =&gt; console.log(err))
-
-// 出错了
-</code></pre><p>7.async 函数中 ， 只要一个await语句后面的 Promise 变为reject，那么整个 async 函数都会中断执行；</p>
-<pre><code>async function f() {
-  await Promise.reject(&apos;出错了&apos;);
-  await Promise.resolve(&apos;hello world&apos;); // 不会执行
-}
-
-f();  // 出错了
-</code></pre><p>8.如果我们希望即使前一个异步操作失败，也不要中断后面的异步操作。那我们可以将第一个 await 放在 try…catch 结构里面，这样不管这个异步操作是否成功，第二个 await 都会执行；</p>
-<pre><code>async function f() {
-  try {
-    await Promise.reject(&apos;出错了&apos;);
-  } catch(e) {
-
-  }
-  return await Promise.resolve(&apos;hello world&apos;);
-}
-
-f().then(res =&gt; console.log(res))
-
-// hello world
-</code></pre><p>或者是 await 后面的 Promise 对象再跟一个 catch 方法，处理前面可能出现的错误：</p>
-<pre><code>async function f() {
-  await Promise.reject(&apos;出错了&apos;)
-    .catch(err =&gt; console.log(err));
-  return await Promise.resolve(&apos;hello world&apos;);
-}
-
-f()
-.then(res =&gt; console.log(res))
-// 出错了
-// hello world
-</code></pre><p>9.如果 await 后面的异步操作出错，那么等同于 asyn c函数返回的 Promise 对象被 rejected：</p>
-<pre><code>async function f() {
-  await new Promise(function (resolve, reject) {
-    throw new Error(&apos;出错了&apos;);
-  });
-}
-
-f().then(res =&gt; console.log(res))
-   .catch(err =&gt; console.log(err))
-// Error：出错了
-</code></pre><p>10.为了防止出错，做法也是将其放在try…catch代码块之中，并且如果有多个await命令，可以统一放在try…catch结构中。</p>
-<pre><code>async function f() {
-  try {
-    await new Promise(function (resolve, reject) {
-      throw new Error(&apos;出错了&apos;);
-    });
-  } catch(e) {
-  }
-  return await(&apos;hello world&apos;);
-}
-
-f().then( res =&gt; console.log(res) )
-// &apos;hello world&apos;
-</code></pre><p>11.使用 await 要注意以下几点 ：</p>
-<ul>
-<li><p>await 命令后面的 Promise 对象，运行结果可能是 rejected，所以最好把 await 命令放在 try…catch 代码块中</p>
-<pre><code>async function myFunction() {
-  try {
-    await operations();
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-// 另一种写法
-
-async function myFunction() {
-  await operations()
-  .catch(function (err) {
-    console.log(err);
-  });
-}   
-</code></pre></li>
-<li><p>多个 await 命令后面的异步操作，如果不存在继发关系（即互不依赖），最好让它们同时触发，缩短程序的执行时间</p>
-<pre><code>// 写法一
-let [foo, bar] = await Promise.all([getFoo(), getBar()]);
-
-// 写法二
-let fooPromise = getFoo();
-let barPromise = getBar();
-let foo = await fooPromise;
-let bar = await barPromise;
-</code></pre></li>
-<li><p>await 命令只能用在 async 函数之中，如果用在普通函数，就会报错</p>
-<pre><code>async function func(db) {
-  let docs = [{}, {}, {}];
-
-  // 报错
-  docs.forEach(function (doc) {
-    await db.post(doc);
-  });
-}
-</code></pre></li>
-</ul>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1076,7 +931,7 @@ let bar = await barPromise;
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1087,7 +942,7 @@ let bar = await barPromise;
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1098,7 +953,7 @@ let bar = await barPromise;
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
