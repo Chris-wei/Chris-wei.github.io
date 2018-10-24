@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JavaScript设计模式," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="嗯~~~ 开门见山，这次我也就不卖关子了，今天我们就来聊一聊 JavasSript 设计模式中的 观察者模式 ，首先我们来认识一下，什么是观察者模式？ 什么是观察者模式？观察者模式（Observer） 通常又被称为 发布-订阅者模式 或 消息机制，它定义了对象间的一种一对多的依赖关系，只要当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新，解决了主体对象与观察者之间功能的耦合，即">
+<meta name="keywords" content="JavaScript设计模式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript设计模式之观察者模式">
+<meta property="og:url" content="http://yoursite.com/2018/10/24/Observe/index.html">
+<meta property="og:site_name" content="Cryptic&#39;s Blog">
+<meta property="og:description" content="嗯~~~ 开门见山，这次我也就不卖关子了，今天我们就来聊一聊 JavasSript 设计模式中的 观察者模式 ，首先我们来认识一下，什么是观察者模式？ 什么是观察者模式？观察者模式（Observer） 通常又被称为 发布-订阅者模式 或 消息机制，它定义了对象间的一种一对多的依赖关系，只要当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新，解决了主体对象与观察者之间功能的耦合，即">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-600cc21078feb559.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-c8725ad0ef27f54b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-d2c6acc9f7aff1db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-fef806e758df680b.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-14ad07e941ac1f2c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-10-24T07:55:38.578Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript设计模式之观察者模式">
+<meta name="twitter:description" content="嗯~~~ 开门见山，这次我也就不卖关子了，今天我们就来聊一聊 JavasSript 设计模式中的 观察者模式 ，首先我们来认识一下，什么是观察者模式？ 什么是观察者模式？观察者模式（Observer） 通常又被称为 发布-订阅者模式 或 消息机制，它定义了对象间的一种一对多的依赖关系，只要当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新，解决了主体对象与观察者之间功能的耦合，即">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-600cc21078feb559.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/24/Observe/"/>
+
+
+
+
+
+  <title>JavaScript设计模式之观察者模式 | Cryptic's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b8caac68f7b00d37aea3c9ee8ce00dd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cryptic's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/Observe/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JavaScript设计模式之观察者模式</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-24T15:50:20+08:00">
+                2018-10-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>嗯~~~</p>
+<p>开门见山，这次我也就不卖关子了，今天我们就来聊一聊 JavasSript 设计模式中的 <strong>观察者模式</strong> ，首先我们来认识一下，什么是观察者模式？</p>
+<h3 id="什么是观察者模式？"><a href="#什么是观察者模式？" class="headerlink" title="什么是观察者模式？"></a>什么是观察者模式？</h3><p><strong>观察者模式（Observer）</strong></p>
+<p>通常又被称为 <strong>发布-订阅者模式</strong> 或 <strong>消息机制</strong>，它定义了对象间的一种一对多的依赖关系，只要当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新，解决了主体对象与观察者之间功能的耦合，即一个对象状态改变给其他对象通知的问题。</p>
+<p>单纯的看定义，对于前端小伙伴们，可能这个概念还是比较模糊，对于观察者模式还是一知半解，ok，那我就来看个生活中比较贴切的例子，相信你立马就懂了~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-600cc21078feb559.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>生活中的观察者模式</strong></p>
+<p>每次小米出新款手机都是热销，我看中了小米3这款手机，想去小米之家购买，但是到店后售货员告诉我他们这款手机很热销，他们已经卖完了，现在没有货了，那我不可能每天都跑过来问问吧，这样很耽误时间的，于是我将我的手机号码留给销售小姐姐，如果他们店里有货，让她打电话通知我就好了，这样就不用担心不知道什么时候有货，也不需要天天跑去问了，如果你已经成功买到了手机呢，那么销售小姐姐之后也就不需要通知你了~</p>
+<p>这样是不是清晰了很多~诸如此类的案例还有很多，我也就不在赘述了。</p>
+<h3 id="观察者模式的使用"><a href="#观察者模式的使用" class="headerlink" title="观察者模式的使用"></a>观察者模式的使用</h3><p>不瞒你说，我敢保证，过来看的每个人都使用过观察者模式~</p>
+<p>什么，你不信？</p>
+<p>那么来看看下面这段代码~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">document.querySelector(&apos;#btn&apos;).addEventListener(&apos;click&apos;,function () &#123;</div><div class="line">    alert(&apos;You click this btn&apos;);</div><div class="line">&#125;,false)</div></pre></td></tr></table></figure>
+<p>怎么样，是不是很眼熟！</p>
+<p>没错，我们平时对 <code>DOM</code> 的事件绑定就是一个非常典型的 <strong>发布-订阅者模式</strong> ，这里我们需要监听用户点击按钮这个动作，但是我们却无法知道用户什么时候去点击，所以我们订阅 按钮上的 <code>click</code> 事件，只要按钮被点击时，那么按钮就会向订阅者发布这个消息，我们就可以做对应的操作了。</p>
+<p>除了我们常见的 <code>DOM</code> 事件绑定外，观察者模式应用的范围还有很多~</p>
+<p>比如比较当下热门 <strong>vue</strong> 框架，里面不少地方都涉及到了观察者模式，比如：</p>
+<p><strong>数据的双向绑定</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-c8725ad0ef27f54b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>利用 <code>Object.defineProperty()</code> 对数据进行劫持，设置一个监听器 <code>Observer</code>，用来监听所有属性，如果属性上发上变化了，就需要告诉订阅者 <code>Watcher</code> 去更新数据，最后指令解析器 <code>Compile</code> 解析对应的指令，进而会执行对应的更新函数，从而更新视图，实现了双向绑定~</p>
+<p><strong>子组件与父组件通信</strong></p>
+<p><code>Vue</code> 中我们通过 <code>props</code> 完成父组件向子组件传递数据，子组件与父组件通信我们通过自定义事件即 <code>$on</code>,<code>$emit</code>来实现，其实也就是通过 <code>$emit</code> 来发布消息，并对订阅者 <code>$on</code> 做统一处理 ~</p>
+<p>ok，说了这么多，该我们自己露一手了，接下来我们来自己创建一个简单的观察者~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-d2c6acc9f7aff1db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="创建一个观察者"><a href="#创建一个观察者" class="headerlink" title="创建一个观察者"></a>创建一个观察者</h3><p>首先我们需要创建一个观察者对象，它包含一个消息容器和三个方法，分别是订阅消息方法 <code>on</code> , 取消订阅消息方法 <code>off</code> ，发送订阅消息 <code>subscribe</code> 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">const Observe = (function () &#123;</div><div class="line">	//防止消息队列暴露而被篡改，将消息容器设置为私有变量</div><div class="line">	let __message = &#123;&#125;;</div><div class="line">	return &#123;</div><div class="line">    	//注册消息接口</div><div class="line">        on : function () &#123;&#125;,</div><div class="line">        //发布消息接口</div><div class="line">		subscribe : function () &#123;&#125;,</div><div class="line">        //移除消息接口</div><div class="line">        off : function () &#123;&#125;</div><div class="line">    &#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
+<p>好的，我们的观察者雏形已经出来了，剩下的就是完善里面的三个方法~</p>
+<p><strong>注册消息方法</strong></p>
+<p>注册消息方法的作用是将订阅者注册的消息推入到消息队列中，因此需要传递两个参数：消息类型和对应的处理函数，要注意的是，如果推入到消息队列是如果此消息不存在，则要创建一个该消息类型并将该消息放入消息队列中，如果此消息已经存在则将对应的方法突入到执行方法队列中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//注册消息接口</div><div class="line">on: function (type, fn) &#123;</div><div class="line">    //如果此消息不存在，创建一个该消息类型</div><div class="line">    if( typeof __message[type] === &apos;undefined&apos; )&#123;</div><div class="line">    	// 将执行方法推入该消息对应的执行队列中</div><div class="line">        __message[type] = [fn];</div><div class="line">    &#125;else&#123;</div><div class="line">    	//如果此消息存在，直接将执行方法推入该消息对应的执行队列中</div><div class="line">        __message[type].push(fn);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>发布消息方法</strong></p>
+<p>发布消息，其功能就是当观察者发布一个消息是将所有订阅者订阅的消息依次执行，也需要传两个参数，分别是消息类型和对应执行函数时所需要的参数，其中消息类型是必须的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">//发布消息接口</div><div class="line">subscribe: function (type, args) &#123;</div><div class="line">	//如果该消息没有注册，直接返回</div><div class="line">	if ( !__message[type] )  return;</div><div class="line">	//定义消息信息</div><div class="line">	let events = &#123;</div><div class="line">    	type: type,           //消息类型</div><div class="line">    	args: args || &#123;&#125;       //参数</div><div class="line">    &#125;,</div><div class="line">    i = 0,                         // 循环变量</div><div class="line">    len = __message[type].length;   // 执行队列长度</div><div class="line">	//遍历执行函数</div><div class="line">	for ( ; i &lt; len; i++ ) &#123;</div><div class="line">		//依次执行注册消息对应的方法</div><div class="line">        __message[type][i].call(this,events)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>移除消息方法</strong></p>
+<p>移除消息方法，其功能就是讲订阅者注销的消息从消息队列中清除，也需要传递消息类型和执行队列中的某一函数两个参数。这里为了避免删除是，消息不存在的情况，所以要对其消息存在性制作校验。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//移除消息接口</div><div class="line">off: function (type, fn) &#123;</div><div class="line">	//如果消息执行队列存在</div><div class="line">	if ( __message[type] instanceof Array ) &#123;</div><div class="line">		// 从最后一条依次遍历</div><div class="line">		let i = __message[type].length - 1;</div><div class="line">		for ( ; i &gt;= 0; i-- ) &#123;</div><div class="line">			//如果存在改执行函数则移除相应的动作</div><div class="line">			__message[type][i] === fn &amp;&amp; __message[type].splice(i, 1);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ok，到此，我们已经实现了一个基本的观察者模型，接着就是我们大显身手的时候了~<br>赶紧拿出来测试测试啊~</p>
+<h3 id="大显身手"><a href="#大显身手" class="headerlink" title="大显身手"></a>大显身手</h3><p>首先我们先来一个简单的测试，看看我们自己创建的观察者模式执行效果如何？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//订阅消息</div><div class="line"> Observe.on(&apos;say&apos;, function (data) &#123;</div><div class="line"> 	console.log(data.args.text);</div><div class="line"> &#125;)</div><div class="line"> Observe.on(&apos;success&apos;,function () &#123;</div><div class="line">     console.log(&apos;success&apos;)</div><div class="line"> &#125;);</div><div class="line"></div><div class="line"> //发布消息</div><div class="line"> Observe.subscribe(&apos;say&apos;, &#123; text : &apos;hello world&apos; &#125; )</div><div class="line"> Observe.subscribe(&apos;success&apos;);</div></pre></td></tr></table></figure>
+<p>我们在消息类型为 <code>say</code> 的消息中注册了两个方法，其中有一个接受参数，另一个不需要参数，然后通过 <code>subscribe</code> 发布 <code>say</code> 和 <code>success</code> 消息，结果跟我们预期的一样，控制台输出了 <code>hello world</code> 以及 <code>success</code> ~</p>
+<p>看！我们已经成功的实现了我们的观察者~ 为自己点个赞吧！</p>
+<p><strong>自定义数据的双向绑定</strong></p>
+<p>上面说到，<code>vue</code> 双向绑定是数据劫持和发布订阅做实现的，现在我们借助这种思想，自己来实现一个简单的数据的双向绑定~</p>
+<p>首先当然是要有页面结构了，这里不讲究什么，我就随手一码了~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;app&quot;&gt;</div><div class="line">    &lt;h3&gt;数据的双向绑定&lt;/h3&gt;</div><div class="line">    &lt;div class=&quot;cell&quot;&gt;</div><div class="line">        &lt;div class=&quot;text&quot; v-text=&quot;myText&quot;&gt;&lt;/div&gt;</div><div class="line">        &lt;input class=&quot;input&quot; type=&quot;text&quot; v-model=&quot;myText&quot; &gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>相信你已经知道了，我们要做到就是 <code>input</code> 标签的输入，通过 <code>v-text</code> 绑定到类名为 <code>text</code> 的 <code>div</code> 标签上~</p>
+<p>首先我们需要创建一个类，这里就叫做 <code>myVue</code> 吧。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">class myVue&#123;</div><div class="line">    constructor (options)&#123;</div><div class="line">        // 传入的配置参数</div><div class="line">        this.options = options;</div><div class="line">        // 根元素</div><div class="line">        this.$el = document.querySelector(options.el);</div><div class="line">        // 数据域</div><div class="line">        this.$data = options.data;</div><div class="line"></div><div class="line">        // 保存数据model与view相关的指令，当model改变时，我们会触发其中的指令类更新，保证view也能实时更新</div><div class="line">        this._directives = &#123;&#125;;</div><div class="line">        // 数据劫持，重新定义数据的 set 和 get 方法</div><div class="line">        this._obverse(this.$data);</div><div class="line">        // 解析器，解析模板指令，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图</div><div class="line">        this._compile(this.$el);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我们定义了 <code>myVue</code> 构造函数，并在构造方法中进行了一些初始化操作，上面做了注释，这里我就不在赘述，主要来看里面关键的两个方法 <code>_obverse</code> 和 <code>_compile</code>。</p>
+<p>首先是 <code>_observe</code> 方法，他的作用就是处理传入的 <code>data</code> ，并重新定义 <code>data</code> 的 <code>set</code> 和 <code>get</code> 方法，保证我们在 <code>data</code> 发生变化的时候能跟踪到，并发布通知，主要用到了 <code>Object.defineProperty()</code> 这个方法，对这个方法还不太熟悉的小伙伴们，请<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">猛戳这里</a>~</p>
+<p><strong>_observe</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">//_obverse 函数，对data进行处理，重写data的set和get函数</div><div class="line">_obverse(data)&#123;</div><div class="line">	let val ;</div><div class="line">	//遍历数据</div><div class="line">    for( let key in data )&#123;</div><div class="line">        // 判断是不是属于自己本身的属性</div><div class="line">        if( data.hasOwnProperty(key) )&#123;</div><div class="line">        	this._directives[key] = [];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        val = data[key];</div><div class="line">        //递归遍历</div><div class="line">        if ( typeof val === &apos;object&apos; ) &#123;</div><div class="line">        	//递归遍历</div><div class="line">        	this._obverse(val);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // 初始当前数据的执行队列</div><div class="line">        let _dir = this._directives[key];</div><div class="line"></div><div class="line">        //重新定义数据的 get 和 set 方法</div><div class="line">        Object.defineProperty(this.$data,key,&#123;</div><div class="line">        	enumerable: true,</div><div class="line">        	configurable: true,</div><div class="line">        	get: function () &#123;</div><div class="line">        		return val;</div><div class="line">        	&#125;,</div><div class="line">        	set: function (newVal) &#123;</div><div class="line">        		if ( val !== newVal ) &#123;</div><div class="line">        			val = newVal;</div><div class="line">        			// 当 myText 改变时，触发 _directives 中的绑定的Watcher类的更新</div><div class="line">        			_dir.forEach(function (item) &#123;</div><div class="line">        			    //调用自身指令的更新操作</div><div class="line">        				item._update();</div><div class="line">        			&#125;)</div><div class="line">        		&#125;</div><div class="line">        	&#125;</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码也很简单，注释也都很清楚，不过有个问题就是，我在递归遍历数据的时候，偷了个小懒 –，这里我只涉及到了一些简单的数据结构，复杂的例如循环引用的这种我没有考虑进入，大家可以自行补充一下哈~</p>
+<p>接着我们来看看 <code>_compile</code> 这个方法，它实际上是一个解析器，其功能就是解析模板指令，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，就收到通知，然后去更新视图变化，具体实现如下：</p>
+<p><strong>_compile</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">_compile(el)&#123;</div><div class="line">    //子元素</div><div class="line">    let nodes = el.children;</div><div class="line">    for( let i = 0 ;  i &lt; nodes.length ; i++ )&#123;</div><div class="line">    	let node = nodes[i];</div><div class="line">    	// 递归对所有元素进行遍历，并进行处理</div><div class="line">    	if( node.children.length )&#123;</div><div class="line">    		this._compile(node);</div><div class="line">    	&#125;</div><div class="line"></div><div class="line">        //如果有 v-text 指令 , 监控 node的值 并及时更新</div><div class="line">        if( node.hasAttribute(&apos;v-text&apos;))&#123;</div><div class="line">            let attrValue = node.getAttribute(&apos;v-text&apos;);</div><div class="line">            //将指令对应的执行方法放入指令集</div><div class="line">            this._directives[attrValue].push(new Watcher(&apos;text&apos;,node,this,attrValue,&apos;innerHTML&apos;))</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    	//如果有 v-model属性，并且元素是INPUT或者TEXTAREA，我们监听它的input事件</div><div class="line">        if( node.hasAttribute(&apos;v-model&apos;) &amp;&amp; ( node.tagName === &apos;INPUT&apos; || node.tagName === &apos;TEXTAREA&apos;))&#123;</div><div class="line">            let _this = this;</div><div class="line">            //添加input时间</div><div class="line">            node.addEventListener(&apos;input&apos;,(function()&#123;</div><div class="line">            	let attrValue = node.getAttribute(&apos;v-model&apos;);</div><div class="line">            	//初始化赋值</div><div class="line">            	_this._directives[attrValue].push(new Watcher(&apos;input&apos;,node,_this,attrValue,&apos;value&apos;));</div><div class="line">                return function () &#123;</div><div class="line">                    //后面每次都会更新</div><div class="line">                    _this.$data[attrValue] = node.value;</div><div class="line">            	&#125;</div><div class="line">            &#125;)())</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码也很清晰，我们从根元素 <code>#app</code> 开始递归遍历每个节点，并判断每个节点是否有对应的指令，这里我们只针对 <code>v-text</code> 和 <code>v-model</code>，我们对 <code>v-text</code> 进行了一次 <code>new Watcher()</code>，并把它放到了 <code>myText</code> 的指令集里面，对 <code>v-model</code> 也进行了解析，对其所在的 <code>input</code> 绑定了 <code>input</code> 事件，并将其通过 <code>new Watcher()</code> 与 <code>myText</code> 关联起来，那么我们就应该来看看这个 <code>Watcher</code> 到底是什么？</p>
+<p><code>Watcher</code> 其实就是订阅者，是 <code>_observer</code> 和 <code>_compile</code> 之间通信的桥梁用来绑定更新函数，实现对 <code>DOM</code> 元素的更新</p>
+<p><strong>Warcher</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Watcher&#123;</div><div class="line">    /*</div><div class="line">    * name  指令名称，例如文本节点，该值设为&quot;text&quot;</div><div class="line">    * el    指令对应的DOM元素</div><div class="line">    * vm    指令所属myVue实例</div><div class="line">    * exp   指令对应的值，本例如&quot;myText&quot;</div><div class="line">    * attr  绑定的属性值，本例为&quot;innerHTML&quot;</div><div class="line">    * */</div><div class="line">    constructor (name, el, vm, exp, attr)&#123;</div><div class="line">        this.name = name;</div><div class="line">        this.el = el;</div><div class="line">        this.vm = vm;</div><div class="line">        this.exp = exp;</div><div class="line">        this.attr = attr;</div><div class="line"></div><div class="line">        //更新操作</div><div class="line">        this._update();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    _update()&#123;</div><div class="line">    	this.el[this.attr] = this.vm.$data[this.exp];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>每次创建 <code>Watcher</code> 的实例，都会传入相应的参数，也会进行一次 <code>_update</code> 操作，上述的 <code>_compile</code> 中，我们创建了两个 <code>Watcher</code> 实例，不过这两个对应的 <code>_update</code> 操作不同而已，对于 <code>div.text</code> 的操作其实相当于 <code>div.innerHTML=h3.innerHTML = this.data.myText</code> ， 对于 <code>input</code> 相当于 <code>input.value=this.data.myText</code> , 这样每次数据 <code>set</code> 的时候，我们会触发两个 <code>_update</code> 操作，分别更新 <code>div</code> 和 <code>input</code> 中的内容~</p>
+<p>废话不多说，赶紧测试一下吧~</p>
+<p>先初始化一下~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//创建vue实例</div><div class="line">const app = new myVue(&#123;</div><div class="line">    el : &apos;#app&apos; ,</div><div class="line">    data : &#123;</div><div class="line">        myText : &apos;hello world&apos;</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>接着，上图~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-fef806e758df680b.gif?imageMogr2/auto-orient/strip" alt=""></p>
+<p>我们顺利的实现了一个简单的双向绑定，棒棒哒 ~</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>现在，是不是已经对观察者模式有比较深刻的理解了呢？其实，我这里说了这么多，只是起到了一个抛砖引玉的作用，重要的是设计思想，要学会将这种设计思想合理的应用到我们实际的开发过程中，可能过程会比较艰难，但是纸上得来终觉浅，绝知此事要躬行啊，大家加油~</p>
+<p>哦，对了，今天 1024 啊 ， 大家节日快乐哈~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-14ad07e941ac1f2c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JavaScript设计模式/" rel="tag"># JavaScript设计模式</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/01/OOP-01/" rel="next" title="JavaScript设计模式之面向对象编程">
+                <i class="fa fa-chevron-left"></i> JavaScript设计模式之面向对象编程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/headImg.jpg"
+              alt="Chris wei" />
+          
+            <p class="site-author-name" itemprop="name">Chris wei</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Chris-wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>简书</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/DreamerChenwei" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010732998898" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是观察者模式？"><span class="nav-number">1.</span> <span class="nav-text">什么是观察者模式？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#观察者模式的使用"><span class="nav-number">2.</span> <span class="nav-text">观察者模式的使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个观察者"><span class="nav-number">3.</span> <span class="nav-text">创建一个观察者</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#大显身手"><span class="nav-number">4.</span> <span class="nav-text">大显身手</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris wei</span>
+
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
