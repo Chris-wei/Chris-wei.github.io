@@ -97,14 +97,13 @@
 
 <meta name="description" content="I only wish to face the sea , with spring flowers blossoming">
 <meta property="og:type" content="website">
-<meta property="og:title" content="标签">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+<meta property="og:title" content="Cryptic&#39;s Blog">
+<meta property="og:url" content="http://yoursite.com/page/11/index.html">
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="I only wish to face the sea , with spring flowers blossoming">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-15T02:25:37.142Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="标签">
+<meta name="twitter:title" content="Cryptic&#39;s Blog">
 <meta name="twitter:description" content="I only wish to face the sea , with spring flowers blossoming">
 
 
@@ -135,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tags/"/>
+  <link rel="canonical" href="http://yoursite.com/page/11/"/>
 
 
 
 
 
-  <title>标签 | Cryptic's Blog</title>
+  <title>Cryptic's Blog</title>
   
 
 
@@ -170,7 +169,8 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -263,44 +263,194 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
+  <section id="posts" class="posts-expand">
+    
+      
 
-  <div id="posts" class="posts-expand">
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/18/ES6-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
     
-    
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">标签</h2>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <div class="tag-cloud">
-            <div class="tag-cloud-title">
-                目前共计 6 个标签
-            </div>
-            <div class="tag-cloud-tags">
-              <a href="/tags/CSS/" style="font-size: 12px; color: #ccc">CSS</a> <a href="/tags/ECMAScript6/" style="font-size: 30px; color: #111">ECMAScript6</a> <a href="/tags/JS中的算法与数据结构/" style="font-size: 26.4px; color: #363636">JS中的算法与数据结构</a> <a href="/tags/JavaScript设计模式/" style="font-size: 15.6px; color: #a7a7a7">JavaScript设计模式</a> <a href="/tags/Vue/" style="font-size: 22.8px; color: #5c5c5c">Vue</a> <a href="/tags/小程序/" style="font-size: 19.2px; color: #818181">小程序</a>
-            </div>
-          </div>
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/18/ES6-01/" itemprop="url">ES6必知必会 （一）—— 变量声明和结构赋值</a></h2>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-18T16:19:23+08:00">
+                2017-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript6</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        
+          
+            <p>本文章属于个人对es6一些比较常用的语法的总结归纳，其主要参考阮一峰大神的<a href="http://es6.ruanyifeng.com//" target="_blank" rel="external">ECMAScript6入门</a> ，如有哪里理解不对或者不透彻的地方，还请批评指正~</p>
+<p>ps：推荐使用<a href="http://babeljs.cn/repl/#?experimental=false&amp;evaluate=true&amp;loose=false&amp;spec=false&amp;code=" target="_blank" rel="external">es6在线调试</a></p>
+<p><b>let 和 const</b></p>
+<p>1.let声明的变量只有在当前代码块成效，而且不具备变量提升（即代码块中有let声明的变量提前使用会报错）;</p>
+<pre><code>{
+   console.log(a)    // a is not defined
+   console.log(b)   //  2
+   let a = 1;
+   var b = 2;
+}
+</code></pre><p>2.let同一作用域内不允许重复声明;</p>
+<p>3.const声明一个只读常量，一旦声明，无法更改;</p>
+<p>4.const声明一个变量的时候，必须初始化，而且该变量只能在当前作用域有效;</p>
+<p>5.const声明一个符合类型的数据时（主要是对象和数组），保存的是变量的内存地址，只能保证这个地址固定，不能保证数据结构不变;</p>
+<pre><code>const o = {};
+o.name = &apos;hello&apos;;    //可以给对象添加属性
+console.log(o);      // { &quot;name&quot; : &quot;hello&quot; }
+
+o = {};             //报错，因为o的内存地址不能改变
+</code></pre><p>6.可以使用 Object.freeze()方法来冻结一个对象或者对象的某个属性;</p>
+<p>7.ES5声明变量的方式有两种 : var 和 function; ES6声明变量的方式有六种 : var let const function import class；</p>
+<p><b>变量的解构赋值 </b></p>
+<p>1.ES6 允许按照一定模式，从数组和对象中提取值，对变量进行赋值；</p>
+<p>2.如果变量解构不成功就会返回 undefined；</p>
+<p>3.只要某种数据结构具有 Iterator 接口，都可以采用数组形式的解构赋值；</p>
+<p>4.解构赋值时可以指定默认值 （ let [ foo = true ] = [] ）；</p>
+<p>5.如果数组的某个成员不严格等于( === ) undefined ， 默认值就不会生效；</p>
+<pre><code>let [x, y = &apos;b&apos;] = [&apos;a&apos;]; // x=&apos;a&apos;, y=&apos;b&apos;
+let [x, y = &apos;b&apos;] = [&apos;a&apos;, &apos;undefined&apos;];  // x = &apos;a&apos; , y = &apos;undefined&apos; 
+</code></pre><p>6.如果指定的默认值是一个表达式，那么该表达式是惰性求值（即只有在使用到的时候才去求值）；</p>
+<p>7.默认值可以引用解构赋值的其他变量，但该变量必须已经声明；</p>
+<p>8.对象的解构中，变量必须与属性同名，才能取到正确的值，如果变量没有对应的同名属性，则会导致取不到值，最后等于undefined；</p>
+<p>9.对象的解构赋值是先找到同名属性，然后再赋给对应的变量。真正被赋值的是后者，而不是前者；</p>
+<pre><code>let { foo: baz , bar } = { foo: &quot;aaa&quot;, bar: &quot;bbb&quot; }; 
+foo // foo is not defined
+baz // &apos;aaa&apos;
+bar // &apos;bbb&apos;
+</code></pre><p>上述例子中 foo 是匹配的模式，baz才是变量。真正被赋值的是变量baz，而不是模式foo ， bar之所以能匹配，是因为对象的解构赋值是下面形式的简写</p>
+<pre><code>let { foo: foo, bar: bar } = { foo: &quot;aaa&quot;, bar: &quot;bbb&quot; }
+</code></pre><p>10.变量的解构赋值通常用于交换变量，函数参数定义，参数指定默认值等，虽然解构赋值虽然很方便，但是解析起来并不容易，如果使用不当就会产生与预期值不同的问题~</p>
+
+          
+        
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </div>
+  
+  
+  
+  </article>
+
+
+    
+  </section>
+
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/10/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><span class="page-number current">11</span>
+  </nav>
+
 
 
           </div>

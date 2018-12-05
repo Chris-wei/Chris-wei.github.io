@@ -278,6 +278,171 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/Crypto-js/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/13/Crypto-js/" itemprop="url">前端 crypto-js aes 加解密</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T11:30:10+08:00">
+                2018-04-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前端-crypto-js-aes-加解密"><a href="#前端-crypto-js-aes-加解密" class="headerlink" title="前端 crypto-js aes 加解密"></a>前端 crypto-js aes 加解密</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前段时间公司做项目，该项目涉及到的敏感数据比较多，经过的一波讨论之后，决定前后端进行接口加密处理，采用的是 <code>AES</code> + <code>BASE64</code> 算法加密~</p>
+<p>网上关于 <code>AES</code> 对称加密的算法介绍挺多的，对这一块还不是特别理解的小伙伴可自行百度，这里我推荐一篇<a href="https://blog.csdn.net/qq_28205153/article/details/55798628" target="_blank" rel="external">AES加密算法的详细介绍与实现</a>，讲的还是蛮详细的~</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>其实搞懂了是怎么一回事，做起来还是挺简单的，因为库都是现成的，我们只需要会用就好啦，这里我在推荐一篇<a href="https://blog.csdn.net/vieri_32/article/details/48345023" target="_blank" rel="external">理解AES加密解密的使用方法</a>，加深大家对 <code>AES</code> 算法的理解~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-83da40c9171c17a8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>这里我以 <code>Vue</code> 作为例子，其他的也就大同小异了~</p>
+<ul>
+<li><p>要用 <code>AES</code> 算法加密，首先我们要引入 <code>crypto-js</code> ，<code>crypto-js</code> 是一个纯 <code>javascript</code> 写的加密算法类库 ，可以非常方便地在 <code>javascript</code> 进行 <code>MD5</code>、<code>SHA1</code>、<code>SHA2</code>、<code>SHA3</code>、<code>RIPEMD-160</code> 哈希散列，进行 <code>AES</code>、<code>DES</code>、<code>Rabbit</code>、<code>RC4</code>、<code>Triple DES</code> 加解密，我们可以采用 <code>npm install crypto-js --save</code> 进行下载安装，也可以直接去 <a href="https://github.com/brix/crypto-js" target="_blank" rel="external">GitHub</a>下载源码~</p>
+</li>
+<li><p>其次我们需要定义两个方法 ，分别是用于加密和解密，这里我将它放在了 <code>utils</code> 文件夹下，命名为 <code>secret.js</code> ，其具体代码如下：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">const CryptoJS = require(&apos;crypto-js&apos;);  //引用AES源码js</div><div class="line"></div><div class="line">const key = CryptoJS.enc.Utf8.parse(&quot;1234123412ABCDEF&quot;);  //十六位十六进制数作为密钥</div><div class="line">const iv = CryptoJS.enc.Utf8.parse(&apos;ABCDEF1234123412&apos;);   //十六位十六进制数作为密钥偏移量</div><div class="line"></div><div class="line">//解密方法</div><div class="line">function Decrypt(word) &#123;</div><div class="line">    let encryptedHexStr = CryptoJS.enc.Hex.parse(word);</div><div class="line">    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);</div><div class="line">    let decrypt = CryptoJS.AES.decrypt(srcs, key, &#123; iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 &#125;);</div><div class="line">    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);</div><div class="line">    return decryptedStr.toString();</div><div class="line">&#125;</div><div class="line"></div><div class="line">//加密方法</div><div class="line">function Encrypt(word) &#123;</div><div class="line">    let srcs = CryptoJS.enc.Utf8.parse(word);</div><div class="line">    let encrypted = CryptoJS.AES.encrypt(srcs, key, &#123; iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 &#125;);</div><div class="line">    return encrypted.ciphertext.toString().toUpperCase();</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">	Decrypt ,</div><div class="line">	Encrypt</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码中的 <code>key</code> 是密钥 ，<code>iv</code> 是密钥偏移量，这个一般是接口返回的，为了方便，我们这里就直接在这里定义了。</p>
+<p>值得注意的是密钥的长度，由于对称解密使用的算法是 <code>AES-128-CBC</code>算法，数据采用 <code>PKCS#7</code> 填充 ， 因此这里的 <code>key</code> 需要为16位！</p>
+<p>接着我们定义了 <strong>解密方法<code>Decrypt</code></strong> 和 <strong>加密方法 <code>Encrypt</code></strong> ，最后通过 <code>export default</code> 将其暴露出去，方便在需要的时候进行引入~</p>
+<p>ok，核心代码就这么多，是不是很简单啊，其实也么有你想的那么复杂哈，剩下的就是展示一下如何使用咯~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0afabfa57699d966.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这里我定义了一个 <code>index.vue</code> 用来展示数据加解密的操作~</p>
+<p><strong>加密操作：</strong> 假设我们现在要给后端发送一段文字，暂且定义为 <code>This is a clear text</code> ， 在发送之前我们需要对其进行加密操作，这时候我们可以调用上面介绍的 <code>Encrypt</code> 方法，通过加密后我们可以得到密文为：<code>4ACEA01505ADAF9FB59A03B22FC1EF1B244AE28DDACFDFAEFA7E263655C44357</code></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-381239f35b58ed37.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>解密操作：</strong> 假设我们请求后端接口，后端返回了我们一堆如下的字符串 <code>BBFE62335C28821AD2F4043B715BB0C3E45734908254666526DCFD86A605F3AF</code> , 这让我很蒙蔽啊，这时候就要调用 <code>Decrypt</code> 方法，<br>通过解密我们可以拿到后端返回的信息其实是：<code>{&quot;name&quot;:&quot;Chris&quot;,&quot;sex&quot;:&quot;male&quot;}</code></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-eb7249069436efac.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>至此，你已经 <code>get</code> 了前端 <code>AES</code> 加解密的方法，是不是感觉很简单啊，用起来很简单，原理可不简单，况且这也只是其中的一种方案，关于加解密的方法还有很多，感兴趣的小伙伴们可以继续做一些深入的研究哈~</p>
+<p>至于我呢。。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f2929a9ed881a394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>对了，代码已上传到 <a href="https://github.com/Chris-wei/vue-crypto" target="_blank" rel="external">GitHub</a>，有需要的小伙伴自行下载~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/10/vue-slide/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2376,312 +2541,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/18/vue-calculation/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/18/vue-calculation/" itemprop="url">Vue自定义数字键盘</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-18T17:00:20+08:00">
-                2017-12-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="Vue自定义数字键盘"><a href="#Vue自定义数字键盘" class="headerlink" title="Vue自定义数字键盘"></a>Vue自定义数字键盘</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近做 Vue 开发，因为有不少页面涉及到金额输入，产品老是觉得用原生的 <code>input</code> 进行金额输入的话 体验很不好，天天催着我找时间优化，原生控件还有优化个毛线，回去等死吧~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-126f4ffafc627e77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="绝望"></p>
-<p>既然要用户体验，而我又对原生控件感到很绝望，于是！我有一个大胆的想法….</p>
-<p>我们自己动手写一个！</p>
-<p>废话不多说，先上效果图吧~</p>
-<h3 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h3><p><img src="http://upload-images.jianshu.io/upload_images/6633377-7d95d89baf3c724e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="效果图"></p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>布局排版</strong></p>
-<pre><code>&lt;div class=&apos;key-container&apos;&gt;
-    &lt;div class=&apos;key-title&apos;&gt;请输入金额&lt;/div&gt;
-    &lt;div class=&apos;input-box&apos;&gt;{{ money }}&lt;/div&gt;
-    &lt;div class=&apos;keyboard&apos; @click.stop=&apos;_handleKeyPress&apos;&gt;
-        &lt;div class=&apos;key-row&apos;&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;7&apos;&gt;7&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;8&apos;&gt;8&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;9&apos;&gt;9&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;D&apos;&gt;C&lt;/div&gt;
-        &lt;/div&gt;
-        &lt;div class=&apos;key-row&apos;&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;4&apos;&gt;4&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;5&apos;&gt;5&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;6&apos;&gt;6&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;C&apos;&gt;清空&lt;/div&gt;
-        &lt;/div&gt;
-        &lt;div class=&apos;key-row&apos;&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;1&apos;&gt;1&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;2&apos;&gt;2&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;3&apos;&gt;3&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;-1&apos;&gt;&lt;/div&gt;
-        &lt;/div&gt;
-        &lt;div class=&apos;key-row&apos;&gt;
-            &lt;div class=&apos;key-cell disabled&apos; data-num=&apos;-1&apos;&gt;&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;.&apos;&gt;.&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;0&apos;&gt;0&lt;/div&gt;
-            &lt;div class=&apos;key-cell&apos; data-num=&apos;-1&apos;&gt;&lt;/div&gt;
-        &lt;/div&gt;
-        &lt;div class=&apos;key-confirm&apos; data-num=&apos;S&apos;&gt;确认&lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre><ul>
-<li>布局方面我全部采用了 <code>div</code> 元素来模拟，方便好用 (๑ŐдŐ)b</li>
-<li>键盘按键方面，每个按钮都设置了其自定义属性值 <code>num</code> ，目的就是为了区分按键后产生不同的效果</li>
-<li>事件绑定在了父级，通过捕获来确定具体点击的元素</li>
-</ul>
-<p>样式代码我在这里就不贴了，具体的我托管到 <a href="https://github.com/Chris-wei/vue-calculation" target="_blank" rel="external">github</a> 上了~</p>
-<p><strong>输入判断</strong></p>
-<p>对于键盘来说，最主要的就是输入判断，整个键盘的输入都是先经过 <code>_handleKeyPress</code> 进行处理的</p>
-<pre><code>//处理按键
-_handleKeyPress(e) {
-    let num = e.target.dataset.num;
-
-    //不同按键处理逻辑
-    // -1 代表无效按键，直接返回
-    if (num == -1) return false;
-
-    switch (String(num)) {
-        //小数点
-        case &apos;.&apos;:
-            this._handleDecimalPoint();
-            break;
-        //删除键
-        case &apos;D&apos;:
-            this._handleDeleteKey();
-            break;
-        //清空键
-        case &apos;C&apos;:
-            this._handleClearKey();
-            break;
-        //确认键
-        case &apos;S&apos;:
-            this._handleConfirmKey();
-            break;
-        default:
-            this._handleNumberKey(num);
-            break;
-    }
-}
-</code></pre><p>可以看出，我将按键种类分为了，五大类，分别是 <strong>小数点</strong>、<strong>删除（退格）键</strong>、<strong>清空键</strong>、<strong>确认键</strong> 和 <strong>数字键</strong>，分别对用不同的处理函数，接下来我们一一来分析~</p>
-<ul>
-<li><p>小数点，由于最多只能输入一个小数点，因此需要对其判断，如果有小数点直接返回；没有的话，也要分小数点是不是第一个输入的字符，如果是就将其变成 <strong>0.</strong>，如果不是将小数点追加到当前字符末尾；</p>
-<pre><code>//处理小数点函数
-_handleDecimalPoint() {
-    //如果包含小数点，直接返回
-    if (this.money.indexOf(&apos;.&apos;) &gt; -1) return false;
-    //如果小数点是第一位，补0
-    if (!this.money.length)
-        this.money = &apos;0.&apos;;
-
-    //如果不是，添加一个小数点
-    else
-        this.money = this.money + &apos;.&apos;;
-
-}
-</code></pre></li>
-<li><p>删除（退格）键，处理起来比较方便，先判断当前输入的字符是否为空，如果没有字符，直接返回，否则将字符串最后一个字符删除；</p>
-<pre><code>//处理删除键
-_handleDeleteKey() {
-    let S = this.money;
-    //如果没有输入，直接返回
-    if (!S.length) return false;
-    //否则删除最后一个
-    this.money = S.substring(0, S.length - 1);
-
-}
-</code></pre></li>
-<li><p>清空键，逻辑最简单，直接将当前字符清空即可；</p>
-<pre><code>//处理清空键
-_handleClearKey() {
-    this.money = &apos;&apos;;
-}
-</code></pre></li>
-<li><p>确认键，判断当前字符是否为空，为空就提示信息并返回，不为空我们也要进行判断，如果输入的是 <code>8.</code> 这种格式，我们需要对齐格式化成 <code>8.00</code> 这种形式，否则就直接保留两位小数，最后在触发 回调，并把结果作为参数传递过去；</p>
-<pre><code>_handleConfirmKey() {
-    let S = this.money;
-    //未输入
-    if (!S.length){
-        alert( &apos;您目前未输入!&apos; )
-        return false;
-    }
-
-    //将 8. 这种转换成 8.00
-    if (S.indexOf(&apos;.&apos;) &gt; -1 &amp;&amp; S.indexOf(&apos;.&apos;) == (S.length - 1))
-        S = Number(S.substring(0, S.length - 1)).toFixed(2);
-    //保留两位
-    S = Number(S).toFixed(2);
-    this.$emit(&apos;confirmEvent&apos;,S)
-}
-</code></pre></li>
-<li><p>数字键，逻辑也不是很复杂，主要先看其有没有小数点，如果有小数点，那么最多输入两位数字，如果没有小数点，得判断第一位输入的是是不是0 ， 如果是0，那么接下来就只能输入小数点了，而且也要杜绝 <code>0000</code> 这种无效的输入，因此我多加了一个判断，否则就直接追加在当前字符后面即可；</p>
-<pre><code>//处理数字
-_handleNumberKey(num) {
-    let S = this.money;
-
-    //如果有小数点且小数点位数不小于2
-    if ( S.indexOf(&apos;.&apos;) &gt; -1 &amp;&amp; S.substring(S.indexOf(&apos;.&apos;) + 1).length &lt; 2)
-        this.money = S + num;
-</code></pre></li>
-</ul>
-<pre><code>    //没有小数点
-    if (!(S.indexOf(&apos;.&apos;) &gt; -1)) {
-        //如果第一位是0，只能输入小数点
-        if (num == 0 &amp;&amp; S.length == 0)
-            this.money = &apos;0.&apos;;
-
-        else {
-            if (S.length &amp;&amp; Number(S.charAt(0)) === 0) return;
-            this.money = S + num;
-        }
-
-    }
-
-}
-</code></pre><h3 id="组件引入"><a href="#组件引入" class="headerlink" title="组件引入"></a>组件引入</h3><p>组件准备好了，只需填好路径，在对应的 <code>components</code> 中注册后，直接放在页面上使用使用即可，类似下面</p>
-<pre><code>&lt;calculation @confirmEvent=&quot;_confirmEvent&quot;&gt;&lt;/calculation&gt;
-</code></pre><p>其中， <code>_confirmEvent</code> 是点击确认键的回调，参数就是输入的金额，我这里只是简单的打印而已~</p>
-<pre><code>_confirmEvent(res){
-    console.log(res)
-}
-</code></pre><p>效果就跟下面差不多，</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a776c419109f2716.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="确认效果图"></p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>怎么样，是不是很简单，so easy ， 再也不怕产品让我天天用户体验了。<br>当然，我这里只是写了一个基础，具体的还得切合自己的业务逻辑，感兴趣的同学可以自己对其在进行封装，实现纯数字或者带小数点直接的切换式键盘等，看你们发挥~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7329353eb4d5afe5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="xx"></p>
-<p>完整代码，<a href="https://github.com/Chris-wei/vue-calculation" target="_blank" rel="external">请戳这里</a>~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/">10</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/11/">11</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2730,7 +2594,7 @@ _handleNumberKey(num) {
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
