@@ -278,6 +278,230 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/16/Wx-plugin/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/16/Wx-plugin/" itemprop="url">手把手教你开发微信小程序中的插件</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-16T18:12:20+08:00">
+                2018-04-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
+<h3 id="小程序插件接入"><a href="#小程序插件接入" class="headerlink" title="小程序插件接入"></a>小程序插件接入</h3><p>小程序插件不像自定义组件那样，很方便的就可以嵌在自己的代码中了，它是需要去官网开通小程序插件功能才能使用的，详细的接入流程和文档可以阅读官方的 <a href="https://developers.weixin.qq.com/miniprogram/introduction/plugin.html#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" target="_blank" rel="external">小程序插件接入指南</a>，当然这不是我们本篇文章的重点，本篇文章重点是教你如何开发一个微信小程序插件~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>建立模板</strong></p>
+<p>要开发一个小程序插件，前期准备要充分，我们打开在开发者工具中，我们按照正常步骤新建一个小程序项目，并选择 <strong>「建立插件快速启动模板」</strong> ，没有 <code>AppID</code> 的小伙伴我建议去官网注册一个，因为缺乏 <code>AppID</code>，不仅部分功能受到限制，也不方面在真机上调试~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-96e87ee925688cbc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>项目结构</strong></p>
+<p>插件项目建立完成之后，开发者工具就会自动新建一个插件项目，官网给的示例项目的结构如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-6a285d51fa176f72.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>我们先大概了解一下~</p>
+<p>项目中包含了两个目录：</p>
+<ul>
+<li><code>miniprogram</code> 目录：放置的是一个小程序，该小程序是用于调试、测试插件用的。</li>
+<li><code>plugin</code> 目录：插件代码的存放目录，用于放置我们开发的插件</li>
+</ul>
+<p>前者就跟普通小程序一样，我们可以正常开发，后来用来插件调试、预览和审核，不同的是 <code>app.json</code> 和 <code>project.config.json</code> 里多了一些关于插件的配置而已，这些也都是官方帮你完成了，一般也不用配置，当然我们也可以根据自己的实际项目需求做对应的调整~</p>
+<p><code>plugin</code> 插件文件夹下存放的插件的目录结构大概如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-772d6c10f689b4e3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<ul>
+<li><code>api</code> ： 接口插件文件夹，可以存放插件所需的接口</li>
+<li><code>components</code> ： 插件提供的自定义组件文件夹， 中自定义组件可以有多个</li>
+<li><code>index.js</code> ： 插件入口文件，可以在这里 <code>export</code> 一些<code>js</code>接口，供插件使用者使用</li>
+<li><code>plugin.json</code> ： 插件的配置文件，主要说明有哪些自定义组件可以供插件外部调用，并标识哪个js文件是插件的js接口文件，默认的配置形式如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;publicComponents&quot;: &#123;</div><div class="line">    &quot;list&quot;: &quot;components/list/list&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;main&quot;: &quot;index.js&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>具体实现</strong></p>
+<p>有些人可能纳闷了？觉得官方不是现成的示例了，为啥我还要写这篇文章呢？在我看来，官网给的示例过于简单，不足以展示插件的用法，官方给的示例中很多东西都没有涉及到，只是单纯的数据列表渲染，没有交互，这在实际开发中几乎是不存在的，大部分情况下，我们都是要通过插件的回调来进行一系列操作，本篇文章就是专门针对微信官网示例的痛点，分享一下自己的实现过程和思路~</p>
+<p>ok，老规矩，首先先定一个小目标，我们要实现一个省市区选择器的插件，并在点击提交按钮的时候把数据提交过去，大整效果如下图所示~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-588f37b9f67ee63a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>Step1</strong></p>
+<p>首先，我们在 <code>components</code> 组件文件中创建一个 <code>regionPicker</code> 文件夹，用来开发我们的省市区选择器，我们右击选择创建 <code>component</code> 并命名完毕后，就会产生组件的组成部分，即 <code>.wxml</code>、<code>.wxss</code>、<code>.json</code>、<code>.js</code> 四个文件，我们为了方便，就直接采用微信自带的 <code>picker</code> 实现~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0c78a4e0d6225f64.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>代码如下：</p>
+<p>结构 <code>regionPicker.wxml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;view class=&apos;section&apos;&gt;</div><div class="line">    &lt;view class=&quot;section-title&quot;&gt;省市区选择器&lt;/view&gt;</div><div class="line">    &lt;picker mode=&quot;region&quot; bindchange=&quot;bindRegionChange&quot; value=&quot;&#123;&#123;region&#125;&#125;&quot; &gt;</div><div class="line">        &lt;view class=&quot;picker&quot;&gt;</div><div class="line">            当前选择：&#123;&#123;region[0]&#125;&#125;，&#123;&#123;region[1]&#125;&#125;，&#123;&#123;region[2]&#125;&#125;</div><div class="line">        &lt;/view&gt;</div><div class="line">    &lt;/picker&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
+<p>样式 <code>regionPicker.wxss</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">.section&#123;</div><div class="line">    padding: 20rpx;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.section-title&#123;</div><div class="line">    font-size: 30rpx;</div><div class="line">    line-height: 40rpx;</div><div class="line">    text-align: center;</div><div class="line">    color: #666;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.picker&#123;</div><div class="line">    margin: 20rpx auto;</div><div class="line">    text-align: center;</div><div class="line">    font-size: 30rpx;</div><div class="line">    color: #666;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>js <code>regionPicker.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Component(&#123;</div><div class="line">    properties : &#123;</div><div class="line">        region : &#123;</div><div class="line">            type : Array ,</div><div class="line">            value: [&apos;北京市&apos;, &apos;北京市&apos;, &apos;东城区&apos;]</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    data: &#123;</div><div class="line"></div><div class="line">    &#125;,</div><div class="line">    methods : &#123;</div><div class="line">       bindRegionChange(e)&#123;</div><div class="line">        this.setData(&#123;</div><div class="line">            region: e.detail.value</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>跟我们书写自定义组件基本相同，数据绑定在 <code>region</code> 字段，方法声明在 <code>methods</code> 对象中，关于自定义组件中 <code>js</code> 文件中的书写还不是很熟的小伙伴，可以看看官方<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/component.html" target="_blank" rel="external"><code>Component构造器</code></a> 和 我上篇文章<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">自定义组件开发</a>中对其的一些介绍和理解~</p>
+<p><strong>Step2</strong></p>
+<p>到这里，你已经实现了一个自定义的组件，如何将其以插件的形式让其他小程序应用呢，需要配置两个地方，一个是 <code>plugin.json</code> ，声明我们的插件;</p>
+<p><code>plugin.json</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;publicComponents&quot;: &#123;</div><div class="line">    &quot;regionPicker&quot; : &quot;components/regionPicker/regionPicker&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;main&quot;: &quot;index.js&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一个是在我们需要的页面中去引入（这里是 <code>index.wxml</code> ），修改 <code>index.json</code> ，引入插件</p>
+<p><code>index.json</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;usingComponents&quot;: &#123;</div><div class="line">    &quot;regionPicker&quot; : &quot;plugin://myPlugin/regionPicker&quot;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着页面中调用一下即可</p>
+<p><code>index.wxml</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!--引入插件  --&gt;</div><div class="line">&lt;regionPicker /&gt;</div><div class="line"></div><div class="line">&lt;button class=&apos;submit&apos;&gt;提交&lt;/button&gt;</div></pre></td></tr></table></figure>
+<p>现在你看到的效果基本也就是下图这样了~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f16e9a44947d7224.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>嗯，看起来功能都正常，好像也没什么问题啊~</p>
+<p>不对，好像又有问题了，我切换后的数据怎么传过来，我点击提交按钮的时候怎么穿我选择区域呢，确实是，我们接着看~</p>
+<p><strong>Step3</strong></p>
+<p>我们接下来就要解决上面的问题，首先，我们有了之前开发组件的经验，应该都知道，我们刚才是在 <code>properties</code> 字段中声明的 <code>region</code> ，那么我们当然可以对它进行修改，我们在 <code>index.js</code> 中的 <code>data</code> 字段中也声明一个 <code>region</code>，不同的是我们将它的值设置为 <code>region: [&#39;广东省&#39;, &#39;广州市&#39;, &#39;海珠区&#39;]</code> ， 再将其绑定到我们的插件上 <code>&lt;regionPicker region=&quot;&quot;/&gt;</code> 后保存 ，我们会发现现在的插件默认值已经不是 <strong>北京市, 北京市, 东城区</strong> ， 而变成了 <strong>广东省, 广州市, 海珠区</strong> ， 这样就解决了修改插件默认值的问题，接下来就是回调事件了！</p>
+<p>嗯，其实回调触发也很简单，有过自定义组件开发经验的小伙伴应该早都想到了，跟自定义组件一样，我们只需要在组件 <code>change</code> 的时候触发回调就可以了，即我们修改 <code>regionPicker.js</code> 的 <code>bindRegionChange</code> 方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bindRegionChange(e)&#123;</div><div class="line">    this.setData(&#123;</div><div class="line">        region: e.detail.value</div><div class="line">    &#125;)</div><div class="line">    // 触发回调</div><div class="line">    this.triggerEvent(&quot;changeEvent&quot;, &#123; region: this.data.region&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们把每次的改变值通过回调穿回去，这样我们直接在 <code>index.wxml</code> 中定义 <code>&lt;regionPicker region=&quot;&quot; bindchangeEvent=&quot;changeEvent&quot; /&gt;</code> ，调用 <code>index.js</code> 中的 <code>changeEvent</code> 方法即可.</p>
+<p><code>index.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Page(&#123;</div><div class="line">    data: &#123;</div><div class="line">        region: [&apos;广东省&apos;, &apos;广州市&apos;, &apos;海珠区&apos;]</div><div class="line">    &#125;,</div><div class="line">    submit()&#123;</div><div class="line">        console.log(this.data.region)</div><div class="line">    &#125;,</div><div class="line">    changeEvent(e)&#123;</div><div class="line">        console.log(e)</div><div class="line">        this.setData(&#123;</div><div class="line">            region : e.detail.region</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    onLoad()&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>这样，每次选择区域后，通过回调触发，我们就可以通过 <code>e.detail</code> 拿到我们想要的数据了~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0ef7cefc81ee4700.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>到这里，插件的数据交互传递基本没什么问题了~<br>想想，我们还有什么没有用到的呢，插件的 <code>api</code> 接口，ok，我们接下来就看看这个怎么使用~</p>
+<p><strong>Step4</strong></p>
+<p>我们知道了 <code>api</code> 的文件夹的作用是定义插件的一些接口，我们可以定义以下几个方法：</p>
+<p><code>api.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">let systemInfo = null;</div><div class="line"></div><div class="line">// 获取插件信息</div><div class="line">function getPluginInfo() &#123;</div><div class="line">    return &#123;</div><div class="line">        name : &apos;regionPicker&apos; ,</div><div class="line">        version : &apos;1.0.0&apos; ,</div><div class="line">        date : &apos;2018-04-14&apos;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//设置设备信息</div><div class="line">function setSystemInfo(value)&#123;</div><div class="line">    systemInfo = value;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//获取设备信息</div><div class="line">function getSystemInfo()&#123;</div><div class="line">    return systemInfo;</div><div class="line">&#125;</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">    getPluginInfo ,</div><div class="line">    getSystemInfo ,</div><div class="line">    setSystemInfo</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>后面通过 <code>exports</code> 把想要用的接口暴露出去~</p>
+<p>还记得我们之前的插件入口文件 <code>index.js</code> 么，现在它就要派上用场了，我们在 <code>index.js</code> 文件中引入我们的 <code>api.js</code> ，这样我们就可以在插件加载的时候对其进行一些操作，我这里只是单纯的获取了当前用户的设备信息而已：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">var api = require(&apos;./api/api.js&apos;)</div><div class="line"></div><div class="line">// 获取设备信息</div><div class="line">wx.getSystemInfo(&#123;</div><div class="line">    success: function(res) &#123;</div><div class="line">        // 存数据</div><div class="line">        api.setSystemInfo(</div><div class="line">            &#123;</div><div class="line">                model: res.model ,</div><div class="line">                system: res.system</div><div class="line">            &#125;</div><div class="line">        )</div><div class="line">    &#125;,</div><div class="line">&#125;)</div><div class="line"></div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">    getPluginInfo: api.getPluginInfo ,</div><div class="line">    getSystemInfo: api.getSystemInfo</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>后面我们还看到了 <code>exports</code> 了两个方法 <code>getPluginInfo</code> 和 <code>getSystemInfo</code> ，这里暴露出去的方法是方面在插件外部使用，给插件调用者提供接口~</p>
+<p><code>Step5</code></p>
+<p>我们引入插件后，如何调用插件的接口呢？</p>
+<p>其实也很简单，我们只需要在对应的 <code>js</code> 文件中（ 这里是<code>index.js</code> ）通过 <code>var plugin = requirePlugin(&quot;myPlugin&quot;)</code> 引入插件后就可获得对应的接口。</p>
+<p>现在在页面 <code>onLoad</code> 的时候我们打印一下 <code>plugin</code> ，控制台输出如下内容：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-bdfe050d391b3071.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>看到 <code>plugin</code> 的内容刚好就是我们之前在 <code>index.js</code> 中通过 <code>exports</code> 暴露出去的接口，我们调用试试看~</p>
+<p>返回如下内容：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-de558c20dd5d0603.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>接口数据也能完美的获取，棒棒哒~</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>怎么样，是不是对小程序插件开发有了新的认识！其实并没有想象中的那么复杂，倒是跟<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">自定义组件开发</a>有很多相似点，我相信现在你已经基本 get 了小程序插件开发的技巧了，还没有学会了小伙伴加油啊，搜搜学习，快快上手，多开发一些常用的插件，方便自己以后在小程序中引用~</p>
+<p>咳咳，至于我呢。。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-d0003503d6151910.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="13.jpg"></p>
+<p>哦，对了，代码已托管在<a href="https://github.com/Chris-wei/wx-pungin" target="_blank" rel="external">github</a>上，有需要的小伙伴自行下载~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/Crypto-js/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -821,1726 +1045,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/29/magic-css/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/29/magic-css/" itemprop="url">你以为 CSS 只是个简单的布局？</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-29T12:03:20+08:00">
-                2017-12-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index">
-                    <span itemprop="name">CSS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="CSS3-奇思妙想"><a href="#CSS3-奇思妙想" class="headerlink" title="CSS3 奇思妙想"></a>CSS3 奇思妙想</h2><p> 前几天看了一篇文章 ， 颠覆了我对 <code>CSS</code> 认识，心中无数次蹦出一个念头：’卧槽，卧槽，还能特么这么用，这特么太叼了’ …</p>
-<p> 于是我迫不及待想跟你们一起分享分享，以后你也可以在别人面前炫（装）耀（逼）了~</p>
-<p> ps：本文原创不是我，我只是搬运工，看到好东西与大家分享而已，作者 github 主页请戳 <a href="https://github.com/chokcoco" target="_blank" rel="external">这里</a>~</p>
-<h3 id="装逼指南"><a href="#装逼指南" class="headerlink" title="装逼指南"></a>装逼指南</h3><p>本文中，所有的图形都是在单个标签内实现的，大量使用了 <code>CSS3</code> 中的 <code>::before</code> 、<code>::after</code> 伪元素，<code>transparent</code> 、<code>border</code>，多重线性与径向渐变，多重内外阴影，如果你的效果不尽人意，请尝试在 <code>Chrome</code> 浏览器下预览。</p>
-<h3 id="装逼技巧"><a href="#装逼技巧" class="headerlink" title="装逼技巧"></a>装逼技巧</h3><p>本文所有图形都会有个容器 <code>&lt;div class=&quot;css-cell&quot;&gt;&lt;/div&gt;</code>包裹，其样式结构如下：</p>
-<pre><code>.css-cell{
-    position: relative;
-    width: 100%;
-    height: 300px;
-}
-</code></pre><p>所有图形都是在容器内实现的，其结构如下：</p>
-<pre><code>&lt;!--heart--&gt;
-&lt;div class=&quot;css-cell&quot;&gt;
-    &lt;div class=&quot;heart&quot;&gt;&lt;/div&gt;
-&lt;/div&gt;
-</code></pre><p>天气那一块有部分会多一个容器，其结构如下：</p>
-<pre><code>&lt;div class=&quot;css-cell &quot;&gt;
-    &lt;div class=&quot;breeze-container&quot;&gt;
-        &lt;div class=&quot;breeze&quot;&gt;&lt;/div&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre><p>为了方便起见，下面图形的具体实现，我只会贴出对应的类相应的样式代码~</p>
-<h3 id="装逼实战"><a href="#装逼实战" class="headerlink" title="装逼实战"></a>装逼实战</h3><ul>
-<li>爱心</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5b0e56dd2ab749b3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="爱心"></p>
-<p>利用 <code>div</code> 的正方形和伪类的圆型组合而成，具体代码如下：</p>
-<pre><code>/*heart*/
-.heart{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%) rotate(45deg);
-    background: red;
-    width: 100px;
-    height: 100px;
-}
-.heart:before,
-.heart:after
-{
-    content: &apos;&apos;;
-    position: absolute;
-    top: 0;
-    left: -50px;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: red;
-}
-.heart:after{
-    top: -50px;
-    left: 0;
-}
-</code></pre><ul>
-<li>气泡悬浮框</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a621cfb27feb9600.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="气泡悬浮框"></p>
-<p>利用 <code>border</code> 结合 <code>transparent</code> 特性实现，代码如下：</p>
-<pre><code>/*bubbly*/
-.bubbly{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    background: #00ccbb;
-    border-radius: 8px;
-    width: 200px;
-    padding: 40px 10px;
-    text-align: center;
-    color: white;
-    font-size: 20px;
-}
-.bubbly:after {
-    content: &apos;&apos;;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    border: 34px solid transparent;
-    border-top-color: #00ccbb;
-    border-bottom: 0;
-    border-left: 0;
-    margin: 0 0 -34px -17px;
-}
-</code></pre><ul>
-<li>切角</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-fa6dafe8b12dc0f4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="切角"></p>
-<p>利用使用线性渐变实现的，代码如下：</p>
-<pre><code>/*notching*/
-.notching{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 200px;
-    padding: 60px 20px;
-}
-.notching{
-    background:
-            linear-gradient(135deg, transparent 15px, deeppink 0)
-            top left,
-            linear-gradient(-135deg, transparent 15px, deeppink 0)
-            top right,
-            linear-gradient(-45deg, transparent 15px, deeppink 0)
-            bottom right,
-            linear-gradient(45deg, transparent 15px, deeppink 0)
-            bottom left;
-    background-size: 50% 50%;
-    background-repeat: no-repeat;
-}
-</code></pre><ul>
-<li>弧形切角</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7cd828820c9e8617.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="弧形切角"></p>
-<p>使用径向渐变实现，具体实现如下：</p>
-<pre><code>/*arc*/
-.arc{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 80px;
-    padding: 80px;
-}
-.arc {
-    background:
-            radial-gradient(circle at top left,
-            transparent 15px, yellowgreen 0) top left,
-            radial-gradient(circle at top right,
-            transparent 15px, yellowgreen 0) top right,
-            radial-gradient(circle at bottom right,
-            transparent 15px, yellowgreen 0) bottom right,
-            radial-gradient(circle at bottom left,
-            transparent 15px, yellowgreen 0) bottom left;
-    background-size: 50% 50%;
-    background-repeat: no-repeat;
-}
-</code></pre><ul>
-<li>梯形</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-868b1d2051055221.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="梯形"></p>
-<p>利用伪类加旋转透视实现，具体实现如下：</p>
-<pre><code>/*trapezoid*/
-.trapezoid{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 160px;
-    padding: 60px;
-}
-.trapezoid:before{
-    content:&quot;&quot;;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    transform:perspective(40px) scaleY(1.3) rotateX(5deg);
-    transform-origin: bottom;
-    background:dodgerblue;
-    z-index:-1;
-}
-</code></pre><ul>
-<li>饼图</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-cfc801a948271548.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="饼图"></p>
-<p>利用伪类、线性渐变、旋转实现，具体代码如下：</p>
-<pre><code>/*pie*/
-.pie{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 200px;
-    height:200px;
-    border-radius:50%;
-    text-align: center;
-    background-color:yellowgreen;
-    overflow:hidden;
-    background-image: linear-gradient(to right, transparent 50%, #655 0);
-    cursor:pointer;
-}
-.pie:before{
-    content:&quot;&quot;;
-    position:absolute;
-    top:0;
-    left:50%;
-    width:50%;
-    height:100%;
-    background-color: inherit;
-    transform-origin: left;
-    z-index:-1;
-    transform:rotate(.1turn);
-}
-.pie:hover:before{
-    transition:all 1s;
-    transform:rotate(.45turn);
-}
-</code></pre><ul>
-<li>平行四边形</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-f50a26bc347e7040.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="平行四边形"></p>
-<p>利用伪类、拉伸实现，实现过程如下：</p>
-<pre><code>/*parallelogram*/
-.parallelogram{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 200px;
-    height:120px;
-
-}
-.parallelogram:before{
-    content: &apos;&apos;;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color:#00aabb;
-    z-index:-1;
-    transform: skew(.08turn);
-}
-</code></pre><ul>
-<li>折角</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-b8f707c49dda7eef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="折角"></p>
-<p>利用切角、伪类、渐变、旋转实现，代码如下：</p>
-<pre><code>/*corner*/
-.corner{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 120px;
-    height:120px;
-    padding:40px;
-    background:linear-gradient(-150deg,transparent 1.5em, yellowgreen  0);
-    border-radius:8px;
-}
-.corner:before{
-    content: &apos;&apos;;
-    position: absolute;
-    top: 0; right: 0;
-    background: linear-gradient(to left bottom,transparent 50%, rgba(0,0,0,.2) 0, rgba(0,0,0,.4)) 100% 0 no-repeat;
-    width: 1.73em;
-    height: 3em;
-    transform: translateY(-1.3em) rotate(-30deg);
-    transform-origin: bottom right;
-    border-bottom-left-radius: inherit;
-    box-shadow: -.2em .2em .3em -.1em rgba(0,0,0,.15);
-}
-</code></pre><ul>
-<li>纯 CSS 方案实现背景变暗效果（hover按钮触发）</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-c3c7f7b408d7b354.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hover之前"></p>
-<p>鼠标移入</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-c3e575153cf8dcbf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="hover之后"></p>
-<p>利用 <code>box-shadow</code> 实现，具体代码如下：</p>
-<pre><code>/*spectiveBlur*/
-.spectiveBlur{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 220px;
-    height:160px;
-    transform: translate(-50%, -50%);
-    border-radius:10px;
-    overflow:hidden;
-    background:#E91E63;
-    cursor:pointer;
-    transition: transform .2s;
-}
-.spectiveBlur:hover{
-    box-shadow:0 0 0 1920px rgba(0,0,0,.7);
-    transform: translate(-50%, -50%) scale(1.2);
-}
-</code></pre><ul>
-<li>条纹背景图</li>
-</ul>
-<p>主要是利用渐变实现，具体实现如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-35446807bfa3fd95.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="条纹背景图"></p>
-<pre><code>/*stripe*/
-.stripe{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 200px;
-    height:200px;
-    background:deeppink;
-    border-radius:.5em;
-    background:repeating-linear-gradient(45deg,#CC9999, #CC9999 15px, #CCCCCC 0, #CCCCCC 30px)
-}
-</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/6633377-670bbeaa760b3633.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="条纹背景图"></p>
-<pre><code>/*wave-stripe*/
-.wave-stripe{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 200px;
-    height:200px;
-    border-radius:.5em;
-    background:
-            linear-gradient(135deg, deeppink 25%, transparent 25%) -50px 0,
-            linear-gradient(225deg, deeppink 25%, transparent 25%) -50px 0,
-            linear-gradient(315deg, deeppink 25%, transparent 25%),
-            linear-gradient(45deg, deeppink 25%, transparent 25%);
-    background-size: 40px 40px;
-}
-</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/6633377-2cb36ce717f66002.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="条纹背景图"></p>
-<pre><code>/*arrow-stripe*/
-.arrow-stripe{
-    position: absolute;
-    top:50%;
-    left: 50%;
-    transform:translate(-50%,-50%);
-    width: 200px;
-    height:200px;
-    border-radius:.5em;
-    background:
-            linear-gradient(45deg, #92baac 45px, transparent 45px)64px 64px,
-            linear-gradient(45deg, #92baac 45px, transparent 45px,transparent 91px, #e1ebbd 91px, #e1ebbd 135px, transparent 135px),
-            linear-gradient(-45deg, #92baac 23px, transparent 23px, transparent 68px,#92baac 68px,#92baac 113px,transparent 113px,transparent 158px,#92baac 158px);
-    background-color:#e1ebbd;
-    background-size: 128px 128px;
-}
-</code></pre><ul>
-<li>混合模式背景图</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-555bedb9b2fbd955.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="混合模式背景图"></p>
-<pre><code>.colorful-stripe {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;
-    height: 200px;
-    text-align: center;
-    color: #fff;
-    font-size: 200%;
-    border-radius: .5em;
-    background:
-            linear-gradient(limegreen, transparent), linear-gradient(90deg, skyblue, transparent), linear-gradient(-90deg, coral, transparent);
-    background-blend-mode: screen;
-}
-</code></pre><ul>
-<li>太阳</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-84dddeff933767db.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="sun"></p>
-<p>利用线性渐变、阴影、旋转实现，具体代码如下：</p>
-<pre><code>/*sun*/
-.sun{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width:200px;
-    height:260px;
-    transform: translate(-50%, -50%);
-    background:#0BF;
-    border-radius:5px;
-}
-.sun:before{
-    content:&quot;&quot;;
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    background:rgba(255, 238, 68, 1);
-    box-shadow: 0 0 0 15px rgba(255,255,0,0.2),0 0 15px #fff;
-    z-index:-10;
-}
-.sun:after{
-    content:&quot;&quot;;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 160px;
-    width: 160px;
-    transform: translate(-50%, -50%) rotate(30deg);
-    z-index:-100;
-    background-image:
-            -webkit-linear-gradient(top,rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%),
-            -webkit-linear-gradient(left,rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
-    background-size: 20px 100%, 100% 20px;
-    background-repeat: no-repeat;
-    background-position: center center, center center;
-    animation:sunRotate 10s linear infinite;
-}
-@keyframes sunRotate{
-    0%{
-        transform: translate(-50%, -50%) rotate(30deg);
-    }
-    100%{
-        transform: translate(-50%, -50%) rotate(390deg);
-    }
-}
-</code></pre><ul>
-<li>多云</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-2ed4375f300a221e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cloud"><br>)</p>
-<p>利用线性渐变、阴影、缩放实现，具体实现如下：</p>
-<pre><code>/*cloudy*/
-.cloudy{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width:200px;
-    height:260px;
-    transform: translate(-50%, -50%);
-    background:#2EB5E5;
-    border-radius:5px;
-}
-.cloudy:before {
-    content: &quot;&quot;;
-    text-indent:23px;
-    font-size:22px;
-    line-height:40px;
-    color:#333;
-    position: absolute;
-    height: 50px;width: 50px;
-    background: #FFFFFF;
-    left:30%;
-    top:45%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    box-shadow:
-            #FFFFFF 65px -15px 0 -5px,
-            #FFFFFF 25px -25px,
-            #FFFFFF 30px 10px,
-            #FFFFFF 60px 15px 0 -10px,
-            #FFFFFF 85px 5px 0 -5px,
-            #C8C8C8 35px -35px,
-            #C8C8C8 66px -27px 0 -5px,
-            #C8C8C8 91px -10px 0 -8px;
-    animation: cloudy 5s ease-in-out infinite;
-}
-.cloudy:after{
-    content:&quot;&quot;;
-    position: absolute;
-    top: 80%;
-    left: 50%;
-    height: 15px;
-    width: 120px;
-    background:rgba(0,0,0,.5);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: cloudy_shadow 5s ease-in-out infinite;
-}
-@keyframes cloudy {
-    50%{
-        transform: translate(-50%, -70%);
-    }
-    100%{
-        transform: translate(-50%, -50%);
-    }
-}
-@keyframes cloudy_shadow {
-    50%{
-        transform: translate(-50%, -50%) scale(0.8);
-        background:rgba(0,0,0,.2);
-    }
-    100%{
-        transform: translate(-50%, -50%) scale(1);
-        background:rgba(0,0,0,.5);
-    }
-}
-</code></pre><p><img src="http://upload-images.jianshu.io/upload_images/6633377-fb56babd4485d41a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="cloud2"></p>
-<pre><code>/*cloudy2*/
-.cloudy2{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width:200px;
-    height:260px;
-    transform: translate(-50%, -50%);
-    background:#2EB5E5;
-    border-radius:5px;
-}
-.cloudy2:before {
-    content: &quot;&quot;;
-    text-indent:23px;
-    font-size:22px;
-    line-height:40px;
-    color:#333;
-    position: absolute;
-    height: 50px;width: 50px;
-    background: #FFFFFF;
-    left:30%;
-    top:55%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    z-index:100;
-    box-shadow:
-            #FFFFFF 65px -15px 0 -5px,
-            #FFFFFF 25px -25px,
-            #FFFFFF 30px 10px,
-            #FFFFFF 60px 15px 0 -10px,
-            #FFFFFF 85px 5px 0 -5px;
-    animation: cloudy2 5s ease-in-out infinite;
-}
-.cloudy2:after{
-    content:&quot;&quot;;
-    position: absolute;
-    top: 45%;left: 63%;
-    height: 60px;
-    width: 60px;
-    z-index:10;
-    background:linear-gradient(180deg,#FE9F38 0%, #F46635 100%);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px 4px #FFA563;
-    animation: cloudy2 10s ease-in-out infinite;
-}
-@keyframes cloudy2 {
-    50%{
-        transform: translate(-50%, -70%);
-    }
-    100%{
-        transform: translate(-50%, -50%);
-    }
-}
-</code></pre><ul>
-<li>雨</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-72e8cfef646db51c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="rain"></p>
-<p>利用线性渐变、阴影、缩放实现，具体代码如下：</p>
-<pre><code>/*rainy*/
-.rainy {
-    position: absolute;
-    width: 3px;
-    height: 6px;
-    top: 30%;
-    left: 50%;
-    background: #CCCCCC;
-    border-radius: 50%;
-    animation: rainy_rain .7s infinite linear;
-}
-.rainy:before {
-    content: &quot;&quot;;
-    color: #333;
-    position: absolute;
-    height: 50px;
-    width: 50px;
-    top: 30px;
-    left: -40px;
-    background: #CCC;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    box-shadow: #CCC 65px -15px 0 -5px, #CCC 25px -25px, #CCC 30px 10px, #CCC 60px 15px 0 -10px, #CCC 85px 5px 0 -5px;
-    animation: cloudy 5s ease-in-out infinite;
-}
-.rainy:after {
-    content: &quot;&quot;;
-    position: absolute;
-    top: 120px;
-    left: 50%;
-    height: 15px;
-    width: 120px;
-    background: rgba(0, 0, 0, .5);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: cloudy_shadow 5s ease-in-out infinite;
-}
-@keyframes cloudy {
-    50% {
-        transform: translate(-50%, -70%);
-    }
-    100% {
-        transform: translate(-50%, -50%);
-    }
-}
-@keyframes cloudy_shadow {
-    50% {
-        transform: translate(-50%, -50%) scale(0.8);
-        background: rgba(0, 0, 0, .2);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        background: rgba(0, 0, 0, .5);
-    }
-}
-@keyframes rainy_rain {
-    0% {
-        box-shadow: rgba(0, 0, 0, 0) -10px 30px, rgba(0, 0, 0, 0) 40px 40px, rgba(0, 0, 0, .3) -50px 75px, rgba(0, 0, 0, .3) 55px 50px, rgba(0, 0, 0, .3) -18px 100px, rgba(0, 0, 0, .3) 12px 95px, rgba(0, 0, 0, .3) -31px 45px, rgba(0, 0, 0, .3) 30px 35px;
-    }
-    25% {
-        box-shadow: rgba(0, 0, 0, .3) -10px 45px, rgba(0, 0, 0, .3) 40px 60px, rgba(0, 0, 0, .3) -50px 90px, rgba(0, 0, 0, .3) 55px 65px, rgba(0, 0, 0, 0) -18px 120px, rgba(0, 0, 0, 0) 12px 120px, rgba(0, 0, 0, .3) -31px 70px, rgba(0, 0, 0, .3) 30px 60px;
-    }
-    26% {
-        box-shadow: rgba(0, 0, 0, .3) -10px 45px, rgba(0, 0, 0, .3) 40px 60px, rgba(0, 0, 0, .3) -50px 90px, rgba(0, 0, 0, .3) 55px 65px, rgba(0, 0, 0, 0) -18px 40px, rgba(0, 0, 0, 0) 12px 20px, rgba(0, 0, 0, .3) -31px 70px, rgba(0, 0, 0, .3) 30px 60px;
-    }
-    50% {
-        box-shadow: rgba(0, 0, 0, .3) -10px 70px, rgba(0, 0, 0, .3) 40px 80px, rgba(0, 0, 0, 0) -50px 100px, rgba(0, 0, 0, .3) 55px 80px, rgba(0, 0, 0, .3) -18px 60px, rgba(0, 0, 0, .3) 12px 45px, rgba(0, 0, 0, .3) -31px 95px, rgba(0, 0, 0, .3) 30px 85px;
-    }
-    51% {
-        box-shadow: rgba(0, 0, 0, .3) -10px 70px, rgba(0, 0, 0, .3) 40px 80px, rgba(0, 0, 0, 0) -50px 45px, rgba(0, 0, 0, .3) 55px 80px, rgba(0, 0, 0, .3) -18px 60px, rgba(0, 0, 0, .3) 12px 45px, rgba(0, 0, 0, .3) -31px 95px, rgba(0, 0, 0, .3) 30px 85px;
-    }
-    75% {
-        box-shadow: rgba(0, 0, 0, .3) -10px 95px, rgba(0, 0, 0, .3) 40px 100px, rgba(0, 0, 0, .3) -50px 60px, rgba(0, 0, 0, 0) 55px 95px, rgba(0, 0, 0, .3) -18px 80px, rgba(0, 0, 0, .3) 12px 70px, rgba(0, 0, 0, 0) -31px 120px, rgba(0, 0, 0, 0) 30px 110px;
-    }
-    76% {
-        box-shadow: rgba(0, 0, 0, .3) -10px 95px, rgba(0, 0, 0, .3) 40px 100px, rgba(0, 0, 0, .3) -50px 60px, rgba(0, 0, 0, 0) 55px 35px, rgba(0, 0, 0, .3) -18px 80px, rgba(0, 0, 0, .3) 12px 70px, rgba(0, 0, 0, 0) -31px 25px, rgba(0, 0, 0, 0) 30px 15px;
-    }
-    100% {
-        box-shadow: rgba(0, 0, 0, 0) -10px 120px, rgba(0, 0, 0, 0) 40px 120px, rgba(0, 0, 0, .3) -50px 75px, rgba(0, 0, 0, .3) 55px 50px, rgba(0, 0, 0, .3) -18px 100px, rgba(0, 0, 0, .3) 12px 95px, rgba(0, 0, 0, .3) -31px 45px, rgba(0, 0, 0, .3) 30px 35px;
-    }
-}
-</code></pre><ul>
-<li>微风</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-0262ac2d34403f74.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="wind"></p>
-<p>利用border、transparent、实现，这个会多一层 <code>div.breeze-container</code> 包裹，样式代码如下：</p>
-<pre><code>/*breeze*/
-.breeze-container{
-    position: absolute;
-    top: 50%;left: 50%;
-    width:200px;height:260px;
-    transform: translate(-50%, -50%);
-    text-align:center;
-    font-size:200%;
-    color:#fff;
-    background:#00BBFF;
-    border-radius:5px;
-}
-.breeze-container:after{
-    content:&quot;&quot;;
-    position:absolute;
-    top:58%;
-    left:50%;
-    transform: translate(-50%, -50%);
-    width:6px;
-    height:70px;
-    background:#fff;
-}
-.breeze{
-    position:absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(1deg);
-    border-bottom:60px solid #fff;
-    border-left:5px solid transparent;
-    border-right:5px solid transparent;
-    animation: windmill 12s infinite linear;
-    transform-origin:50.5% 62px;
-}
-.breeze:before{
-    position:absolute;
-    top: 75px;left: -59px;
-    content:&quot;&quot;;
-    border-right:60px solid #fff;
-    border-top:5px solid transparent;
-    border-bottom:5px solid transparent;
-    transform:rotate(-30deg);
-}
-.breeze:after{
-    position:absolute;
-    top: 75px;left: -1px;
-    content:&quot;&quot;;
-    border-left:60px solid #fff;
-    border-top:5px solid transparent;
-    border-bottom:5px solid transparent;
-    transform:rotate(30deg);
-}
-@keyframes windmill{
-    0%{
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100%{
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-</code></pre><ul>
-<li>彩虹</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-faa858c17bb2dcfb.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="rainbow"></p>
-<p>主要是利用border、box-shadow 实现，具体实现如下：</p>
-<pre><code>/*rainbow*/
-.rainbow-container{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width:200px;
-    height:260px;
-    transform: translate(-50%, -50%);
-    background:#F3D166;
-    border-radius:5px;
-}
-.rainbow{
-    position:absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 1px;width: 1px;
-}
-.rainbow:before{
-    content:&quot;&quot;;
-    position:absolute;
-    top: 50%;left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    height: 70px;width: 70px;
-    border-radius: 100px 0 0 0;
-    box-shadow:
-            #F44336 -2px -2px 0 1px,
-            #FF9800 -4px -4px 0 3px,
-            #FFEB3B -6px -6px 0 5px,
-            #8BC34A -8px -8px 0 7px,
-            #00BCD4 -10px -10px 0 9px,
-            #2196F3 -12px -12px 0 11px,
-            #9C27B0 -14px -14px 0 13px;
-    animation: rainbow 5s ease-in-out infinite;
-}
-.rainbow:after{
-    content: &quot;&quot;;
-    position: absolute;
-    top: 70px;
-    left: 50%;
-    height: 15px;
-    width: 120px;
-    background: rgba(0, 0, 0, .5);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: cloudy_shadow 5s ease-in-out infinite;
-}
-@keyframes rainbow {
-    50% {
-        transform: translate(-50%, -55%) rotate(30deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(45deg);
-    }
-}
-@keyframes cloudy_shadow {
-    50% {
-        transform: translate(-50%, -50%) scale(0.8);
-        background: rgba(0, 0, 0, .2);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        background: rgba(0, 0, 0, .5);
-    }
-}
-</code></pre><ul>
-<li>夜空</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ecf0d54a1e689a4b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="moon"></p>
-<p>主要是利用 box-shadow 实现 ， 实现方式如下：</p>
-<pre><code>/*starry*/
-.starry-container{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width:200px;
-    height:260px;
-    transform: translate(-50%, -50%);
-    background:#222233;
-    border-radius:5px;
-}
-.starry{
-    position:absolute;
-    top: 30%;left: 40%;
-    transform: translate(-50%, -50%);
-    height: 4px;width: 4px;
-    border-radius:50%;
-    box-shadow:
-            #FFFFFF -26px 77px 0 -1px,
-            rgba(255,255,255,0.1) -36px 59px 0 -1px,
-            rgba(255,255,255,0.1) -28px 89px 0 -1px,
-            #FFFFFF -35px 20px 0 -1px,
-            #FFFFFF 14px 100px,
-            rgba(255,255,255,0.1) 41px 60px,
-            #FFFFFF 34px 39px,
-            rgba(255,255,255,0.1) 14px 45px 0 -1px,
-            #FFFFFF 64px 12px 0 -1px,
-            rgba(255,255,255,0.1) 32px 96px 0 -1px,
-            #FFFFFF 64px 71px,
-            rgba(255,255,255,0.1) 60px 18px 0 -1px,
-            #FFFFFF 34px 9px,
-            rgba(255,255,255,0.1) -26px 55px 0 -1px;
-    animation: starry_star 5s ease-in-out infinite;
-}
-.starry:before{
-    content:&quot;&quot;;
-    position:absolute;
-    top: 20%;left: 50%;
-    width:100px;height:100px;
-    box-shadow: #FFFFFF -25px 0;
-    transform: rotate(-5deg);
-    border-radius: 50%;
-    animation: starry 5s ease-in-out infinite;
-}
-@keyframes starry {
-    50% {
-        transform: rotate(10deg);
-    }
-}
-@keyframes starry_star{
-    50%{
-        box-shadow:
-                rgba(255,255,255,0.1) -26px 77px 0 -1px,
-                #FFF -36px 59px 0 -1px,
-                #FFF -28px 89px 0 -1px,
-                rgba(255,255,255,0.1) -35px 20px 0 -1px,
-                rgba(255,255,255,0.1) 14px 100px,
-                #FFF 41px 60px,
-                rgba(255,255,255,0.1) 34px 39px,
-                #FFF 14px 45px 0 -1px,
-                rgba(255,255,255,0.1) 64px 12px 0 -1px,
-                #FFF 32px 96px 0 -1px,
-                rgba(255,255,255,0.1) 64px 71px,
-                #FFF 60px 18px 0 -1px,
-                rgba(255,255,255,0.1) 34px 9px,
-                #FFF -26px 55px 0 -1px;
-    }
-}
-</code></pre><ul>
-<li>雷电</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ef93fc387d275632.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="thunder"></p>
-<p>主要是利用阴影、border实现，代码如下：</p>
-<pre><code>/*thunder*/
-.thunder-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    height: 260px;
-    transform: translate(-50%, -50%);
-    background: #444;
-    border-radius: 5px;
-}
-.thunder {
-    color: #333;
-    position: absolute;
-    height: 50px;
-    width: 50px;
-    top: 40%;
-    left: 30%;
-    background: #222;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    box-shadow:
-            #222 65px -15px 0 -5px,
-            #222 25px -25px,
-            #222 30px 10px,
-            #222 60px 15px 0 -10px,
-            #222 85px 5px 0 -5px;
-    animation: cloudy 5s ease-in-out infinite;
-}
-.thunder:before {
-    content: &quot;&quot;;
-    position: absolute;
-    top: 60px;
-    left: 60px;
-    border-left: 0px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 38px solid yellow;
-    box-shadow: yellow -7px -32px;
-    transform:rotate(30deg);
-    transform-origin:center -50px;
-    animation:stormy_thunder 2s steps(1, end) infinite;;
-}
-.thunder:after {
-    content: &quot;&quot;;
-    position: absolute;
-    top: 120px;
-    left: 64px;
-    height: 15px;
-    width: 120px;
-    background: rgba(0, 0, 0, .5);
-    border-radius: 50%;
-    z-index:-1;
-    transform: translate(-50%, -50%);
-    animation: cloudy_shadow 5s ease-in-out infinite;
-}
-@keyframes cloudy {
-    50% {
-        transform: translate(-50%, -30px);
-    }
-}
-@keyframes cloudy_shadow {
-    50% {
-        transform: translate(-50%, 0) scale(0.8);
-        background: rgba(0, 0, 0, .2);
-    }
-}
-@keyframes stormy_thunder{
-    0%  {  transform: rotate(30deg); opacity:1; }
-    5%  {  transform: rotate(-34deg); opacity:1; }
-    10% {  transform: rotate(0deg); opacity:1; }
-    15% {  transform: rotate(-34deg); opacity:0; }
-}
-</code></pre><ul>
-<li>大雪</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-eab2cbfcb6a1828e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="snow"></p>
-<p>利用阴影实现 ， 代码如下：</p>
-<pre><code>/*snow*/
-.snowy-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    height: 260px;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 200%;
-    color: #fff;
-    background: #607D8B;
-    border-radius: 5px;
-}
-.snowy {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius:50%;
-    top: 30%;
-    left: 50%;
-    background: #fff;
-    border-radius: 50%;
-    animation: snowy_rain 2s infinite linear;
-}
-.snowy:before {
-    content: &quot;&quot;;
-    color: #333;
-    position: absolute;
-    height: 50px;
-    width: 50px;
-    top: 30px;
-    left: -40px;
-    background: #eee;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    box-shadow:
-            #eee 65px -15px 0 -5px,
-            #eee 25px -25px,
-            #eee 30px 10px,
-            #eee 60px 15px 0 -10px,
-            #eee 85px 5px 0 -5px;
-    animation: cloudy 5s ease-in-out infinite;
-}
-.snowy:after {
-    content: &quot;&quot;;
-    position: absolute;
-    top: 120px;
-    left: 50%;
-    height: 15px;
-    width: 120px;
-    background: rgba(0, 0, 0, .5);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    animation: cloudy_shadow 5s ease-in-out infinite;
-}
-@keyframes cloudy {
-    50% {
-        transform: translate(-50%, -70%);
-    }
-    100% {
-        transform: translate(-50%, -50%);
-    }
-}
-@keyframes cloudy_shadow {
-    50% {
-        transform: translate(-50%, -50%) scale(0.8);
-        background: rgba(0, 0, 0, .2);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        background: rgba(0, 0, 0, .5);
-    }
-}
-@keyframes snowy_rain {
-    0% {
-        box-shadow:
-                rgba(255, 255, 255, 0) -10px 30px,
-                rgba(255, 255, 255, 0) 40px 40px,
-                rgba(255, 255, 255, .6) -50px 75px,
-                rgba(255, 255, 255, .6) 55px 50px,
-                rgba(255, 255, 255, .6) -18px 100px,
-                rgba(255, 255, 255, .6) 12px 95px,
-                rgba(255, 255, 255, .6) -31px 45px,
-                rgba(255, 255, 255, .6) 30px 35px;
-    }
-    25% {
-        box-shadow:
-                rgba(255, 255, 255, .6) -10px 45px,
-                rgba(255, 255, 255, .6) 40px 60px,
-                rgba(255, 255, 255, .6) -50px 90px,
-                rgba(255, 255, 255, .6) 55px 65px,
-                rgba(255, 255, 255, 0) -18px 120px,
-                rgba(255, 255, 255, 0) 12px 120px,
-                rgba(255, 255, 255, .6) -31px 70px,
-                rgba(255, 255, 255, .6) 30px 60px;
-    }
-    26% {
-        box-shadow:
-                rgba(255, 255, 255, .6) -10px 45px,
-                rgba(255, 255, 255, .6) 40px 60px,
-                rgba(255, 255, 255, .6) -50px 90px,
-                rgba(255, 255, 255, .6) 55px 65px,
-                rgba(255, 255, 255, 0) -18px 40px,
-                rgba(255, 255, 255, 0) 12px 20px,
-                rgba(255, 255, 255, .6) -31px 70px,
-                rgba(255, 255, 255, .6) 30px 60px;
-    }
-    50% {
-        box-shadow:
-                rgba(255, 255, 255, .6) -10px 70px,
-                rgba(255, 255, 255, .6) 40px 80px,
-                rgba(255, 255, 255, 0) -50px 100px,
-                rgba(255, 255, 255, .6) 55px 80px,
-                rgba(255, 255, 255, .6) -18px 60px,
-                rgba(255, 255, 255, .6) 12px 45px,
-                rgba(255, 255, 255, .6) -31px 95px,
-                rgba(255, 255, 255, .6) 30px 85px;
-    }
-    51% {
-        box-shadow:
-                rgba(255, 255, 255, .6) -10px 70px,
-                rgba(255, 255, 255, .6) 40px 80px,
-                rgba(255, 255, 255, 0) -50px 45px,
-                rgba(255, 255, 255, .6) 55px 80px,
-                rgba(255, 255, 255, .6) -18px 60px,
-                rgba(255, 255, 255, .6) 12px 45px,
-                rgba(255, 255, 255, .6) -31px 95px,
-                rgba(255, 255, 255, .6) 30px 85px;
-    }
-    75% {
-        box-shadow:
-                rgba(255, 255, 255, .6) -10px 95px,
-                rgba(255, 255, 255, .6) 40px 100px,
-                rgba(255, 255, 255, .6) -50px 60px,
-                rgba(255, 255, 255, 0) 55px 95px,
-                rgba(255, 255, 255, .6) -18px 80px,
-                rgba(255, 255, 255, .6) 12px 70px,
-                rgba(255, 255, 255, 0) -31px 120px,
-                rgba(255, 255, 255, 0) 30px 110px;
-    }
-    76% {
-        box-shadow:
-                rgba(255, 255, 255, .6) -10px 95px,
-                rgba(255, 255, 255, .6) 40px 100px,
-                rgba(255, 255, 255, .6) -50px 60px,
-                rgba(255, 255, 255, 0) 55px 35px,
-                rgba(255, 255, 255, .6) -18px 80px,
-                rgba(255, 255, 255, .6) 12px 70px,
-                rgba(255, 255, 255, 0) -31px 25px,
-                rgba(255, 255, 255, 0) 30px 15px;
-    }
-    100% {
-        box-shadow:
-                rgba(255, 255, 255, 0) -10px 120px,
-                rgba(255, 255, 255, 0) 40px 120px,
-                rgba(255, 255, 255, .6) -50px 75px,
-                rgba(255, 255, 255, .6) 55px 50px,
-                rgba(255, 255, 255, .6) -18px 100px,
-                rgba(255, 255, 255, .6) 12px 95px,
-                rgba(255, 255, 255, .6) -31px 45px,
-                rgba(255, 255, 255, .6) 30px 35px;
-    }
-}
-</code></pre><ul>
-<li>五角星</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-265dd2c623f66132.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="五角星"></p>
-<p>主要是利用border、transparent、旋转实现，代码如下：</p>
-<pre><code>/*star*/
-.five-star{
-    position: absolute;
-    top: 35%;
-    right: 50%;
-    transform: translate(-50%, -50%) scale(8);
-    width: 0;
-    height: 0;
-    display: block;
-    border-left: 3.04px solid transparent;
-    border-right: 3.24px solid transparent;
-    border-bottom: 10px solid #98DBE3;
-    -webkit-filter: drop-shadow(1px .5px 1px #ccc);
-    cursor: pointer;
-}
-.five-star:before{
-    content: &quot;&quot;;
-    position: absolute;
-    top: 8.65px;
-    left: -8.82px;
-    width: 0;
-    height: 0;
-    color: #98DBE3;
-    display: block;
-    border-left: 12.5px solid transparent;
-    border-right: 12.5px solid transparent;
-    border-bottom: 9.08px solid #98DBE3;
-    transform-origin: top center;
-    transform: rotate(36deg);
-}
-.five-star:after{
-    content: &quot;&quot;;
-    position: absolute;
-    top: 8.65px;
-    left: -15px;
-    width: 0;
-    height: 0;
-    color: #98DBE3;
-    display: block;
-    border-left: 12.5px solid transparent;
-    border-right: 12.5px solid transparent;
-    border-bottom: 9.08px solid #98DBE3;
-    transform-origin: top center;
-    transform: rotate(-36deg);
-}
-</code></pre><ul>
-<li>太极八卦</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-0da6c30a2deaa42c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="太极八卦"></p>
-<p>利用 box-shadow 实现 ， 代码很简单：</p>
-<pre><code>/*TaiChi*/
-.TaiChi{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    transform: translate(-50%, -50%);
-    box-shadow:0 0 2px #ddd;
-    border-radius:50%;
-    background-image:
-            radial-gradient(#000 12.5px, transparent 12.5px),
-            radial-gradient(#fff 12.5px, transparent 12.5px),
-            radial-gradient(#fff 50px, transparent 50px),
-            radial-gradient(#000 50px, transparent 50px),
-            linear-gradient(90deg,#000 100px, #fff 100px);
-    background-position:center 50px,center -50px,center 50px,center -50px,0 0;
-}
-</code></pre><ul>
-<li>美队盾牌</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d3d31b50d62865bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="美队盾牌"></p>
-<p>利用 渐变 实现 ， 代码如下：</p>
-<pre><code>/*captainAmerica*/
-.captainAmerica{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;
-    height: 200px;
-    transform: translate(-50%, -50%);
-    background:
-            linear-gradient(45deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 65%),
-            linear-gradient(-45deg, rgba(255,255,255,0) 35%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 65%),
-            linear-gradient(to right, rgba(0,0,0,0) 35%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 65%),
-            linear-gradient(to bottom, rgba(0,0,0,0) 35%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 65%),
-            radial-gradient(ellipse at center, #0033b0 20%, #ce0021 20%, #ce0021 35%, #eee 35%, #eee 55%, #ce0021 55%);
-    border-radius: 50%;
-    box-shadow: 0 3px 0 #a20917,0 4px 2px 2px #eee;
-}
-.captainAmerica::before{
-    content: &apos;★&apos;;
-    position:absolute;
-    top: 50%;left: 50%;
-    transform: translate(-50%, -50%);
-    margin-left:-3px;
-    width: 50px;height:50px;
-    font-family: simsun,Tahoma,Helvetica,Arial,SimHei,sans-serif;
-    line-height: 47px;
-    z-index: 1;
-    border-radius: 50%;
-    font-size: 55px;
-    color: #fff;
-    text-align:center;
-    text-shadow: 2px 1px 2px #777;
-}
-</code></pre><ul>
-<li>纽扣</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-772f3f1a22b982e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="纽扣"></p>
-<p>利用 渐变、阴影 实现 ， 实现方法如下：</p>
-<pre><code>/*button*/
-.button{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 180px;
-    height: 180px;
-    background: #87ceeb;
-    border-radius: 50%;
-    box-shadow:
-            inset 0 5px 5px #87ceeb,
-            inset 0 17px 5px rgba(255,255,255,0.7),
-            inset 0 -3px 3px rgba(255,255,255,0.3),
-            inset 0 -10px 10px rgba(0,0,0,0.3),
-            inset 0 -15px 10px #45b3e0,
-            0 7px 10px rgba(0,0,0,0.3);
-}
-.button::before{
-    content: &apos;&apos;;
-    position:absolute;
-    top: 50%;left: 50%;
-    width: 110px;height: 106px;
-    margin-left: -55px;margin-top: -55px;
-    background-image:
-            radial-gradient(circle at 38px 38px, #333 10px, transparent 10px),
-            radial-gradient(circle at 73px 73px, #333 10px, transparent 10px),
-            radial-gradient(circle at 38px 73px, #333 10px, transparent 10px),
-            radial-gradient(circle at 73px 38px, #333 10px, transparent 10px);
-    border-radius: 50%;
-    border-top: 1px solid rgba(0,0,0,0.6);
-    border-bottom: 1px solid rgba(255,255,255,0.6);
-    box-shadow:
-            inset 0 20px 2px rgba(255,255,255,0.3),
-            3px -15px 7px -4px rgba(0,0,0,0.3),
-            0 -14px 10px 5px #45b3e0,
-            0 2px 5px 5px #87ceeb,
-            0 10px 5px 5px rgba(255,255,255,0.6);
-}
-.button::after{
-    content: &apos;&apos;;
-    position:absolute;
-    top: 50%;left: 50%;
-    width: 50px;height: 50px;
-    margin-left: -25px;
-    margin-top: -23px;
-    background-image:
-            linear-gradient(to right, transparent 35%, #000080 35%, #4682b4 40%, #000080 45%, #4682b4 50%, #000080 55%, #4682b4 60%, #000080 65%, transparent 65%),
-            linear-gradient(to bottom, transparent 35%, #000080 35%, #4682b4 40%, #000080 45%, #4682b4 50%, #000080 55%, #4682b4 60%, #000080 65%, transparent 65%);
-    border-radius: 50%;
-    transform: rotate(45deg);
-}
-</code></pre><ul>
-<li>Chrome</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-34de6e5e8041163b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Chrome"></p>
-<p>利用渐变实现 , 具体如下：</p>
-<pre><code>/*chrome*/
-.Chrome{
-    position: absolute;
-    top: 50%;left: 50%;
-    width: 180px;height: 180px;
-    transform: translate(-50%, -50%);
-    box-shadow:0 0px 4px #999,0 0 2px #ddd inset;
-    border-radius:50%;
-    background-image:
-            radial-gradient(#4FACF5 0%,#2196F3 28%, transparent 28%),
-            radial-gradient(#fff 33%, transparent 33%),
-            linear-gradient(-50deg,#FFEB3B 34%, transparent 34%),
-            linear-gradient(60deg,#4CAF50 33%, transparent 33%),
-            linear-gradient(180deg,#FF756B 0%, #F44336 30%, transparent 30%),
-            linear-gradient(-120deg,#FFEB3B 40%, transparent 40%),
-            linear-gradient(-60deg,#FFEB3B 30%, transparent 30%),
-            linear-gradient(0deg,#4CAF50 45%, transparent 45%),
-            linear-gradient(60deg,#4CAF50 30%, transparent 30%),
-            linear-gradient(120deg,#F44336 50%, transparent 50%),
-            linear-gradient(180deg,#F44336 30%, transparent 30%);
-    background-position:0 0;
-}
-</code></pre><ul>
-<li>Opera</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d3870c6e755e9d3e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Opera"></p>
-<p>利用渐变实现 , 代码如下：</p>
-<pre><code>/*Opera*/
-.Opera{
-    position: absolute;
-    top: 50%;left: 50%;
-    width: 170px;height: 200px;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    box-shadow:0 2px 4px #333;
-    background-image:
-            linear-gradient(rgb(254, 135, 138) 0%, rgb(231, 22, 22) 50%, rgb(128, 0, 0) 85%, rgb(184, 3, 4) 100%);
-}
-.Opera:after{
-    content:&quot;&quot;;
-    position: absolute;
-    top:50%;left:50%;
-    width: 60px;height: 180px;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    background:#fff;
-}
-.Opera:before{
-    content:&quot;&quot;;
-    position: absolute;
-    top:50%;left:50%;
-    width: 72px;height: 185px;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    background:rgba(0,0,0,.4);
-}
-</code></pre><ul>
-<li>IE</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e1f96b4221685e49.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="IE"></p>
-<p>利用渐变、多重阴影实现 ， 代码实现如下：</p>
-<pre><code>/*IE*/
-.IE{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width:200px;
-    height:200px;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    background-image:
-            radial-gradient(#fff 38%, transparent 38%),
-            radial-gradient(#09C 0%, #09C 100%);
-
-}
-.IE:before{
-    content: &quot;&quot;;
-    width:285px;
-    height:122px;
-    background:none;
-    border-radius:100%;
-    position:absolute;
-    top:33px;
-    left:-45px;
-    margin:auto;
-    box-shadow:
-            inset 0 12px 0 13px  #09c,
-            -35px -8px 0 -5px #fff;
-    transform: rotate(-35deg);
-}
-.IE:after {
-    content: &quot;&quot;;
-    width: 120px;
-    height: 25px;
-    background: #09c;
-    position: absolute;
-    top: 80px;
-    left: 0;
-    right: 0;
-    margin: auto;
-    box-shadow: 50px 23px 0 -2px #fff
-}
-</code></pre><ul>
-<li>safari</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-f404f40b6d660b00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="safari"></p>
-<p>利用渐变、border、旋转实现 ， 具体代码如下：</p>
-<pre><code>/*safari*/
-.safari{
-    position: absolute;
-    top: 50%;left: 50%;
-    width:200px; height:200px;
-    transform: translate(-50%, -50%);
-    border-radius:50%;
-    border:5px solid #E8E8E8;
-    box-shadow:
-            -1px 3px 1px 2px #999,
-            -1px 3px 1px 2px #999 inset;
-    background-image:
-            radial-gradient(transparent 30%,#fff 30%,#fff 34%, transparent 34%),
-            linear-gradient(rgba(255,255,255,.8) 100%, transparent 100%),
-            linear-gradient(rgba(255,255,255,.8) 100%, transparent 100%),
-            linear-gradient(rgba(255,255,255,.8) 100%, transparent 100%),
-            linear-gradient(rgba(255,255,255,.8) 100%, transparent 100%),
-            linear-gradient(#1DE3FF 0%, #1F52EF 100%);
-    background-size: 50% 50%,20px 2px,20px 2px,2px 20px,2px 20px,100%,100%;
-    background-repeat:no-repeat;
-    background-position:center center, 175px center,5px center,center 175px,center 5px,0 0;
-
-}
-.safari::before{
-    content:&quot;&quot;;
-    position: absolute;
-    top: 10px;left: 50%;
-    border-radius:10px;
-    border-bottom:100px solid rgba(255,255,255,.9);
-    border-left:10px solid transparent;
-    border-right:10px solid transparent;
-    transform-origin:center 90px;
-    z-index:-1;
-    transform:translate(-50%, 0%) rotate(40deg);
-}
-.safari::after{
-    content:&quot;&quot;;
-    position: absolute;
-    top: 10px;left: 50%;
-    border-radius:10px;
-    border-bottom:100px solid rgba(255,0,0,.9);
-    border-left:10px solid transparent;
-    border-right:10px solid transparent;
-    transform-origin:center 90px;
-    transform:translate(-50%, 0%) rotate(220deg);
-}
-.safari:hover::before{
-    transition:transform 1s;
-    transform:translate(-50%, 0%) rotate(70deg);
-}
-.safari:hover::after{
-    transition:transform 1s;
-    transform:translate(-50%, 0%) rotate(250deg);
-}
-</code></pre><ul>
-<li>firefox</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-04323b5ed519694e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="firefox"></p>
-<p>利用多重阴影实现 , 代码如下：</p>
-<pre><code>/*firefox*/
-.firefox{
-    position: absolute;
-    top: 50%;left: 50%;
-    width: 200px;height:200px;
-    transform: translate(-50%, -50%);
-    border:8px solid #eee;
-    border-radius:50%;
-    overflow:hidden;
-    background:#F48D00;
-    box-shadow:0 0 2px 0 #999;
-}
-.firefox::before{
-    content: &quot;&quot;;
-    width: 46px;
-    height: 46px;
-    background: #A4DFEF;
-    border-radius: 100%;
-    position: absolute;
-    top: 90px;
-    left: 50px;
-    margin: auto;
-    border: 1px solid #A4DFEF;
-    box-shadow:
-            -10px 0 0 5px rgba(164, 223, 239, .2),
-            16px -60px 0 8px rgba(164, 223, 239, .2),
-            -30px -50px 0 8px #F48D00,
-            25px -38px 0 0px #A4DFEF,
-            -30px -30px 0 12px #F48D00,
-            15px -60px 0 8px #A4DFEF,
-            33px 31px 0 -15px #A4DFEF,
-            30px 17px 0 -13px #F48D00,
-            20px -10px 0 0px #A4DFEF,
-            -8px -0px 0 19px #F48D00,
-            30px 17px 0 0px #A4DFEF,
-            24px 30px 0 15px #F48D00,
-            20px -6px 0 28px #A4DFEF,
-            45px 10px 0 35px #F48D00,
-            -5px -57px 0 8px #F48D00,
-            20px -23px 0 45px #A4DFEF,
-            -5px -80px 0 8px #A4DFEF,
-            -30px -70px 0 8px #F48D00,
-            -5px -57px 0 8px #F48D00,
-            43px -11px 0 55px #F48D00,
-            22px -39px 0 55px #A4DFEF;
-}
-.firefox::after{
-    content: &quot;&quot;;
-    width: 0px;
-    height: 2px;
-    background: linear-gradient(90deg,#F48D00 75% ,#333 30% );
-    background-size: 35px 35px;
-    position: absolute;
-    top: 50px;
-    left: 73px;
-    margin: auto;
-    border: solid;
-    border-width: 12px 0 15px 30px;
-    border-color: #A4DFEF #fff #A4DFEF transparent;
-    box-shadow: inset 0px 0 0 50px #333;
-}
-</code></pre><ul>
-<li>搜狗</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-be223815f5207aac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="搜狗"></p>
-<p>利用文字、阴影实现 , 具体代码如下：</p>
-<pre><code>/*sougou*/
-.sogou{
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 200px;height:200px;
-    transform: translate(-50%, -50%);
-    border:8px solid #fff;
-    box-shadow: 2px 1px 2px 2px #ccc;
-    border-radius:50%;
-    overflow:hidden;
-    background:#4DA0ED;
-}
-.sogou::before{
-    content:&quot;S&quot;;
-    position: absolute;
-    line-height: 185px;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    color:#fff;
-    font-weight:600;
-    font-size:320px;
-    text-align:center;
-    text-shadow:
-            3px 0 0px #337FC4,
-            -5px 0px 0px #CDE4F0,
-            0px 8px 0px #387FBF;
-    transform:rotate(2deg);
-    z-index:-10;
-    overflow:hidden;
-}
-</code></pre><ul>
-<li>利用滤镜实现混合效果</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a15c0abb03bb598c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="filter-mix"></p>
-<p>利用 <code>fliter:blur()</code> 、<code>filter:contrast()</code> 实现 ， 代码如下：</p>
-<pre><code>/*filter-mix*/
-.filter-mix{
-    position: absolute;
-    top: 50%;left: 50%;
-    transform: translate(-50%, -50%);
-    width: 300px;height: 200px;
-    -webkit-filter:contrast(20);
-    background:#fff;
-}
-.filter-mix::before{
-    content:&quot;&quot;;
-    position: absolute;
-    width:120px;
-    height:120px;
-    border-radius: 50%;
-    background:#333;
-    top:40px;
-    left:0px;
-    z-index:2;
-    -webkit-filter:blur(6px);
-    box-sizing:border-box;
-    animation:filterBallMove 10s ease-out infinite;
-    -webkit-animation:filterBallMove 10s ease-out infinite;
-}
-.filter-mix::after{
-    content:&quot;&quot;;
-    position: absolute;
-    width:80px;
-    height:80px;
-    border-radius: 50%;
-    background:#3F51B5;
-    top:60px;
-    right:0px;
-    z-index:2;
-    -webkit-filter:blur(6px);
-    animation:filterBallMove2 10s ease-out infinite;
-    -webkit-animation:filterBallMove2 10s ease-out infinite;
-
-}
-
-@keyframes filterBallMove{
-    50%{
-        left:200px;
-    }
-}
-
-@-webkit-keyframes filterBallMove{
-    50%{
-        left:200px;
-    }
-}
-
-@keyframes filterBallMove2{
-    50%{
-        right:200px;
-    }
-}
-
-@-webkit-keyframes filterBallMove2{
-    50%{
-        right:200px;
-    }
-}
-</code></pre><h3 id="装逼总结"><a href="#装逼总结" class="headerlink" title="装逼总结"></a>装逼总结</h3><p>怎么样，是不是颠覆了你对 <code>CSS3</code> 的认识？</p>
-<p>实际上 <code>CSS3</code> 带给我们的远不止这些东西，没有做不到，只有想不到，只有你脑洞够大，各种黑科技、酷炫的 <code>CSS</code> 必然也是手到擒来~</p>
-<p>虽然你给不了 <code>CSS3</code> 全部，但它却把全部给了你，骚年，加油吧~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d87933c8ddfb0ab2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="end"></p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p>本文主要来源以下文章：</p>
-<p><a href="https://github.com/chokcoco/magicCss" target="_blank" rel="external">magicCss</a></p>
-<p><a href="https://github.com/cssmagic/CSS-Secrets" target="_blank" rel="external">CSS Secrets</a></p>
-<p>对 <code>CSS</code> 感兴趣的同学可以去作者的 <a href="https://github.com/chokcoco" target="_blank" rel="external">github</a> 点个赞~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2594,7 +1098,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -2684,7 +1188,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

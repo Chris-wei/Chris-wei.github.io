@@ -278,6 +278,397 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/01/OOP-01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/01/OOP-01/" itemprop="url">JavaScript设计模式之面向对象编程</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-01T17:01:20+08:00">
+                2018-09-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>为了深入地学习 <code>javascript</code> ，奔着一名标准 Web 开发人员的标准，想要深入了解一下面向对象的编程思想，提高自己模块化开发的能力，编写可维护、高效率、可拓展的代码，最近一直拜读 <strong>《JavaScript设计模式》</strong> ，对其重点内容做了归纳与总结，如有总结的不详细或者理解不透彻的，还望批评斧正~</p>
+<h2 id="什么是面向对象编程（OOP）？"><a href="#什么是面向对象编程（OOP）？" class="headerlink" title="什么是面向对象编程（OOP）？"></a>什么是面向对象编程（OOP）？</h2><p>简单来说，面向对象编程就是将你的需求抽象成一个对象，然后对这个对象进行分析，为其添加对应的特征（属性）与行为（方法），我们将这个对象称之为 <strong>类</strong>。<br>面向对象一个很重要的特点就是封装，虽然 <code>javascript</code> 这种解释性的弱类型语言没有像一些经典的强类型语言(例如<code>C++，JAVA</code>等)有专门的方式用来实现类的封装，但我们可以利用 <code>javascript</code> 语言灵活的特点，去模拟实现这些功能，接下里我们就一起来看看~</p>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><ul>
+<li>创建一个类</li>
+</ul>
+<p>在 <code>javascript</code> 中要创建一个类是很容易的，比较常见的方式就是首先声明一个函数保存在一个变量中（一般类名首字母大写），然后将这个函数（类）的内部通过对 <code>this</code> 对象添加属性或者方法来实现对类进行属性或方法的添加，例如：</p>
+<pre><code>//创建一个类
+var Person = function (name, age ) {
+    this.name = name;
+    this.age = age;
+}
+</code></pre><p>我们也可以在类的原型对象(<code>prototype</code>)上添加属性和方法，有两种方式，一种是一一为原型对象的属性赋值，以一种是将一个对象赋值给类的原型对象：</p>
+<pre><code>//为类的原型对象属性赋值
+Person.prototype.showInfo = function () {
+    //展示信息
+    console.log(&apos;My name is &apos; + this.name , &apos;, I\&apos;m &apos; + this.age + &apos; years old!&apos;);
+}
+
+//将对象赋值给类的原型对象
+Person.prototype = {
+    showInfo : function () {
+        //展示信息
+        console.log(&apos;My name is &apos; + this.name , &apos;, I\&apos;m &apos; + this.age + &apos; years old!&apos;);
+    }
+}
+</code></pre><p>这样我们就将所需要属性和方法都封装在 <code>Person</code> 类里面了，当我们要用的时候，首先得需要使用 <code>new</code> 关键字来实例化（创建）新的对象，通过 <code>.</code> 操作符就可以使用实例化对象的属性或者方法了~</p>
+<pre><code>var person = new Person(&apos;Tom&apos;,24);
+console.log(person.name)        // Tom
+console.log(person.showInfo())  // My name is Tom , I&apos;m 24 years old!
+</code></pre><p>我们刚说到有两种方式来添加属性和方法，那么这两种方式有啥不同呢？</p>
+<p>通过 <code>this</code> 添加的属性和方法是在当前对象添加的，而 <code>javascript</code> 语言的特点是基于原型 <code>prototype</code> 的，是通过 原型<code>prototype</code> 指向其继承的属性和方法的；通过 <code>prototype</code> 继承的方法并不是对象自身的，使用的时候是通过 <code>prototype</code> 一级一级查找的，这样我们通过 <code>this</code> 定义的属性或者方法都是该对象自身拥有的，我们每次通过 <code>new</code> 运算符创建一个新对象时， <code>this</code> 指向的属性和方法也会得到相应的创建，但是通过 <code>prototype</code> 继承的属性和方法是每个对象通过 <code>prototype</code> 访问得到，每次创建新对象时这些属性和方法是不会被再次创建的，如下图所示：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-ccc83863ec7886b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>其中 <code>constructor</code> 是一个属性，当创建一个函数或者对象的时候都会给原型对象创建一个 <code>constructor</code> 属性，指向拥有整个原型对象的函数或者对象。</p>
+<p>如果我们采用第一种方式给原型对象(<code>prototype</code>)上添加属性和方法，执行下面的语句会得到 <code>true</code> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.log(Person.prototype.constructor === Person ) // true</div></pre></td></tr></table></figure>
+<p>那么好奇的小伙伴会问，那我采用第二种方式给原型对象(<code>prototype</code>)上添加属性和方法会是什么结果呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.log(Person.prototype.constructor === Person ) // false</div></pre></td></tr></table></figure>
+<p>卧槽，什么鬼，为什么会产生这种结果？</p>
+<p>原因在于第二种方式是将一整个对象赋值给了原型对象(<code>prototype</code>)，这样会导致原来的原型对象(<code>prototype</code>)上的属性和方法会被全部覆盖掉（<code>pass:</code> 实际开发中两种方式不要混用），那么 <code>constructor</code> 的指向当然也发生了变化，这就导致了原型链的错乱，因此，我们需要手动修正这个问题，在原型对象(<code>prototype</code>)上手动添加上 <code>constructor</code> 属性，重新指向 <code>Person</code> ，保证原型链的正确，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">  Person.prototype = &#123;</div><div class="line">constructor : Person ,</div><div class="line">showInfo : function () &#123;</div><div class="line">	//展示信息</div><div class="line">	console.log(&apos;My name is &apos; + this.name , &apos;, I\&apos;m &apos; + this.age + &apos; years old!&apos;);</div><div class="line">&#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  console.log(Person.prototype.constructor === Person ) // true</div></pre></td></tr></table></figure>
+<ul>
+<li>属性与方法的封装</li>
+</ul>
+<p>在大部分面向对象的语言中，经常会对一些类的属性和方法进行隐藏和暴露，所以就会有 私有属性、私有方法、公有属性、公有方法等这些概念~</p>
+<p>在 <code>ES6</code> 之前， <code>javascript</code> 是没有块级作用域的，有函数级作用域，即声明在函数内部的变量和方法在外部是无法访问的，可以通过这个特性模拟创建类的 <strong>私有变量</strong> 和 <strong>私有方法</strong> ，而函数内部通过 <code>this</code> 创建的属性和方法，在类创建对象的时候，每个对象都会创建一份并可以让外界访问，因此我们可以将通过 <code>this</code> 创建的属性和方法看作是 <strong>实例属性</strong> 和 <strong>实例方法</strong>，然而通过 <code>this</code> 创建的一些方法们不但可以访问对象公有属性和方法，还能访问到类（创建时）或对象自身的私有属性和私有方法，由于权力这些方法的权力比较大，因此成为 <strong>特权方法</strong> ，通过 <code>new</code> 创建的对象无法通过 <code>.</code> 运算符访问类外面添加的属性和和方法，只能通过类本身来访问，因此，类外部定义的属性和方法被称为类的 <strong>静态公有属性</strong> 和 <strong>静态公有方法</strong> ， 通过类的原型 <code>prototype</code> 对象添加的属性和方法，其实例对象都是通过 <code>this</code> 访问到的，所以我们将这些属性和方法称为 <strong>公有属性</strong> 和 <strong>公有方法</strong>，也叫 <strong>原型属性</strong> 和 <strong>原型方法</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">       //创建一个类</div><div class="line">var Person = function (name, age ) &#123;</div><div class="line">   	    //私有属性</div><div class="line">   	    var IDNumber = &apos;01010101010101010101&apos; ;</div><div class="line">   	    //私有方法</div><div class="line">           function checkIDNumber () &#123;&#125;</div><div class="line">           //特权方法</div><div class="line">           this.getIDNumber = function () &#123;&#125;</div><div class="line">           //实例属性</div><div class="line">           this.name = name;</div><div class="line">           this.age = age;</div><div class="line">           //实例方法</div><div class="line">           this.getName = function () &#123;&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//类静态属性</div><div class="line">       Person.isChinese = true;</div><div class="line">//类静态方法</div><div class="line">       Person.staticMethod = function () &#123;</div><div class="line">           console.log(&apos;this is a staticMethod&apos;)</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       //公有属性</div><div class="line">Person.prototype.isRich = false;</div><div class="line">//公有方法</div><div class="line">       Person.prototype.showInfo = function () &#123;&#125;</div></pre></td></tr></table></figure>
+<p>通过 <code>new</code> 创建的对象只能访问到对应的 实例属性 、实例方法 、原型属性 和 原型方法 ，而无法访问到类的静态属性和私有属性，类的私有属性和私有方法只能通过类自身方法，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">var person = new Person(&apos;Tom&apos;,24);</div><div class="line"></div><div class="line">console.log(person.IDNumber) // undefined</div><div class="line">console.log(person.isRich)  // false</div><div class="line">console.log(person.name) // Tom</div><div class="line">console.log(person.isChinese) // undefined</div><div class="line"></div><div class="line">console.log(Person.isChinese) // true</div><div class="line">console.log(Person.staticMethod()) // this is a staticMethod</div></pre></td></tr></table></figure>
+<ul>
+<li>创建对象的安全模式</li>
+</ul>
+<p>我们在创建对象的时候，如果我们习惯了 <code>jQuery</code> 的方式，那么我们很可能会在实例化对象的时候忘记用 <code>new</code> 运算符来构造，而写出来下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">       //创建一个类</div><div class="line">var Person = function (name, age ) &#123;</div><div class="line">	this.name = name;</div><div class="line">	this.age = age;</div><div class="line">&#125;</div><div class="line"></div><div class="line">var person = Person(&apos;Tom&apos;,24)</div></pre></td></tr></table></figure>
+<p>这时候 <code>person</code> 已经不是我们期望的那样，是 <code>Person</code> 的一个实例了~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.log(person)  // undifined</div></pre></td></tr></table></figure>
+<p>那么我们创建的 <code>name</code>、<code>age</code> 都不翼而飞了，当然不是，他们被挂到了 <code>window</code> 对象上了，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">console.log(window.name)  // Tom</div><div class="line">console.log(window.age)   // 24</div></pre></td></tr></table></figure>
+<p>我们在没有使用 <code>new</code> 操作符来创建对象，当执行 <code>Person</code> 方法的时候，这个函数就在<strong>全局作用域</strong>中执行了，此时 <code>this</code> 指向的也就是全局变量，也就是 <code>window</code> 对象，所以添加的属性都会被添加到 <code>window</code> 上，而我们的 <code>person</code> 变量在得到 <code>Person</code> 的执行结果时，由于函数中没有 <code>return</code> 语句， 默认返回了 <code>undifined</code>。</p>
+<p>为了避免这种问题的存在，我们可以采用安全模式解决，稍微修个一下我们的类即可，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">   //创建一个类</div><div class="line">var Person = function (name, age) &#123;</div><div class="line">	// 判断执行过程中的 this 是否是当前这个对象 （如果为真，则表示是通过 new 创建的）</div><div class="line">	if ( this instanceof Person ) &#123;</div><div class="line">		this.name = name;</div><div class="line">		this.age = age;</div><div class="line">	&#125; else &#123;</div><div class="line">		// 否则重新创建对象</div><div class="line">		return new Person(name, age)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ok，我们现在测试一下~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var person = Person(&apos;Tom&apos;, 24)</div><div class="line">console.log(person)         // Person</div><div class="line">console.log(person.name)    // Tom</div><div class="line">console.log(person.age)     // 24</div><div class="line">console.log(window.name)    // undefined</div><div class="line">console.log(window.age)     // undefined</div></pre></td></tr></table></figure>
+<p>这样就可以避免我们忘记使用 <code>new</code> 构建实例的问题了~</p>
+<p>pass：这里我用的 <code>window.name</code> ，这个属性比较特殊，它是 <code>window</code> 自带的，用于设置或返回存放窗口的名称的一个字符串，注意更换~</p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>继承也是面型对象的一大特征，但是 <code>javascript</code> 中没有传统意义上的继承，但是我们依旧可以借助 <code>javascript</code> 的语言特色，模拟实现继承</p>
+<p><strong>类式继承</strong></p>
+<p>比较常见的一种继承方式，原理就是我们是实例化一个父类，新创建的对象会复制父类构造函数内的属性和方法，并将圆形 <code>__proto__</code> 指向父类的原型对象，这样就拥有了父类原型对象上的方法和属性，我们在将这个对象赋值给子类的原型，那么子类的原型就可以访问到父类的原型属性和方法，进而实现了继承，其代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//声明父类</div><div class="line">function Super () &#123;</div><div class="line">    this.superValue = &apos;super&apos;;</div><div class="line">&#125;</div><div class="line">//为父类添加原型方法</div><div class="line">Super.prototype.getSuperValue = function () &#123;</div><div class="line">    return this.superValue;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//声明子类</div><div class="line">function Child () &#123;</div><div class="line">    this.childValue = &apos;child&apos;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//继承父类</div><div class="line">Child.prototype = new Super();</div><div class="line">//为子类添加原型方法</div><div class="line">Child.prototype.getChildValue = function () &#123;</div><div class="line">    return this.childValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们测试一下~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var child = new Child();</div><div class="line">console.log(child.getSuperValue());  // super</div><div class="line">console.log(child.getChildValue());  // child</div></pre></td></tr></table></figure>
+<p>但是这种继承方式会有两个问题，第一由于子类通过其原型 <code>prototype</code> 对其父类实例化，继承父类，只要父类的公有属性中有引用类型，就会在子类中被所有实例共用，如果其中一个子类更改了父类构造函数中的引用类型的属性值，会直接影响到其他子类，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//声明父类</div><div class="line">function Super () &#123;</div><div class="line">	this.superObject = &#123;</div><div class="line">		a: 1,</div><div class="line">		b: 2</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">//声明子类</div><div class="line">function Child () &#123;&#125;</div><div class="line"></div><div class="line">//继承父类</div><div class="line">Child.prototype = new Super();</div><div class="line">&#125;</div><div class="line"></div><div class="line">var child1 = new Child();</div><div class="line">var child2 = new Child();</div><div class="line">console.log(child1.superObject);    // &#123; a : 1 , b : 2 &#125;</div><div class="line">child2.superObject.a = 3 ;</div><div class="line">console.log(child1.superObject);    // &#123; a : 3,  b : 2 &#125;</div></pre></td></tr></table></figure>
+<p>这会对后面的操作造成很大困扰！</p>
+<p>第二，由于子类是通过原型 <code>prototype</code> 对父类的实例化实现的，所以在创建父类的时间，无法给父类传递参数，也就无法在实例化父类的时候对父类构造函数内部的属性进行初始化操作。</p>
+<p>为了解决这些问题，那么就衍生出其他的继承方式。</p>
+<p><strong>构造函数继承</strong><br>利用 <code>call</code> 这个方法可以改变函数的作用环境，在子类中调用这个方法，将子类中的变量在父类中执行一遍，由于父类中是给 <code>this</code> 绑定的， 因此子类也就继承了父类的实例属性，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">//声明父类</div><div class="line">function Super (value) &#123;</div><div class="line">	this.value = value;</div><div class="line">	this.superObject = &#123;</div><div class="line">		a: 1,</div><div class="line">		b: 2</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//为父类添加原型方法</div><div class="line">Super.prototype.showSuperObject = function () &#123;</div><div class="line">	console.log(this.superValue);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//声明子类</div><div class="line">function Child (value) &#123;</div><div class="line">	// 继承父类</div><div class="line">    Super.call(this,value)</div><div class="line">&#125;</div><div class="line"></div><div class="line">var child1 = new Child(&apos;Tom&apos;);</div><div class="line">var child2 = new Child(&apos;Jack&apos;);</div><div class="line"></div><div class="line">child1.superObject.a = 3 ;</div><div class="line">console.log(child1.superObject);    // &#123; a : 3 , b : 2 &#125;</div><div class="line">console.log(child1.value)           // Tom</div><div class="line">console.log(child2.superObject);    // &#123; a : 1,  b : 2 &#125;</div><div class="line">console.log(child2.value);          // Jack</div></pre></td></tr></table></figure>
+<p><code>Super.call(this,value)</code> 这段代码是构造函数继承的精华，这样就可以避免类式继承的问题了~</p>
+<p>但这种继承方式没有涉及到原型 <code>prototype</code> ， 所以父类的原型方法不会得到继承，而如果要想被子类继承，就必须要放到构造函数中，这样创建出来的每个实例都会单独拥有一份，不能共用，为了解决这个问题，有了 组合式继承。</p>
+<p><strong>组合式继承</strong></p>
+<p>我们只要在子类的构造函数作用环境中执行一次父类的构造函数，在将子类的原型 <code>prorotype</code> 对父类进行实例化一次，就可以实现 组合式继承 ， 即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line">//声明父类</div><div class="line">function Super (value) &#123;</div><div class="line">	this.value = value;</div><div class="line">	this.superObject = &#123;</div><div class="line">		a: 1,</div><div class="line">		b: 2</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//为父类添加原型方法</div><div class="line">Super.prototype.showSuperObject = function () &#123;</div><div class="line">	console.log(this.superObject);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//声明子类</div><div class="line">function Child (value) &#123;</div><div class="line">	// 构造函数式继承父类 value 属性</div><div class="line">    Super.call(this,value)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//类式继承</div><div class="line">Child.prototype = new Super();</div><div class="line"></div><div class="line">var child1 = new Child(&apos;Tom&apos;);</div><div class="line">var child2 = new Child(&apos;Jack&apos;);</div><div class="line"></div><div class="line">child1.superObject.a = 3 ;</div><div class="line">console.log(child1.showSuperObject());      // &#123; a : 3 , b : 2 &#125;</div><div class="line">console.log(child1.value)                   // Tom</div><div class="line">child1.superObject.b = 3 ;</div><div class="line">console.log(child2.showSuperObject());      // &#123; a : 1,  b : 2 &#125;</div><div class="line">console.log(child2.value);                  // Jack</div></pre></td></tr></table></figure>
+<p>这样就能融合类式继承和构造函数继承的有点，并且过滤掉其缺点。<br>看起来是不是已经很完美了，NO ， 细心的同学可以发现，我们在使用构造函数继承时执行了一遍父类的构造函数，而在实现子类原型的类式继承时又调用了一父类的构造函数，那么父类的构造函数执行了两遍，这一点是可以继续优化的。</p>
+<p><strong>寄生组合式继承</strong></p>
+<p>我们上面学习了 组合式继承 ，也看出了这种方式的缺点，所以衍生出了 寄生组合式继承 ，其中 寄生 是<strong>寄生式继承</strong> ，而寄生式继承依托于<strong>原型式继承</strong>，因此学习之前，我们得了解一下 <strong>原型式继承</strong> 和 <strong>寄生式继承</strong>。</p>
+<p>原型式继承跟类式继承类似，当然也存在同样的问题，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//原型式继承</div><div class="line">function inheritObject (o) &#123;</div><div class="line">    // 声明一个过渡函数对象</div><div class="line">    function F () &#123;&#125;</div><div class="line">	// 过渡对象的原型继承父对象</div><div class="line">	F.prototype = o;</div><div class="line">    // 返回过渡对象的一个实例，该实例的原型继承了父对象</div><div class="line">	return new F();</div><div class="line">&#125;</div><div class="line">var Super = &#123;</div><div class="line">	name : &apos;Super&apos; ,</div><div class="line">    object : &#123;</div><div class="line">		a : 1 ,</div><div class="line">        b : 2</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">var child1 = inheritObject(Super);</div><div class="line">var child2 = inheritObject(Super);</div><div class="line">console.log(child1.object) // &#123; a : 1 , b : 2 &#125;</div><div class="line">child1.object.a = 3 ;</div><div class="line">console.log(child2.object) // &#123; a : 3 , b : 2 &#125;</div></pre></td></tr></table></figure>
+<p>寄生式继承是对原型继承的第二次封装，并在封装过程中对对象进行了拓展，新对象就有了新增的属性和方法，实现方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">//原型式继承</div><div class="line">function inheritObject (o) &#123;</div><div class="line">    // 声明一个过渡函数对象</div><div class="line">    function F () &#123;&#125;</div><div class="line">	// 过渡对象的原型继承父对象</div><div class="line">	F.prototype = o;</div><div class="line">    // 返回过渡对象的一个实例，该实例的原型继承了父对象</div><div class="line">	return new F();</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 寄生式继承</div><div class="line">// 声明基对象</div><div class="line">var Super = &#123;</div><div class="line">	name : &apos;Super&apos; ,</div><div class="line">    object : &#123;</div><div class="line">		a : 1 ,</div><div class="line">        b : 2</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function createChild (obj) &#123;</div><div class="line">	// 通过原型继承创建新对象</div><div class="line">    var o = new inheritObject(obj);</div><div class="line">    // 拓展新对象</div><div class="line">    o.getObject = function () &#123;</div><div class="line">        console.log(this.object)</div><div class="line">	&#125;</div><div class="line">	return o;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们将两者的特点结合起来就出现了寄生组合式继承，通过借用构造函数来继承属性,通过原型链的混成形式来继承方法，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">* 寄生组合式继承</div><div class="line">* 传递参数</div><div class="line">*   childClass 子类</div><div class="line">*   superClass 父类</div><div class="line">* */</div><div class="line"></div><div class="line">//原型式继承</div><div class="line">function inheritObject (o) &#123;</div><div class="line">   // 声明一个过渡函数对象</div><div class="line">   function F () &#123;&#125;</div><div class="line">   // 过渡对象的原型继承父对象</div><div class="line">   F.prototype = o;</div><div class="line">   // 返回过渡对象的一个实例，该实例的原型继承了父对象</div><div class="line">   return new F();</div><div class="line">&#125;</div><div class="line"></div><div class="line">function inheritPrototype (childClass , superClass) &#123;</div><div class="line">    // 复制一份父类的原型保存在变量中</div><div class="line">    var p = inheritObject(superClass.prototype);</div><div class="line">    // 修复子类的 constructor</div><div class="line">    p.constructor = childClass;</div><div class="line">    // 设置子类的原型</div><div class="line">    childClass.prototype = p;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们需要继承父类的原型，不需要在调用父类的构造函数，我们只需要父类原型的一个副本，而这个副本我们是可以通过原型继承拿到，如果直接赋值给子类对象，会导致子类的原型错乱，因为父类的原型对象复制到 <code>P</code> 中的 <code>constructor</code> 指向的不是子类的对象，所以经行了修正，并赋值给子类的原型，这样子类也就继承了父类的原型，但是没有执行父类的构造方法。</p>
+<p>ok，测试一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">// 定义父类</div><div class="line">function SuperClass (name) &#123;</div><div class="line">	this.name = name;</div><div class="line">	this.object = &#123;</div><div class="line">		a: 1,</div><div class="line">		b: 2</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line">// 定义父类的原型</div><div class="line">SuperClass.prototype.showName = function () &#123;</div><div class="line">    console.log(this.name)</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 定义子类</div><div class="line">function ChildClass (name,age) &#123;</div><div class="line">    // 构造函数式继承</div><div class="line">    SuperClass.call(this,name);</div><div class="line">    // 子类新增属性</div><div class="line">    this.age = age;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 寄生式继承父类原型</div><div class="line">inheritPrototype(ChildClass,SuperClass);</div><div class="line">// 子类新增原型方法</div><div class="line">ChildClass.prototype.showAge = function () &#123;</div><div class="line">    console.log(this.age)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//</div><div class="line">var child1 = new ChildClass(&apos;Tom&apos;,24);</div><div class="line">var child2 = new ChildClass(&apos;Jack&apos;,25);</div><div class="line"></div><div class="line">console.log(child1.object)  // &#123; a : 1 , b : 2 &#125;</div><div class="line">child1.object.a = 3 ;</div><div class="line">console.log(child1.object)  // &#123; a : 3 , b : 2 &#125;</div><div class="line">console.log(child2.object)  // &#123; a : 1 , b : 2 &#125;</div><div class="line"></div><div class="line">console.log(child1.showName())  // Tom</div><div class="line">console.log(child2.showAge())   // 25</div></pre></td></tr></table></figure>
+<p>现在没问题了哈，之前的问题也都解决了，大功告成~</p>
+<h2 id="多继承"><a href="#多继承" class="headerlink" title="多继承"></a>多继承</h2><p>像 <code>Java</code>、<code>C++</code> 面向对象中会有多继承你的概念，但是 <code>javascript</code> 的继承是依赖原型链实现的，但是原型链只有一条，理论上是不能实现多继承的。但是我们可以利用 <code>javascript</code> 的灵活性，可以通过继承多个对象的属性来实现类似的多继承。</p>
+<p>首先，我们来看一个比较经典的继承单对象属性的方法 —— <strong><code>extend</code></strong></p>
+<pre><code>function extend (target,source) {
+    //遍历源对象中的属性
+    for( var property in source ){
+        //将源对象中的属性复制到目标对象
+        target[property] = source[property]
+    }
+     // 返回目标对象
+    return target;
+}
+</code></pre><p>但是这个方法是一个浅复制过程，也就是说只能复制基本数据类型，对于引用类型的数据达不到预期效果，也会出现数据篡改的情况：</p>
+<pre><code>var parent = {
+    name: &apos;super&apos;,
+    object: {
+        a: 1,
+        b: 2
+    }
+}
+
+var child = {
+    age: 24
+}
+
+extend(child, parent);
+
+console.log(child);     //{ age: 24, name: &quot;super&quot;, object: { a : 1 , b : 2 } }
+child.object.a = 3;
+console.log(parent);    //{ name: &quot;super&quot;, object: { a : 3 , b : 2 } }
+</code></pre><p>顺着这个思路，要实现多继承，就要将传入的多个对象的属性复制到源对象中，进而实现对多个对象的属性继承，我们可以参考 <code>jQuery</code> 框架中的 <code>extend</code> 方法，对我们上面的函数进行改造~</p>
+<pre><code>//判断一个对象是否是纯对象
+function isPlainObject(obj) {
+    var proto, Ctor;
+
+    // (1) null 肯定不是 Plain Object
+    // (2) 使用 Object.property.toString 排除部分宿主对象，比如 window、navigator、global
+    if (!obj || ({}).toString.call(obj) !== &quot;[object Object]&quot;) {
+        return false;
+    }
+
+    proto = Object.getPrototypeOf(obj);
+
+    // 只有从用 {} 字面量和 new Object 构造的对象，它的原型链才是 null
+    if (!proto) {
+        return true;
+    }
+
+    // (1) 如果 constructor 是对象的一个自有属性，则 Ctor 为 true，函数最后返回 false
+    // (2) Function.prototype.toString 无法自定义，以此来判断是同一个内置函数
+    Ctor = ({}).hasOwnProperty.call(proto, &quot;constructor&quot;) &amp;&amp; proto.constructor;
+    return typeof Ctor === &quot;function&quot; &amp;&amp; Function.prototype.toString.call(Ctor) === Function.prototype.toString.call(Object);
+}
+
+function extend() {
+    var name, options, src, copy, clone, copyIsArray;
+    var length = arguments.length;
+    // 默认不进行深拷贝
+    var deep = false;
+    // 从第二个参数起为被继承的对象
+    var i = 1;
+    // 第一个参数不传布尔值的情况下，target 默认是第一个参数
+    var target = arguments[0] || {};
+    // 如果第一个参数是布尔值，第二个参数是 target
+    if (typeof target == &apos;boolean&apos;) {
+        deep = target;
+        target = arguments[i] || {};
+        i++;
+    }
+    // 如果target不是对象，我们是无法进行复制的，所以设为 {}
+    if (typeof target !== &quot;object&quot; &amp;&amp; !( typeof target === &apos;function&apos;)) {
+        target = {};
+    }
+
+    // 循环遍历要复制的对象们
+    for (; i &lt; length; i++) {
+        // 获取当前对象
+        options = arguments[i];
+        // 要求不能为空 避免 extend(a,,b) 这种情况
+        if (options != null) {
+            for (name in options) {
+                // 目标属性值
+                src = target[name];
+                // 要复制的对象的属性值
+                copy = options[name];
+
+                // 解决循环引用
+                if (target === copy) {
+                    continue;
+                }
+
+                // 要递归的对象必须是 plainObject 或者数组
+                if (deep &amp;&amp; copy &amp;&amp; (isPlainObject(copy) ||
+                    (copyIsArray = Array.isArray(copy)))) {
+                    // 要复制的对象属性值类型需要与目标属性值相同
+                    if (copyIsArray) {
+                        copyIsArray = false;
+                        clone = src &amp;&amp; Array.isArray(src) ? src : [];
+
+                    } else {
+                        clone = src &amp;&amp; isPlainObject(src) ? src : {};
+                    }
+
+                    target[name] = extend(deep, clone, copy);
+
+                } else if (copy !== undefined) {
+                    target[name] = copy;
+                }
+            }
+        }
+    }
+
+    return target;
+};
+</code></pre><p>该方法默认是浅拷贝，即：</p>
+<pre><code>var parent = {
+    name: &apos;super&apos;,
+    object: {
+        a: 1,
+        b: 2
+    }
+}
+var child = {
+    age: 24
+}
+
+extend(child,parent)
+console.log(child); // { age: 24, name: &quot;super&quot;, object: { a : 1 , b : 2 } }
+child.object.a = 3;
+console.log(parent) // { name: &quot;super&quot;, object: { a : 3 , b : 2 } }
+</code></pre><p>我们只需要将第一个参数传为 <code>true</code> ， 就可以深复制了，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">extend(true,child,parent)</div><div class="line">console.log(child); // &#123; age: 24, name: &quot;super&quot;, object: &#123; a : 1 , b : 2 &#125; &#125;</div><div class="line">child.object.a = 3;</div><div class="line">console.log(parent) // &#123; name: &quot;super&quot;, object: &#123; a : 1 , b : 2 &#125; &#125;</div></pre></td></tr></table></figure>
+<h2 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h2><p>面向对象编程中还有一种比较重要的特性，叫 <strong>多态</strong> ，就是同一个方法多种调用方式。<code>javascript</code> 中也可以对传入的参数做判断来实现多种调用方式，这里我们就以一个 <code>add</code> 方法作为示例看看 <code>javascript</code> 中多态的实现，该方法如果不穿参数返回 <code>1</code> ， 穿一个参数返回 <code>1 +</code>参数，传入两个参数返回两个参数的和~</p>
+<pre><code>// 多态
+function add() {
+    // 获取参数
+    var arg = arguments ,
+        // 参数长度
+        len = arg.length;
+
+    switch (len) {
+        //如果没有参数
+        case 0:
+            return 1;
+        // 如果只有一个参数
+        case 1:
+            return 1 + arg[0];
+        // 如果有两个参数
+        case 2:
+            return arg[0] + arg[1]
+    }
+}
+
+console.log(add());     // 1
+console.log(add(9));    // 10
+console.log(add(8,9));  // 17
+</code></pre><p>这样我们就实现了多态~</p>
+<p>ok~这些就是 <code>javascript</code> 中面向对象的一些知识，能仔细看到这里的小伙伴，相信你们对 <code>javascript</code> 中面向对象编程有了进一步的认识和了解，也为后面的<strong>设计模式</strong>的学习奠定了基础，接下来也会继续分享 <code>javascript</code> 中不同的设计模式，欢迎喜欢的小伙伴持续关注~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/Wx-iconfont/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -688,230 +1079,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/16/Wx-plugin/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/16/Wx-plugin/" itemprop="url">手把手教你开发微信小程序中的插件</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-16T18:12:20+08:00">
-                2018-04-16
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/小程序/" itemprop="url" rel="index">
-                    <span itemprop="name">小程序</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
-<h3 id="小程序插件接入"><a href="#小程序插件接入" class="headerlink" title="小程序插件接入"></a>小程序插件接入</h3><p>小程序插件不像自定义组件那样，很方便的就可以嵌在自己的代码中了，它是需要去官网开通小程序插件功能才能使用的，详细的接入流程和文档可以阅读官方的 <a href="https://developers.weixin.qq.com/miniprogram/introduction/plugin.html#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" target="_blank" rel="external">小程序插件接入指南</a>，当然这不是我们本篇文章的重点，本篇文章重点是教你如何开发一个微信小程序插件~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>建立模板</strong></p>
-<p>要开发一个小程序插件，前期准备要充分，我们打开在开发者工具中，我们按照正常步骤新建一个小程序项目，并选择 <strong>「建立插件快速启动模板」</strong> ，没有 <code>AppID</code> 的小伙伴我建议去官网注册一个，因为缺乏 <code>AppID</code>，不仅部分功能受到限制，也不方面在真机上调试~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-96e87ee925688cbc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p><strong>项目结构</strong></p>
-<p>插件项目建立完成之后，开发者工具就会自动新建一个插件项目，官网给的示例项目的结构如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-6a285d51fa176f72.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>我们先大概了解一下~</p>
-<p>项目中包含了两个目录：</p>
-<ul>
-<li><code>miniprogram</code> 目录：放置的是一个小程序，该小程序是用于调试、测试插件用的。</li>
-<li><code>plugin</code> 目录：插件代码的存放目录，用于放置我们开发的插件</li>
-</ul>
-<p>前者就跟普通小程序一样，我们可以正常开发，后来用来插件调试、预览和审核，不同的是 <code>app.json</code> 和 <code>project.config.json</code> 里多了一些关于插件的配置而已，这些也都是官方帮你完成了，一般也不用配置，当然我们也可以根据自己的实际项目需求做对应的调整~</p>
-<p><code>plugin</code> 插件文件夹下存放的插件的目录结构大概如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-772d6c10f689b4e3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<ul>
-<li><code>api</code> ： 接口插件文件夹，可以存放插件所需的接口</li>
-<li><code>components</code> ： 插件提供的自定义组件文件夹， 中自定义组件可以有多个</li>
-<li><code>index.js</code> ： 插件入口文件，可以在这里 <code>export</code> 一些<code>js</code>接口，供插件使用者使用</li>
-<li><code>plugin.json</code> ： 插件的配置文件，主要说明有哪些自定义组件可以供插件外部调用，并标识哪个js文件是插件的js接口文件，默认的配置形式如下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;publicComponents&quot;: &#123;</div><div class="line">    &quot;list&quot;: &quot;components/list/list&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;main&quot;: &quot;index.js&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>具体实现</strong></p>
-<p>有些人可能纳闷了？觉得官方不是现成的示例了，为啥我还要写这篇文章呢？在我看来，官网给的示例过于简单，不足以展示插件的用法，官方给的示例中很多东西都没有涉及到，只是单纯的数据列表渲染，没有交互，这在实际开发中几乎是不存在的，大部分情况下，我们都是要通过插件的回调来进行一系列操作，本篇文章就是专门针对微信官网示例的痛点，分享一下自己的实现过程和思路~</p>
-<p>ok，老规矩，首先先定一个小目标，我们要实现一个省市区选择器的插件，并在点击提交按钮的时候把数据提交过去，大整效果如下图所示~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-588f37b9f67ee63a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p><strong>Step1</strong></p>
-<p>首先，我们在 <code>components</code> 组件文件中创建一个 <code>regionPicker</code> 文件夹，用来开发我们的省市区选择器，我们右击选择创建 <code>component</code> 并命名完毕后，就会产生组件的组成部分，即 <code>.wxml</code>、<code>.wxss</code>、<code>.json</code>、<code>.js</code> 四个文件，我们为了方便，就直接采用微信自带的 <code>picker</code> 实现~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0c78a4e0d6225f64.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>代码如下：</p>
-<p>结构 <code>regionPicker.wxml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;view class=&apos;section&apos;&gt;</div><div class="line">    &lt;view class=&quot;section-title&quot;&gt;省市区选择器&lt;/view&gt;</div><div class="line">    &lt;picker mode=&quot;region&quot; bindchange=&quot;bindRegionChange&quot; value=&quot;&#123;&#123;region&#125;&#125;&quot; &gt;</div><div class="line">        &lt;view class=&quot;picker&quot;&gt;</div><div class="line">            当前选择：&#123;&#123;region[0]&#125;&#125;，&#123;&#123;region[1]&#125;&#125;，&#123;&#123;region[2]&#125;&#125;</div><div class="line">        &lt;/view&gt;</div><div class="line">    &lt;/picker&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
-<p>样式 <code>regionPicker.wxss</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">.section&#123;</div><div class="line">    padding: 20rpx;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.section-title&#123;</div><div class="line">    font-size: 30rpx;</div><div class="line">    line-height: 40rpx;</div><div class="line">    text-align: center;</div><div class="line">    color: #666;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.picker&#123;</div><div class="line">    margin: 20rpx auto;</div><div class="line">    text-align: center;</div><div class="line">    font-size: 30rpx;</div><div class="line">    color: #666;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>js <code>regionPicker.js</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Component(&#123;</div><div class="line">    properties : &#123;</div><div class="line">        region : &#123;</div><div class="line">            type : Array ,</div><div class="line">            value: [&apos;北京市&apos;, &apos;北京市&apos;, &apos;东城区&apos;]</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    data: &#123;</div><div class="line"></div><div class="line">    &#125;,</div><div class="line">    methods : &#123;</div><div class="line">       bindRegionChange(e)&#123;</div><div class="line">        this.setData(&#123;</div><div class="line">            region: e.detail.value</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>跟我们书写自定义组件基本相同，数据绑定在 <code>region</code> 字段，方法声明在 <code>methods</code> 对象中，关于自定义组件中 <code>js</code> 文件中的书写还不是很熟的小伙伴，可以看看官方<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/component.html" target="_blank" rel="external"><code>Component构造器</code></a> 和 我上篇文章<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">自定义组件开发</a>中对其的一些介绍和理解~</p>
-<p><strong>Step2</strong></p>
-<p>到这里，你已经实现了一个自定义的组件，如何将其以插件的形式让其他小程序应用呢，需要配置两个地方，一个是 <code>plugin.json</code> ，声明我们的插件;</p>
-<p><code>plugin.json</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;publicComponents&quot;: &#123;</div><div class="line">    &quot;regionPicker&quot; : &quot;components/regionPicker/regionPicker&quot;</div><div class="line">  &#125;,</div><div class="line">  &quot;main&quot;: &quot;index.js&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>另一个是在我们需要的页面中去引入（这里是 <code>index.wxml</code> ），修改 <code>index.json</code> ，引入插件</p>
-<p><code>index.json</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;usingComponents&quot;: &#123;</div><div class="line">    &quot;regionPicker&quot; : &quot;plugin://myPlugin/regionPicker&quot;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>接着页面中调用一下即可</p>
-<p><code>index.wxml</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!--引入插件  --&gt;</div><div class="line">&lt;regionPicker /&gt;</div><div class="line"></div><div class="line">&lt;button class=&apos;submit&apos;&gt;提交&lt;/button&gt;</div></pre></td></tr></table></figure>
-<p>现在你看到的效果基本也就是下图这样了~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f16e9a44947d7224.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>嗯，看起来功能都正常，好像也没什么问题啊~</p>
-<p>不对，好像又有问题了，我切换后的数据怎么传过来，我点击提交按钮的时候怎么穿我选择区域呢，确实是，我们接着看~</p>
-<p><strong>Step3</strong></p>
-<p>我们接下来就要解决上面的问题，首先，我们有了之前开发组件的经验，应该都知道，我们刚才是在 <code>properties</code> 字段中声明的 <code>region</code> ，那么我们当然可以对它进行修改，我们在 <code>index.js</code> 中的 <code>data</code> 字段中也声明一个 <code>region</code>，不同的是我们将它的值设置为 <code>region: [&#39;广东省&#39;, &#39;广州市&#39;, &#39;海珠区&#39;]</code> ， 再将其绑定到我们的插件上 <code>&lt;regionPicker region=&quot;&quot;/&gt;</code> 后保存 ，我们会发现现在的插件默认值已经不是 <strong>北京市, 北京市, 东城区</strong> ， 而变成了 <strong>广东省, 广州市, 海珠区</strong> ， 这样就解决了修改插件默认值的问题，接下来就是回调事件了！</p>
-<p>嗯，其实回调触发也很简单，有过自定义组件开发经验的小伙伴应该早都想到了，跟自定义组件一样，我们只需要在组件 <code>change</code> 的时候触发回调就可以了，即我们修改 <code>regionPicker.js</code> 的 <code>bindRegionChange</code> 方法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">bindRegionChange(e)&#123;</div><div class="line">    this.setData(&#123;</div><div class="line">        region: e.detail.value</div><div class="line">    &#125;)</div><div class="line">    // 触发回调</div><div class="line">    this.triggerEvent(&quot;changeEvent&quot;, &#123; region: this.data.region&#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们把每次的改变值通过回调穿回去，这样我们直接在 <code>index.wxml</code> 中定义 <code>&lt;regionPicker region=&quot;&quot; bindchangeEvent=&quot;changeEvent&quot; /&gt;</code> ，调用 <code>index.js</code> 中的 <code>changeEvent</code> 方法即可.</p>
-<p><code>index.js</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Page(&#123;</div><div class="line">    data: &#123;</div><div class="line">        region: [&apos;广东省&apos;, &apos;广州市&apos;, &apos;海珠区&apos;]</div><div class="line">    &#125;,</div><div class="line">    submit()&#123;</div><div class="line">        console.log(this.data.region)</div><div class="line">    &#125;,</div><div class="line">    changeEvent(e)&#123;</div><div class="line">        console.log(e)</div><div class="line">        this.setData(&#123;</div><div class="line">            region : e.detail.region</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    onLoad()&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>这样，每次选择区域后，通过回调触发，我们就可以通过 <code>e.detail</code> 拿到我们想要的数据了~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0ef7cefc81ee4700.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>到这里，插件的数据交互传递基本没什么问题了~<br>想想，我们还有什么没有用到的呢，插件的 <code>api</code> 接口，ok，我们接下来就看看这个怎么使用~</p>
-<p><strong>Step4</strong></p>
-<p>我们知道了 <code>api</code> 的文件夹的作用是定义插件的一些接口，我们可以定义以下几个方法：</p>
-<p><code>api.js</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">let systemInfo = null;</div><div class="line"></div><div class="line">// 获取插件信息</div><div class="line">function getPluginInfo() &#123;</div><div class="line">    return &#123;</div><div class="line">        name : &apos;regionPicker&apos; ,</div><div class="line">        version : &apos;1.0.0&apos; ,</div><div class="line">        date : &apos;2018-04-14&apos;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//设置设备信息</div><div class="line">function setSystemInfo(value)&#123;</div><div class="line">    systemInfo = value;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//获取设备信息</div><div class="line">function getSystemInfo()&#123;</div><div class="line">    return systemInfo;</div><div class="line">&#125;</div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">    getPluginInfo ,</div><div class="line">    getSystemInfo ,</div><div class="line">    setSystemInfo</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>后面通过 <code>exports</code> 把想要用的接口暴露出去~</p>
-<p>还记得我们之前的插件入口文件 <code>index.js</code> 么，现在它就要派上用场了，我们在 <code>index.js</code> 文件中引入我们的 <code>api.js</code> ，这样我们就可以在插件加载的时候对其进行一些操作，我这里只是单纯的获取了当前用户的设备信息而已：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">var api = require(&apos;./api/api.js&apos;)</div><div class="line"></div><div class="line">// 获取设备信息</div><div class="line">wx.getSystemInfo(&#123;</div><div class="line">    success: function(res) &#123;</div><div class="line">        // 存数据</div><div class="line">        api.setSystemInfo(</div><div class="line">            &#123;</div><div class="line">                model: res.model ,</div><div class="line">                system: res.system</div><div class="line">            &#125;</div><div class="line">        )</div><div class="line">    &#125;,</div><div class="line">&#125;)</div><div class="line"></div><div class="line"></div><div class="line">module.exports = &#123;</div><div class="line">    getPluginInfo: api.getPluginInfo ,</div><div class="line">    getSystemInfo: api.getSystemInfo</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>后面我们还看到了 <code>exports</code> 了两个方法 <code>getPluginInfo</code> 和 <code>getSystemInfo</code> ，这里暴露出去的方法是方面在插件外部使用，给插件调用者提供接口~</p>
-<p><code>Step5</code></p>
-<p>我们引入插件后，如何调用插件的接口呢？</p>
-<p>其实也很简单，我们只需要在对应的 <code>js</code> 文件中（ 这里是<code>index.js</code> ）通过 <code>var plugin = requirePlugin(&quot;myPlugin&quot;)</code> 引入插件后就可获得对应的接口。</p>
-<p>现在在页面 <code>onLoad</code> 的时候我们打印一下 <code>plugin</code> ，控制台输出如下内容：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-bdfe050d391b3071.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>看到 <code>plugin</code> 的内容刚好就是我们之前在 <code>index.js</code> 中通过 <code>exports</code> 暴露出去的接口，我们调用试试看~</p>
-<p>返回如下内容：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-de558c20dd5d0603.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>接口数据也能完美的获取，棒棒哒~</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>怎么样，是不是对小程序插件开发有了新的认识！其实并没有想象中的那么复杂，倒是跟<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">自定义组件开发</a>有很多相似点，我相信现在你已经基本 get 了小程序插件开发的技巧了，还没有学会了小伙伴加油啊，搜搜学习，快快上手，多开发一些常用的插件，方便自己以后在小程序中引用~</p>
-<p>咳咳，至于我呢。。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-d0003503d6151910.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="13.jpg"></p>
-<p>哦，对了，代码已托管在<a href="https://github.com/Chris-wei/wx-pungin" target="_blank" rel="external">github</a>上，有需要的小伙伴自行下载~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -965,7 +1132,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-count">32</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1055,7 +1222,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="小程序," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="背景小程序这两年可谓是风风火火，已经涉及到了行业的方方面面，作为一枚前端码农，为了紧跟时代的步伐，满足市场的需要，楼主也步入了小程序的坑中，一探究竟，从最初的原生开发，过渡到WePY的引入，又转到了mpvue的框架，最近又准备踩踩Taro的坑 了~ 之所以从mpvue框架迁移到Taro框架，一是由于该框架是京东凹凸实验室开发维护的，目前来看比较活跃，更新迭代速度比较快，质量上有一定的保障；二是该框">
+<meta name="keywords" content="小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Taro框架的微信小程序JWT授权登录方案">
+<meta property="og:url" content="http://yoursite.com/2019/03/01/Wx-Auth/index.html">
+<meta property="og:site_name" content="Cryptic&#39;s Blog">
+<meta property="og:description" content="背景小程序这两年可谓是风风火火，已经涉及到了行业的方方面面，作为一枚前端码农，为了紧跟时代的步伐，满足市场的需要，楼主也步入了小程序的坑中，一探究竟，从最初的原生开发，过渡到WePY的引入，又转到了mpvue的框架，最近又准备踩踩Taro的坑 了~ 之所以从mpvue框架迁移到Taro框架，一是由于该框架是京东凹凸实验室开发维护的，目前来看比较活跃，更新迭代速度比较快，质量上有一定的保障；二是该框">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-c46de07621f2a6c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-fa6824f472a70a00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-033f45a7f08b05b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-17f657dc8c405916.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-03-01T08:18:10.342Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于Taro框架的微信小程序JWT授权登录方案">
+<meta name="twitter:description" content="背景小程序这两年可谓是风风火火，已经涉及到了行业的方方面面，作为一枚前端码农，为了紧跟时代的步伐，满足市场的需要，楼主也步入了小程序的坑中，一探究竟，从最初的原生开发，过渡到WePY的引入，又转到了mpvue的框架，最近又准备踩踩Taro的坑 了~ 之所以从mpvue框架迁移到Taro框架，一是由于该框架是京东凹凸实验室开发维护的，目前来看比较活跃，更新迭代速度比较快，质量上有一定的保障；二是该框">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-c46de07621f2a6c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/01/Wx-Auth/"/>
+
+
+
+
+
+  <title>基于Taro框架的微信小程序JWT授权登录方案 | Cryptic's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b8caac68f7b00d37aea3c9ee8ce00dd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cryptic's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/01/Wx-Auth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">基于Taro框架的微信小程序JWT授权登录方案</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-01T16:30:20+08:00">
+                2019-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>小程序这两年可谓是风风火火，已经涉及到了行业的方方面面，作为一枚前端码农，为了紧跟时代的步伐，满足市场的需要，楼主也步入了小程序的坑中，一探究竟，从最初的原生开发，过渡到<a href="https://tencent.github.io/wepy/" target="_blank" rel="external">WePY</a>的引入，又转到了<a href="http://mpvue.com/" target="_blank" rel="external">mpvue</a>的框架，最近又准备踩踩<a href="https://taro.aotu.io/" target="_blank" rel="external">Taro</a>的坑 了~</p>
+<p>之所以从<code>mpvue</code>框架迁移到<code>Taro</code>框架，一是由于该框架是京东凹凸实验室开发维护的，目前来看比较活跃，更新迭代速度比较快，质量上有一定的保障；二是该框架支持多端统一，一劳永逸，为后面拓展H5等其他业务奠定基础~</p>
+<p>因业务需求，我们采用<code>JWT</code>进行身份鉴权，所以才有了这篇<code>JWT</code>授权登录 解(cai)决(keng)方(zhi)案(nan)，如果对<code>JWT</code>还不是很了解的小伙伴，请猛戳<a href="http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html" target="_blank" rel="external">这里</a>~</p>
+<p>ok，不废话了，直接进入你们最想看到代码环节~</p>
+<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>关于<code>Taro</code>的安装的使用，我这里就不再赘述了，具体的步骤可以参考<a href="https://nervjs.github.io/taro/docs/GETTING-STARTED.html" target="_blank" rel="external">官网</a>给出的教程，我们直接来看看授权登录这一块~</p>
+<p><code>FBI WARNING</code> : 本文相关的代码是跟楼主目前公司的有些业务场景有关，如有不同，请自行更改即可~</p>
+<p>初始化<code>Taro</code>项目时，我们需要选择使用<code>Redux</code>模版，进行状态管理，然后默默等待依赖安装完成，通过<code>npm run dev:weapp</code>命令就可以启动我们的小程序服务了~</p>
+<p>接下来跟着我的步骤走下去~</p>
+<p><strong>step1</strong></p>
+<p>首先，我们需要使用到<code>Redux</code>定义一些<code>app</code>相关的数据，方便我们后面的判断和使用~</p>
+<p><code>Redux</code>三步走，<code>reducer</code>、<code>constant</code>、<code>action</code> 我这里就直接贴代码了~</p>
+<ul>
+<li><p><code>constants</code>目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//constants  app.js</div><div class="line"></div><div class="line">//更改app登录状态</div><div class="line">export const CHANGE_APP_ON_LAUNCH = &apos;change_app_on_launch&apos;;</div><div class="line"></div><div class="line">//写入授权信息</div><div class="line">export const INSERT_AUTHORIZE = &apos;insert_authorize&apos;;</div></pre></td></tr></table></figure>
+</li>
+<li><p><code>actions</code>目录</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// actions app.js</div><div class="line"></div><div class="line">import * as constants from &apos;../constants/app&apos;</div><div class="line"></div><div class="line">//更改登录状态</div><div class="line">export const changeAppOnLaunch = () =&gt; (&#123;</div><div class="line">    type : constants.CHANGE_APP_ON_LAUNCH</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//写入请求token</div><div class="line">export const insertToken = (authorize) =&gt; (&#123;</div><div class="line">    type : constants.INSERT_AUTHORIZE ,</div><div class="line">    authorize</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<ul>
+<li><code>recuders</code>目录</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">import * as constants from &apos;../constants/app&apos;</div><div class="line"></div><div class="line">const INITIAL_STATE =&#123;</div><div class="line">	//请求接口域名地址</div><div class="line">	baseURL : &apos;https://xx.xxx.xx/&apos; ,</div><div class="line">	//应用首次加载</div><div class="line">	appOnLaunch : true ,</div><div class="line">	//请求token</div><div class="line">	authorize : &apos;&apos;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default function app( state = INITIAL_STATE , action )&#123;</div><div class="line">    switch (action.type)&#123;</div><div class="line">    	case constants.CHANGE_APP_ON_LAUNCH :</div><div class="line">            return &#123;</div><div class="line">            	...state ,</div><div class="line">            	appOnLaunch : false</div><div class="line">            &#125;;</div><div class="line">    	case constants.INSERT_AUTHORIZE :</div><div class="line">            return &#123;</div><div class="line">            	...state ,</div><div class="line">            	authorize : action.authorize</div><div class="line">            &#125;;</div><div class="line">    	default :</div><div class="line">            return state;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后不要忘记将其通过 <code>combineReducers</code> 方法合并到 <code>Redux</code> 里面去~</p>
+<p>为了方便后面的使用，这里我在入口文件 <code>app.js</code> 中将 <code>store</code> 直接挂在到了 <code>Taro</code> 对象上，这样我们也就可以在后面通过<code>Taro.$store</code>这种方式直接获取进行操作处理，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> //app.js</div><div class="line"></div><div class="line"> componentDidMount() &#123;</div><div class="line">    //将redux状态挂载到 Taro 对象上，方便使用</div><div class="line">    Taro.$store = store;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>step2</strong></p>
+<p>我们在<code>src</code>创建一个<code>utils</code>文件夹，用来存放我们一些公用的方法之类的文件~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-c46de07621f2a6c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>由于微信小程序的限制，我们无法得知用户的登录状态是否过期，所以我们必须要通过<code>wx.checkSession</code> 来接口检测当前用户登录态是否有效，做对应的逻辑处理~</p>
+<p>因此，我们创建一个<code>auth.js</code>文件，用来微信登录，获取获取授权信息，其流程可以参考官方的这张时序图！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-fa6824f472a70a00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>我们的<code>JWT</code>就是上面图所提到的自定义登录状态，它一般是长这样的</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-033f45a7f08b05b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>其中<code>exp</code>是令牌过期时间，<code>iat</code>令牌签发时间，<code>nbf</code>令牌生效时间，<code>token</code>是用户状态，包含用户的身份信息，我们主要会用到<code>exp</code> 和 <code>token</code> 两个字段，用来判断令牌是否过期和发送请求携带用户身份~</p>
+<p>因此，我的做法是，在用户进入小程序的时候通过<code>Taro.checkSession()</code>，检查<code>session_key</code>是否过期，如果过期需要通过 <code>Taro.login()</code>重新登录进行授权，获取<code>JWT</code>授权信息，否则就判断用户的令牌是否过期，如果过期就要重新刷新令牌，重新获取，其代码如下~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line">// auth.js</div><div class="line"></div><div class="line">import Taro from &apos;@tarojs/taro&apos;</div><div class="line">import &#123; insertToken , changeAppOnLaunch &#125; from &apos;../actions/app&apos;</div><div class="line">//获取数据</div><div class="line">export default class Auth &#123;</div><div class="line">//app授权</div><div class="line">static appCheckAuth()&#123;</div><div class="line">    return new Promise(function (resolve) &#123;</div><div class="line">    	const state = Taro.$store.getState();</div><div class="line">    	//如果有授权信息</div><div class="line">    	if( Auth.checkAuth() &amp;&amp; !state.app.appOnLaunch )&#123;</div><div class="line">            //直接返回</div><div class="line">            resolve(true);</div><div class="line">    	&#125;else&#123;</div><div class="line">            //判断session_key是否过期</div><div class="line">            Taro.checkSession().then(async ()=&gt;&#123;</div><div class="line">                //未过期检查token是否有效</div><div class="line">                if( !Auth.checkAuth() )&#123;</div><div class="line">                    //判断是否 token 请求成功</div><div class="line">                    let flag = await getAuthToken();</div><div class="line">                    if( flag ) &#123;</div><div class="line">                        //更新app状态</div><div class="line">                        Taro.$store.dispatch(changeAppOnLaunch());</div><div class="line">                        resolve(true);</div><div class="line">                    &#125;else&#123;</div><div class="line">                      //提示</div><div class="line">                        Taro.showToast(&#123;</div><div class="line">                        title : &apos;获取授权信息失败&apos; ,</div><div class="line">                        icon : &apos;none&apos; ,</div><div class="line">                        mask : true</div><div class="line">                        &#125;)</div><div class="line">                    &#125;</div><div class="line">                &#125;else&#123;</div><div class="line">                    //更新app状态</div><div class="line">                    Taro.$store.dispatch(changeAppOnLaunch());</div><div class="line">                    //token 没有过期，直接返回</div><div class="line">                    resolve(true);</div><div class="line">                &#125;</div><div class="line">            &#125;).catch(async (err)=&gt; &#123;</div><div class="line">            	console.log(err);</div><div class="line">            	let flag = await getAuthToken();</div><div class="line">            	//判断是否 token 请求成功</div><div class="line">            	if( flag ) &#123;</div><div class="line">                    //更新app状态</div><div class="line">                    Taro.$store.dispatch(changeAppOnLaunch());</div><div class="line">                    resolve(true);</div><div class="line">            	&#125;else&#123;</div><div class="line">                    //提示</div><div class="line">                    Taro.showToast(&#123;</div><div class="line">                    	title : &apos;获取授权信息失败&apos; ,</div><div class="line">                    	icon : &apos;none&apos; ,</div><div class="line">                    	mask : true</div><div class="line">                    &#125;)</div><div class="line">            	&#125;</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">    // 检查令牌是否有效 true--&gt; 有效  false--&gt; 无效</div><div class="line">    static checkAuth()&#123;</div><div class="line">        const state = Taro.$store.getState();</div><div class="line">        //从缓存读取授权信息</div><div class="line">        let authorize = state.authorize || Taro.getStorageSync(&apos;authorize&apos;) || &#123;&#125;,</div><div class="line">            expiryTime = 0,</div><div class="line">            nowTime = ~~(Date.now() / 1000);</div><div class="line"></div><div class="line">    	if (authorize.exp) &#123;</div><div class="line">            expiryTime = authorize.exp;</div><div class="line">    	&#125;</div><div class="line"></div><div class="line">    	return expiryTime - nowTime &gt; 300;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //获取token</div><div class="line">    static getToken()&#123;</div><div class="line">    	const state = Taro.$store.getState();</div><div class="line">    	let authorize = state.authorize || Taro.getStorageSync(&apos;authorize&apos;);</div><div class="line">    	return authorize.token;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//授权用户 token</div><div class="line">async function getAuthToken()&#123;</div><div class="line">	const state = Taro.$store.getState();</div><div class="line">	//login</div><div class="line">	let res = await Taro.login();</div><div class="line">	//获取token</div><div class="line">	let response = await Taro.request(&#123;</div><div class="line">            url : `$&#123;state.app.baseURL&#125;api/xxx/xxx` ,</div><div class="line">            data : &#123;</div><div class="line">            	code : res.code</div><div class="line">            &#125; ,</div><div class="line">            method : &apos;POST&apos;</div><div class="line">	&#125;)</div><div class="line">    //判断是否成功</div><div class="line">    if( response.data.data &amp;&amp; response.data.data.authorize )&#123;</div><div class="line">        //写入token</div><div class="line">        let authorize = response.data.data.authorize;</div><div class="line">        saveAuthToken(authorize);</div><div class="line">        return true;</div><div class="line">    &#125;else&#123;</div><div class="line">        console.log(&apos;获取token失败&apos;);</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//写入信息</div><div class="line">function saveAuthToken (authorize) &#123;</div><div class="line">    //写入状态管理</div><div class="line">    Taro.$store.dispatch(insertToken(authorize));</div><div class="line">    //写入缓存</div><div class="line">    Taro.setStorageSync(&apos;authorize&apos;,authorize)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面总共定义不少方法，我都有注释，相信大家也都能看懂，其主要思想就是，如果用户首次进入小程序，通过<code>login</code>进行登录，并将令牌存入本地，后面通过<code>getToken</code>方法进行获取请求的令牌，以后用户在进入小程序的时候，就进行授权信息和登录状态检测，如果登录过期或者令牌过期则通过<code>getAuthToken</code>方法进行请求，获取最新的身份令牌！</p>
+<p>上面之所以要触发一次 <code>changeAppOnLaunch</code> 是因为用户每次进入需要进行一次<code>checkSeesion</code>检测，如果用户本次<code>session_key</code>未过期，一般来说本次小程序生命周期内就就不需要在进行<code>checkSession</code>检测了，因此我们用一个状态来标识用户是否是重新进入小程序~</p>
+<p><strong>step3</strong></p>
+<p>假定我们的页面的初始化请求都写在<code>componentDidMount</code>生命周期内，那么现在我们要做的就是要在页面接口请求之前去判断是否已经获取到<code>token</code>，如果有<code>token</code>则进行正常的接口请求，否则就通过上面的登录获取<code>token</code>，不然就会导致接口未携带令牌而发生错误~</p>
+<p>那么问题来了，我们如何阻塞<code>componentDidMount</code>而保证每次接口请求之前都已经拿到了<code>token</code>呢，这里我的做法就是对<code>Component</code>进行二次封装，采用的是<code>ES7</code>提供的<strong>装饰器</strong>，关于装饰器的使用，可以瞄一眼这篇<a href="https://juejin.im/post/59f1c484f265da431c6f8940" target="_blank" rel="external">文章</a>~</p>
+<p>通过装饰器，我们可以将<code>Component</code>进行二次封装，可以根据业务情况将授权、分享等全部进行归一化处理，这里我们创建一个<code>pageInit.js</code>，来实现这个功能~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">//pageInit.js</div><div class="line"></div><div class="line">import Taro from &apos;@tarojs/taro&apos;</div><div class="line">import auth from &apos;../utils/auth&apos;</div><div class="line">function pageInit() &#123;</div><div class="line">    return function Component(Component) &#123;</div><div class="line">        return class extends Component &#123;</div><div class="line"></div><div class="line">        constructor (props)&#123;</div><div class="line">            super(props);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //onLoad</div><div class="line">        componentWillMount()&#123;</div><div class="line">            //初始分享信息</div><div class="line">            initShareMenu(this.state);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //阻塞 didMount ， 鉴权</div><div class="line">        async componentDidMount() &#123;</div><div class="line">            let result = await auth.appCheckAuth();</div><div class="line">            //授权成功</div><div class="line">            if( result )&#123;</div><div class="line">            	//调用父组件的函数</div><div class="line">            	super.componentDidMount &amp;&amp; super.componentDidMount();</div><div class="line">            &#125;else&#123;</div><div class="line">            	//授权失败</div><div class="line">            	Taro.showToast(&#123;</div><div class="line">                    title : &apos;授权失败&apos; ,</div><div class="line">                    icon : &apos;none&apos; ,</div><div class="line">                    mask : true</div><div class="line">            	&#125;)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //重写分享</div><div class="line">        onShareAppMessage()&#123;</div><div class="line">            let shareOptions = super.onShareAppMessage();</div><div class="line">            //如果当前页面配置分享使用配置的</div><div class="line">            if( shareOptions ) return shareOptions;</div><div class="line">            //默认分享</div><div class="line">            return &#123;</div><div class="line">            	title : &apos;默认分享内容&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //重新下拉刷新</div><div class="line">        onPullDownRefresh()&#123;</div><div class="line">            if(super.onPullDownRefresh)&#123;</div><div class="line">            	super.onPullDownRefresh();</div><div class="line">            	setTimeout(() =&gt; &#123;</div><div class="line">            		Taro.stopPullDownRefresh();</div><div class="line">            	&#125;, 1500)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 初始化分享信息</div><div class="line"> */</div><div class="line">function initShareMenu (state) &#123;</div><div class="line">    // 初始化页面分享信息</div><div class="line">    if ( state &amp;&amp; state.canShare ) &#123;</div><div class="line">    	Taro.showShareMenu(&#123;</div><div class="line">            withShareTicket: false</div><div class="line">    	&#125;)</div><div class="line">    &#125; else &#123;</div><div class="line">    	Taro.hideShareMenu();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default pageInit;</div></pre></td></tr></table></figure>
+<p>核心思想是，通过<code>async</code> 和 <code>await</code> 阻塞，让其先执行自身的 <code>componentDidMount</code> 方法，拿到授权信息后，在调用父类的 <code>componentDidMount</code> 方法，这样就可以保证授权信息获取到再进行接口请求了~</p>
+<p>我们要做的就是在页面内通过 <strong><code>@pageInit()</code></strong> 进行装饰即可~</p>
+<p>这里我做了个测试，在清空全部授权信息后，在页面进行一次接口请求，可以看到先执行的是 <code>lite</code> 获取用户令牌，然后进行页面的接口请求，保证了执行顺序不会错乱~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-17f657dc8c405916.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>ok，到此为止，我们基本上已经算是完成了整套体系，接下来就是在接口请求中加上<code>token</code>就好了，这里我就补不贴代码了~<br>完成的代码可去仓库自行<a href="https://github.com/Chris-wei/taro" target="_blank" rel="external">查看</a>~</p>
+<p><code>Taro</code>对于我来说，也算是属于初探，这篇文章也是希望能给跟我一样萌新的小伙伴一个抛砖引玉的作用，如果有哪里写的不对的地方，还请批评斧正~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/小程序/" rel="tag"># 小程序</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/05/Proxy/" rel="next" title="初探 Vue3.0 中的一大亮点——Proxy !">
+                <i class="fa fa-chevron-left"></i> 初探 Vue3.0 中的一大亮点——Proxy !
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/headImg.jpg"
+              alt="Chris wei" />
+          
+            <p class="site-author-name" itemprop="name">Chris wei</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Chris-wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>简书</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/DreamerChenwei" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010732998898" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正文"><span class="nav-number">2.</span> <span class="nav-text">正文</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">3.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris wei</span>
+
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
