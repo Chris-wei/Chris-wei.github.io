@@ -278,6 +278,425 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/17/BST/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/10/17/BST/" itemprop="url">JS中的算法与数据结构——二叉查找树（Binary Sort Tree）</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T18:45:18+08:00">
+                2017-10-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="二叉查找树（Binary-Sort-Tree）"><a href="#二叉查找树（Binary-Sort-Tree）" class="headerlink" title="二叉查找树（Binary Sort Tree）"></a>二叉查找树（Binary Sort Tree）</h2><p>我们之前所学到的<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（<strong>Tree</strong>），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。</p>
+<p>在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的<strong>根结点</strong>，简称树的<strong>根</strong>（root）。每一个结点可以有多个后件，称为该结点的子结点。没有后件的结点称为叶子结点。一个结点所拥有的子结点的个数称为该结点的度，所有结点中最大的度称为树的度。树的最大层次称为树的深度。</p>
+<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>二叉树是一种特殊的树，它的子节点个数不超过两个，且分别称为该结点的左子树（left subtree）与右子树（right subtree），二叉树常被用作二叉查找树和二叉堆或是二叉排序树（BST）。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="二叉树"></p>
+<p>按一定的规则和顺序走遍二叉树的所有结点，使每一个结点都被访问一次，而且只被访问一次，这个操作被称为树的遍历，是对树的一种最基本的运算。由于二叉树是非线性结构，因此，树的遍历实质上是将二叉树的各个结点转换成为一个线性序列来表示。</p>
+<p>按照根节点访问的顺序不同，树的遍历分为以下三种：前序遍历，中序遍历，后序遍历；</p>
+<p>前序遍历：根节点-&gt;左子树-&gt;右子树</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d146521142eed203.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="先序遍历"></p>
+<p>中序遍历：左子树-&gt;根节点-&gt;右子树</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-8a6483d23d6fb05a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="中序遍历"></p>
+<p>后序遍历：左子树-&gt;右子树-&gt;根节点</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-cd6922046694dd42.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="后序遍历"></p>
+<p>因此我们可以得之上面二叉树的遍历结果如下：<br>前序遍历：ABDEFGC<br>中序遍历：DEBGFAC<br>后序遍历：EDGFBCA</p>
+<h2 id="二叉查找树（BST）"><a href="#二叉查找树（BST）" class="headerlink" title="二叉查找树（BST）"></a>二叉查找树（BST）</h2><p>实际应用中，树的每个节点都会有一个与之相关的值对应，有时候会被称为<strong>键</strong>。因此，我们在构建二叉查找树的时候，确定子节点非常的重要，通常将相对较小的值保存在左节点中，较大的值保存在右节点中，这就使得查找的效率非常高，因此被广泛使用。</p>
+<h2 id="二叉查找树的实现"><a href="#二叉查找树的实现" class="headerlink" title="二叉查找树的实现"></a>二叉查找树的实现</h2><p>根据上面的知识，我们了解到二叉树实际上是由多个节点组成，因此我们首先就要定义一个Node类，用于存放树的节点，其构造与前面的<a href="http://www.jianshu.com/p/f254ec665e57" target="_blank" rel="external">链表</a>类似。Node类的定义如下：</p>
+<pre><code>//节点定义
+
+function Node (data , left , right) {
+    this.data = data;       // 数据
+    this.left = left;       // 左节点
+    this.right = right;     // 右节点
+    this.show = show;       // 显示节点数据
+}
+
+function show(){
+    return this.data;
+}
+</code></pre><p>Node对象既保存了数据，也保存了它的左节点和右节点的链接，其中 show 方法用来显示当前保存在节点中数据。</p>
+<p>现在我们可以创建一个类，用来表示二叉查找数（BST），我们初始化类只包含一个成员，一个表示二叉查找树根节点的 Node 对象，初始化为 null ， 表示创建一个空节点。</p>
+<pre><code>//二叉查找树（BST）的类
+
+function BST(){
+    this.root = null;           // 根节点
+    this.insert = insert;       // 插入节点
+    this.preOrder = preOrder;   // 先序遍历
+    this.inOrder = inOrder;     // 中序遍历
+    this.postOrder = postOrder; // 后序遍历
+    this.find = find;           // 查找节点
+    this.getMin = getMin;       // 查找最小值
+    this.getMax = getMax;       // 查找最大值
+    this.remove = remove;       // 删除节点
+}
+</code></pre><p>现在，我们需要为我们的类添加方法。</p>
+<p>首先就是 insert 方法，向树中添加一个新节点，我们一起来看看这个方法；</p>
+<p><strong>insert：向树中添加新节点</strong></p>
+<p>因为添加节点会涉及到插入位置的问题，必须将其放到正确的位置上，才能保证树的正确性，整个过程较为复杂，我们一起来梳理一下：</p>
+<p>首先要添加新的节点，首先需要创建一个Node对象，将数据传入该对象。</p>
+<p>其次要检查当前的BST树是否有根节点，如果没有，那么表示是一棵新数，该节点就为该树的根节点，那么插入这个过程就结束了；否则，就要继续进行下一步了。</p>
+<p>如果待插入节点不是根节点，那么就必须对BST进行遍历，找到合适的位置。该过程类似遍历链表，用一个变量存储当前节点，一层一层遍历BST，算法如下：</p>
+<ol>
+<li>设值当前节点为根节点</li>
+<li>如果待插入节点保存的数据小于当前节点，则新节点为原节点的左节点，反之，执行第4步</li>
+<li>如果当前节点的左节点为null，就将新节点放到这个位置，退出循环；反之，继续执行下一次循环</li>
+<li>设置新节点为原节点的右节点</li>
+<li>如果当前节点的右节点为null，就将新节点放到这个位置，退出循环；反之，继续执行下一次循环</li>
+</ol>
+<p>这样，就能保证每次添加的新节点能够放到正确的位置上，具体实现如下；</p>
+<pre><code>//插入新节点
+
+function insert(data) {
+    var n = new Node( data , null , null );
+    if( this.root == null ){
+        this.root = n;
+    }else{
+        var current = this.root;
+        var parent;
+        while( true ){
+            parent = current;
+            if( data &lt; current.data ){
+                current = current.left;
+                if( current == null ){
+                    parent.left = n ;
+                    break;
+                }
+            }else{
+                current = current.right;
+                if( current == null ){
+                    parent.right = n;
+                    break;
+                }
+            }
+        }
+    }
+}
+</code></pre><p>现在BST类已初步成型，但操作还仅仅限于插入节点，我们需要有遍历BST的能力，上面我们也提到了是三种遍历方式。其中中序遍历是最容易实现的，我们需要升序的方法访问树中的所有节点，先访问左子树，在访问根节点，最后是右子树，我们采用递归来实现！</p>
+<p><strong>inOrder：中序遍历</strong></p>
+<pre><code> // 中序遍历
+
+function inOrder (node) {
+    if( !(node == null )){
+        inOrder( node.left );
+        console.debug( node.show() + &apos; &apos;);
+        inOrder( node.right );
+    }
+}
+</code></pre><p>怎么样，了解了原理，实现起来还是蛮简单的~</p>
+<p>我们用一段代码来测试一下我们所写的中序遍历：</p>
+<pre><code>var nums = new BST();
+//插入数据
+nums.insert(23);
+nums.insert(45);
+nums.insert(16);
+nums.insert(37);
+nums.insert(3);
+nums.insert(99);
+nums.insert(22);
+</code></pre><p>上述插入数据后，会形成如下的二叉树</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6df2ba6abbb901c0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="BST"></p>
+<p>中序遍历结果如下：</p>
+<pre><code>//中序遍历
+console.log(&quot;Inorder traversal: &quot;);
+inOrder(nums.root);
+
+// Inorder traversal:
+// 3 16 22 23 37 45 99
+</code></pre><p><strong>preOrder：先序遍历</strong></p>
+<p>有了中序遍历的基础，相信先序遍历的实现你已经想出来，怎么样？看看对吗？</p>
+<pre><code>//先序遍历
+
+function preOrder( node ) {
+    if( !(node == null )){
+        console.log( node.show() + &apos; &apos;);
+        preOrder( node.left );
+        preOrder( node.right );
+    }
+}
+</code></pre><p>怎么样，看起来是不是和中序遍历差不多，唯一的区别就是 if 语句中代码的执行顺序，中序遍历中 show 方法放在两个递归调用之间，先序遍历则放在递归调用之前。</p>
+<p>先序遍历结果如下：</p>
+<pre><code>// 先序遍历
+
+console.log(&quot;Preorder traversal: &quot;);
+preOrder(nums.root);
+
+// Preorder traversal:
+// 23 16 3 22 45 37 99
+</code></pre><p><strong>postOrder：后序遍历</strong></p>
+<p>后序遍历的实现和前面的基本相同，将 show 方法放在递归调用之后执行即可</p>
+<pre><code>//后序遍历
+
+function postOrder ( node ) {
+    if( !(node == null ) ){
+        postOrder( node.left );
+        postOrder( node.right );
+        console.log( node.show() + &apos; &apos;);
+    }
+}
+</code></pre><p>后序遍历结果如下：</p>
+<pre><code>// 后序遍历
+
+console.log(&quot;Postorder traversal: &quot;);
+postOrder(nums.root);
+
+// Postorder traversal:
+// 3 22 16 37 99 45 23
+</code></pre><h2 id="二叉查找树的查找运算"><a href="#二叉查找树的查找运算" class="headerlink" title="二叉查找树的查找运算"></a>二叉查找树的查找运算</h2><p>对于BST通常有一下三种的查找类型：</p>
+<ol>
+<li>查找给定值</li>
+<li>查找最大值</li>
+<li>查找最小值</li>
+</ol>
+<p>我们接下来一起来讨论三种查找的方式的实现。</p>
+<p>要查找BST中的最小值和最大值是非常简单的。因为较小的值总是在左子节点上，要想查找BST中的最小值，只需遍历左子树，直到找到最后一个节点即可。同理，查找最大值，只需遍历右子树，直到找到最后一个节点即可。</p>
+<p><strong>getMin：查找最小值</strong></p>
+<p>遍历左子树，直到左子树的某个节点的 left 为 null 时，该节点保存的即为最小值</p>
+<pre><code>//查找最小值
+
+function getMin( ) {
+    var current = this.root;
+    while ( !( current.left == null ) ){
+        current = current.left;
+    }
+    return current.show();
+}
+</code></pre><p><strong>getMax：查找最大值</strong></p>
+<p>遍历右子树，直到右子树的某个节点的 right 为 null 时，该节点保存的即为最大值</p>
+<pre><code>//查找最大值
+
+function getMax () {
+    var current = this.root;
+    while ( !( current.right == null ) ) {
+        current = current.right;
+    }
+    return current.show();
+}
+</code></pre><p>我们还是利用前面构建的树来测试：</p>
+<pre><code>// 最小值
+console.log(&apos;min:&apos; + nums.getMin() );       // min : 3
+
+//最大值
+console.log(&apos;max:&apos; + nums.getMax() );       // max : 99
+</code></pre><p>在BST上查找给定值，需要比较给定值和当前节点保存的值的大小，通过比较，就能确定给定值在不在当前节点，根据BST的特点，qu接下来是向左还是向右遍历；</p>
+<pre><code>//查找给定值
+
+function find ( data ) {
+    var current = this.root;
+    while ( current != null ){
+        if( current.data == data ){
+            return current;
+        }else if( current.data &lt; data ){
+            current = current.right;
+        }else{
+            current = current.left;
+        }
+    }
+    return null;
+}
+</code></pre><p>如果找到给定值，该方法返回保存该值的节点，反之返回null；</p>
+<pre><code>//查找不存在的值
+console.log(&apos;find:&apos; + nums.find(66));       // find : null
+
+//查找存在的值
+console.log(&apos;find:&apos; + nums.find(99) );      // find : [object Object]
+</code></pre><h2 id="二叉查找树的删除运算"><a href="#二叉查找树的删除运算" class="headerlink" title="二叉查找树的删除运算"></a>二叉查找树的删除运算</h2><p>从BST中删除节点的操作最为复杂，其复杂程度取决于删除的节点位置。如果待删除的节点没有子节点，那么非常简单。如果删除包含左子节点或者右子节点，就变得稍微有些复杂。如果删除包含两个节点的节点最为复杂。</p>
+<p>我们采用递归方法，来完成复杂的删除操作，我们定义 remove() 和 removeNode() 两个方法；算法思想如下：</p>
+<ol>
+<li>首先判断当前节点是否包含待删除的数据，如果包含，则删除该节点；如果不包含，则比较当前节点上的数据和待删除树的的大小关系。如果待删除的数据小于当前节点的数据，则移至当前节点的左子节点继续比较；如果大于，则移至当前节点的右子节点继续比较。</li>
+<li>如果待删除节点是叶子节点（没有子节点），那么只需要将从父节点指向它的链接指向变为null；</li>
+<li>如果待删除节点含有一个子节点，那么原本指向它的节点需要做调整，使其指向它的子节点；</li>
+<li>最后，如果待删除节点包含两个子节点，可以选择查找待删除节点左子树上的最大值或者查找其右子树上的最小值，这里我们选择后一种。</li>
+</ol>
+<p>因此，我们需要一个查找树上最小值的方法，后面会用它找到最小值创建一个临时节点，将临时节点上的值复制到待删除节点，然后再删除临时节点；</p>
+<p>我们上面说会用到两个方法，其中 remove 方法只是简单的接收待删除数据，调用 removeNode 删除它，主要工作在 removeNode 中完成，定义如下：</p>
+<pre><code>//删除操作
+
+function remove( data ) {
+    removeNode( this.root , data);
+}
+
+//查找最小值
+
+function getSmallest(node) {
+    if (node.left == null) {
+        return node;
+    }
+    else {
+        return getSmallest(node.left);
+    }
+}
+
+//删除节点
+function removeNode( node , data ) {
+    if( node == null ) {
+        return null;
+    }
+    if(data == node.data) {
+        // 没有子节点的节点
+        if(node.left == null &amp;&amp; node.right == null) {
+            return null;
+        }
+        // 没有左子节点的节点
+        if(node.left == null) {
+            return node.right;
+        }
+        // 没有右子节点的节点
+        if(node.right == null) {
+            return node.left;
+        }
+        // 有2个子节点的节点
+        var tempNode = getSmallest(node.right);
+        node.data = tempNode.data;
+        node.right = removeNode(node.right,tempNode.data);
+        return node;
+
+    }else if(data &lt; node.data) {
+        node.left = removeNode( node.left,data);
+        return node;
+    }else {
+        node.right = removeNode( node.right,data);
+        return node;
+    }
+}
+</code></pre><p> 现在我们来删除节点试试。</p>
+<pre><code>//删除根节点
+nums.remove(23);
+
+inOrder(nums.root);
+
+// 3 16 22 37 45 99
+</code></pre><p>成功了！<br>现在，我们的BST算是完整了。</p>
+<p>我们现在已经可以利用js是实现一个简单的BST了，实际中树的使用会很广泛，希望大家能多去了解了解树的数据结构，多动手实践，相信你会有不少的收获！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/08/Set/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -887,272 +1306,6 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Dictionary/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/27/Dictionary/" itemprop="url">JS中的算法与数据结构——字典(Dictionary)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T17:31:28+08:00">
-                2017-09-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="字典-Dictionary"><a href="#字典-Dictionary" class="headerlink" title="字典(Dictionary)"></a>字典(Dictionary)</h2><p>字典(Dictionary)是一种以 <strong>键-值对</strong> 形式存储数据的数据结构 ，就如同我们平时查看通讯录一样，要找一个电话，首先先找到该号码的机主名字，名字找到了，紧接着电话号码也就有了。这里的键就是你用来查找的东西，本例中指代的就是名字，值就是查找得到的结果，也就是对应的电话号码。</p>
-<p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
-<h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
-<p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cbda4fe5fdd62c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据类型定义"></p>
-<p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
-<pre><code>//字典类
-
-function Dictionary () {
-    this.dataStore = [];
-    this.add = add;         // 添加元素
-    this.find = find;       // 查找元素
-    this.remove = remove;   // 删除元素
-    this.count = count;     // 字典中元素个数
-    this.showAll = showAll; // 显示字典元素
-    this.clear = clear;     // 清空字典
-}
-</code></pre><p><strong>add：向字典添加一个元素</strong></p>
-<p>上面我们也提到，字典是以 键值对 的方式存储数据的，因此，add 方法就需要接受两个参数，分别是 键和值 ，其中键表示其在字典中的索引，实现如下</p>
-<pre><code>//向字典添加元素
-
-function add( key , value ){
-    this.dataStore[key] = value;
-}
-</code></pre><p>没错，就是这么简单！接着我们来看看 find 方法</p>
-<p><strong>find：查找字典中的元素</strong></p>
-<p>我们是以键值对方式存储的，因此我们只需要传入需要查找的键，就可以顺理成章的取到对应的值，这对应于JS中的数组也是十分简单的；</p>
-<pre><code>//查找字典中的元素
-
-function find( key ){
-    return this.dataStore[key];
-}
-</code></pre><p>有了添加和查找，接下来就是删除了！</p>
-<p><strong>remove：删除字典中的一个元素</strong></p>
-<p>要想删除字典中的一个元素，即删除一个 键值对 ， 我们需要借助 JS 提供的一个内置的函数 ： delete ，这个函数我们并不陌生，它可以同时删除键和与其对应的值，那么 remove 方法定义就很简单了</p>
-<pre><code>//删除一个元素
-
-function remove( key ){
-    if( this.dataStore[key] ) delete this.dataStore[key];
-    else return &apos;Not Found&apos;;
-}
-</code></pre><p>除此之外，我们还想显示字典中的所有键值对，showAll 方法来完成。</p>
-<p><strong>showAll：显示字典中所以键值对</strong></p>
-<pre><code>//显示字典元素
-
-function showAll () {
-    for( var key in this.dataStore ){
-        console.log( key + &apos;-&gt;&apos; + this.dataStore[key] );
-    }
-}
-</code></pre><p>我们已经完成了字典的基本操作，现在我们做个小测试，</p>
-<pre><code>//实例化字典类
-
-var directory = new Dictionary();
-
-//添加元素
-
-directory.add( &apos;Jack&apos; , &apos;138****5505&apos; );
-directory.add( &apos;Alice&apos; , &apos;156****6606&apos;);
-directory.add( &apos;Tom&apos; , &apos;180****8808&apos;);
-
-//显示字典
-
-directory.showAll();         // Jack-&gt;138****5505
-                             // Alice-&gt;156****6606
-                             // Tom-&gt;180****8808
-
-directory.remove( &apos;Tom&apos; );
-directory.showAll();         // Jack-&gt;138****5505
-                             // Alice-&gt;156****6606
-</code></pre><p> 我们定义的时候看到了还有两个方法没有实现呢，一个是 count ， 另一个是 clear ，下面我们一起来实现。</p>
-<p> <strong>count：查看字典中元素的个数</strong></p>
-<p> 该方法有时候会很有用，不过实现起来可能会跟你想的不太一样，我们先看看如何实现的</p>
-<pre><code>//查看字典中元素的个数
-
-function count(){
-    var n = 0 ;
-    for ( var key in this.dataStore ){
-        ++n;
-    }
-    return n;
-}
-</code></pre><p>怎么样，是不是跟想的不太一样，为什么不用 length 属性，不是很简单么？其实不然，我们的键为字符串的时候，数组的 length 属性就不起作用了，请看下面的例子：</p>
-<pre><code>var nums = [ 0 , 1 , 2 ] ;
-
-console.log(nums.length)        // 3
-
-var directory = [];
-directory[&apos;Jack&apos;] = &apos;138****5505&apos;;
-directory[&apos;Alice&apos;] = &apos;156****6606&apos;;
-directory[&apos;Tom&apos;] = &apos;180****8808&apos;;
-
-console.log(directory.length)   // 0
-</code></pre><p>现在是不是又了解了一个坑！哈哈，我们把最后一个clear方法实现一下。</p>
-<p><strong>clear：清空字典</strong></p>
-<pre><code>//清空字典
-
-function clear(){
-    for( var key in this.dataStore ){
-        delete this.dataStore[key];
-    }
-}
-</code></pre><p>至此，字典的功能已基本完成了，我们利用上述的代码继续走下去，测试测试</p>
-<pre><code>console.log(directory.count());     // 2
-directory.clear();
-console.log(directory.count());     // 0
-</code></pre><p>字典中我们通常都是用键来取值，所以我们无须关心s数据在字典中的实际存储顺序，但我们希望能看到显示字典内容的时候是有序的，这也很简单，我们只需稍微改造一下我们的 showAll 方法即可。</p>
-<pre><code>//改造后的showAll
-
-function showAll(){
-    var sortKeys = Object.keys(this.dataStore).sort();
-    for( var key in sortKeys ){
-        console.log( sortKeys[key] + &apos;-&gt;&apos; + this.dataStore[sortKeys[key]] );
-    }
-}
-</code></pre><p>和我们之前的方法唯一的区别就是，我们拿到了键之后，对其进行了一次 sort 排序，下面我们看看新方法的输出。</p>
-<pre><code>// 重新打印上述字典
-
-directory.showAll();        //  Alice-&gt;156****6606
-                            //  Jack-&gt;138****5505
-                            //  Tom-&gt;180****8808
-</code></pre><p>要注意的是，上述 showAll 方法中，进行 Object.keys().sort()排序后，返回的是新的一个数组，类似下面的形式，</p>
-<pre><code>//sortKeys
-
-[&quot;Alice&quot;, &quot;Jack&quot;, &quot;Tom&quot;]
-</code></pre><p>此时，数组的 key 是 0、1、2，这样是不是就清晰很多了呢？</p>
-<p>至此，我们已基本了解了字典的一些内容，并且我们可以用JS自己去实现一个字典了，有木有很棒！接下来，大家加油~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1206,7 +1359,7 @@ directory.showAll();        //  Alice-&gt;156****6606
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-count">33</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Vue," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="如何在Vue里实现一个Redux状态管理嗯，我们都知道 redux 通常是 react 项目中 中一种管理数据的手段，它跟我们 vue 项目里的 Vuex 状态管理类似，功能相同，但是使用方法却有不同~ 最近在学习 redux 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 redux 的内部原理，我们就来试试，手动实现一个简单的 redux 状态管理。 不同的是，我们是在 vue 项目中来实">
+<meta name="keywords" content="Vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在Vue里实现一个Redux状态管理">
+<meta property="og:url" content="http://yoursite.com/2019/05/09/Redux/index.html">
+<meta property="og:site_name" content="Cryptic&#39;s Blog">
+<meta property="og:description" content="如何在Vue里实现一个Redux状态管理嗯，我们都知道 redux 通常是 react 项目中 中一种管理数据的手段，它跟我们 vue 项目里的 Vuex 状态管理类似，功能相同，但是使用方法却有不同~ 最近在学习 redux 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 redux 的内部原理，我们就来试试，手动实现一个简单的 redux 状态管理。 不同的是，我们是在 vue 项目中来实">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-cf9e01564ddd75a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-530e7887d488f59c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-3c0722d427f5d394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-05-09T13:25:17.164Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在Vue里实现一个Redux状态管理">
+<meta name="twitter:description" content="如何在Vue里实现一个Redux状态管理嗯，我们都知道 redux 通常是 react 项目中 中一种管理数据的手段，它跟我们 vue 项目里的 Vuex 状态管理类似，功能相同，但是使用方法却有不同~ 最近在学习 redux 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 redux 的内部原理，我们就来试试，手动实现一个简单的 redux 状态管理。 不同的是，我们是在 vue 项目中来实">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-cf9e01564ddd75a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/09/Redux/"/>
+
+
+
+
+
+  <title>如何在Vue里实现一个Redux状态管理 | Cryptic's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b8caac68f7b00d37aea3c9ee8ce00dd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cryptic's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/09/Redux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">如何在Vue里实现一个Redux状态管理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-09T21:25:18+08:00">
+                2019-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="如何在Vue里实现一个Redux状态管理"><a href="#如何在Vue里实现一个Redux状态管理" class="headerlink" title="如何在Vue里实现一个Redux状态管理"></a>如何在Vue里实现一个Redux状态管理</h3><p>嗯，我们都知道 <a href="https://www.redux.org.cn/" target="_blank" rel="external"><code>redux</code></a> 通常是 <code>react</code> 项目中 中一种管理数据的手段，它跟我们 <code>vue</code> 项目里的 <code>Vuex</code> 状态管理类似，功能相同，但是使用方法却有不同~</p>
+<p>最近在学习 <code>redux</code> 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 <code>redux</code> 的内部原理，我们就来试试，手动实现一个简单的 <code>redux</code> 状态管理。</p>
+<p>不同的是，我们是在 <code>vue</code> 项目中来实现的~</p>
+<h3 id="代码未动，目标先行"><a href="#代码未动，目标先行" class="headerlink" title="代码未动，目标先行"></a>代码未动，目标先行</h3><p>我们要实现 <code>redux</code> ，首先要给自己定个小目标，也就是一个业务场景，我们呀，也别想那么复杂，就以最简单的还是最经典的计数器开始，如图：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-cf9e01564ddd75a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>看图，大家就应该很清楚做什么，当我点击<strong>加号</strong>按钮，希望仓库里的数据能增 1，点击<strong>减号</strong>按钮，希望仓库里的数据能减 1 ，嗯，很明确的需求，我们就来看看怎么实现吧~</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><ul>
+<li><strong>redux创建</strong></li>
+</ul>
+<p>首先我们需要在<code>src</code>目录下创建一个<code>redux</code>目录，用来放我们<code>redux</code>的核心代码，其中最核心的代码就是 <code>createStore</code> 方法了，因为我们在初始化 <code>store</code> 的时候就是通过这个方法进行创建的，<code>redux</code>源码里它会返回 <code>dispatch</code>、<code>subscribe</code>、<code>getState</code>、<code>replaceReducer</code> 四个方法，但是实际上我们通常用到的就是前三个了~</p>
+<p>ok，我们接下来慢慢的来实现~</p>
+<p>在<code>redux</code>目录下创建一个<code>index.js</code>，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">// index.js</div><div class="line"></div><div class="line">function createStore () &#123;</div><div class="line">    let state ;</div><div class="line">    </div><div class="line">    //分发action</div><div class="line">    let dispatch = ()=&gt;&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //订阅数据更新</div><div class="line">    let subscribe = ()=&gt; &#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //获取store的状态</div><div class="line">    let getState = ()=&gt;&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    return&#123;</div><div class="line">    	dispatch ,</div><div class="line">    	subscribe ,</div><div class="line">    	getState</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">export &#123;</div><div class="line">    createStore</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样我们就有了一个 <code>redux</code> 雏形，接下来主要是完善里面的方法而已~</p>
+<ul>
+<li><strong>初始化store</strong></li>
+</ul>
+<p>我们先把这个 <code>store</code> 挂载到 <code>vue</code> 的原型上，方便后面的使用，我们在<code>src</code>创建一个<code>store</code>文件夹，并新建一个<code>index.js</code>，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">import &#123; createStore &#125; from &quot;../redux&quot;</div><div class="line"></div><div class="line">const store = createStore();</div><div class="line"></div><div class="line">export default store;</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>挂载store</strong></li>
+</ul>
+<p>我们在入口文件 <code>main.js</code> 引入，并挂载即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import store from &apos;./store&apos;</div><div class="line"></div><div class="line">Vue.prototype.$store = store;</div></pre></td></tr></table></figure>
+<p>接着，如果在页面中打印 <code>this.$store</code>，出现如下结果，则证明呢已经挂载成功了~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-530e7887d488f59c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>但是此时，并没有什么实际的功能，因为我们并没有完善我们的 <code>createStore</code> 里方法~</p>
+<ul>
+<li><strong>完善createStore</strong></li>
+</ul>
+<p>使用过 <code>redux</code> 的同学都知道，我们在初始化 <code>store</code> , 也就是调用 <code>createStore</code> 的时候是需要传递一个<code>reducers</code> 参数的，用来写入更改状态的处理逻辑，我们这里以计数器为例，将计数器 的 <code>reducer</code> 作为入参~</p>
+<p>这里我将计数器相关<code>actions</code>、<code>constants</code>、<code>reducer</code> 直接贴代码了，就不在赘述了~</p>
+<p><code>constants counter.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// 常量定义</div><div class="line">export const ADD = &apos;add&apos;;</div><div class="line">export const MINUS = &apos;minus&apos;</div></pre></td></tr></table></figure>
+<p><code>actions counter.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import * as constants from &apos;../constants/counter&apos;</div><div class="line"></div><div class="line">//增加</div><div class="line">export const add = ()=&gt;(&#123;</div><div class="line">    type : constants.ADD</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//减少</div><div class="line">export const minus = ()=&gt;(&#123;</div><div class="line">    type : constants.MINUS</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><code>reducers counter.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import * as constants from &apos;../constants/counter&apos;</div><div class="line"></div><div class="line">const defaultState = &#123;</div><div class="line">	count: 0</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default (state = defaultState, action) =&gt; &#123;</div><div class="line">    switch ( action.type ) &#123;</div><div class="line">    	case constants.ADD :</div><div class="line">            return &#123;</div><div class="line">            	...state ,</div><div class="line">            	count : state.count + 1</div><div class="line">            &#125;</div><div class="line">    	case constants.MINUS :</div><div class="line">            return &#123;</div><div class="line">                ...state ,</div><div class="line">                count : state.count - 1</div><div class="line">            &#125;</div><div class="line">    	default :</div><div class="line">            return  state;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>dispatch</strong></p>
+<p>我们期望，我们点击加号的时候，会派发一个<code>add</code>的<code>action</code>，然后对应的 <code>reducer</code> 接收到 <code>action</code> 做对应的处理，减号按钮同理~</p>
+<p>顺着这个思路，我们先来看看 <code>dispatch</code> 方法，需要接受一个参数 <code>action</code> ，<code>action</code> 必须是一个对象，必须包含一个 <code>type</code> 值，表明需要 <code>action</code>的类型，然后我们可以通过传过来的 <code>recuder</code> 获取到新的状态，因此，<code>dispatch</code> 方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//分发action</div><div class="line">let dispatch = (action)=&gt;&#123;</div><div class="line">    //判断 action 的 type 值</div><div class="line">    if( typeof action !== &apos;object&apos;) throw Error(&apos;Expected the action to be a object.&apos;);</div><div class="line">    if( action.type === undefined ) throw Error(&apos;The action.type is not defined&apos;);</div><div class="line">    //获取新的 state</div><div class="line">    state = reducer(state, action);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们打印 <code>state</code> ， 通过点击 加号 和 减号 按钮，可以看到 <code>state</code> 确实有变换，跟我们预期的一样~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-3c0722d427f5d394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>getState</strong></p>
+<p>我们可以通过 <code>getState()</code> 方法获取当前 <code>state</code> ，因此该方法相对比较简单，如下~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//获取store的状态</div><div class="line">let getState = () =&gt; state;</div></pre></td></tr></table></figure>
+<p>这样我们在每次派发 <code>action</code> 的后，通过 <code>getState</code> 方法确实能获取到对应的状态~</p>
+<p>但其实有个问题，我们初始获取 <code>state</code> 的时候会返回 <code>undefined</code> ，因为我们初始的时候只是定义了 <code>state</code> ， 却没有赋值~</p>
+<p>为了解决这个问题，我们可以在 初始化的时候 <code>dispatch</code> 一个 <code>init</code> 的 <code>action</code> ，这样会返回 <code>reducer</code> 中默认的 <code>state</code> ，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//初始化state</div><div class="line">dispatch(&#123; type : &apos;@@redux/INIT&apos;&#125;);</div><div class="line"></div><div class="line">//获取store的状态</div><div class="line">let getState = () =&gt; state;</div></pre></td></tr></table></figure>
+<p><strong>subscribe</strong></p>
+<p>虽然我们现在通过按钮，在控制台打印出每次 <code>count</code>的变化，但是并没有反馈到页面上，因为页面上我们的值并没有做更改~</p>
+<p>为了监控数据变化后做对应的处理，<code>redux</code> 提供了一个叫 <code>subscribe</code>，它的入参是一个函数，作用就是订阅数据变化，做对应的逻辑处理，返回一个函数，用来取消订阅，因此我们可以对 <code>subscribe</code> 函数做如下处理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//订阅处理函数</div><div class="line">let listeners = [];</div><div class="line"></div><div class="line">//订阅数据更新</div><div class="line">let subscribe = (fn)=&gt; &#123;</div><div class="line">    listeners.push(fn);</div><div class="line">    return ()=&gt;&#123;</div><div class="line">        listeners = listeners.filter(listener =&gt; fn != listener );</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意，上面只是订阅，当我们数据变化的时候需要发布，即要循环 <code>listeners</code> 中的方法，依次执行，因此需要在 <code>dispatch</code> 方法的最后加上一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">listeners.forEach(listener =&gt; listener());</div></pre></td></tr></table></figure>
+<p><strong>效果</strong></p>
+<p>接着我们来试试~</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">    &lt;div class=&apos;wrapper&apos;&gt;</div><div class="line">        &lt;div class=&quot;&quot;&gt;计数器：&#123;&#123; number &#125;&#125;&lt;/div&gt;</div><div class="line">        &lt;div class=&quot;btn-box&quot;&gt;</div><div class="line">            &lt;button class=&quot;btn&quot; @click=&quot;handleAddBtnClick&quot;&gt;+&lt;/button&gt;</div><div class="line">            &lt;button class=&quot;btn&quot; @click=&quot;handleMinusBtnClick&quot;&gt;-&lt;/button&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">        &lt;div class=&quot;btn-box&quot;&gt;</div><div class="line">            &lt;button class=&quot;btn&quot; @click=&quot;handleRemoveListenerBtnClick&quot;&gt;取消打印监听&lt;/button&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line">    import &#123; add , minus &#125; from &apos;../actions/counter&apos;</div><div class="line">    export default &#123;</div><div class="line">        data()&#123;</div><div class="line">            return&#123;</div><div class="line">            	number : this.$store.getState().count ,</div><div class="line">                consoleHandler : null</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        methods : &#123;</div><div class="line">            //计数器加一</div><div class="line">            handleAddBtnClick()&#123;</div><div class="line">                this.$store.dispatch(add())</div><div class="line">            &#125;,</div><div class="line">            //计数器减一</div><div class="line">            handleMinusBtnClick()&#123;</div><div class="line">            	this.$store.dispatch(minus())</div><div class="line">            &#125;,</div><div class="line">            //取消打印事件监听</div><div class="line">    		handleRemoveListenerBtnClick()&#123;</div><div class="line">                this.consoleHandler();</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        mounted () &#123;</div><div class="line">            //数据更新事件</div><div class="line">            this.$store.subscribe(()=&gt;&#123;</div><div class="line">            	this.number = this.$store.getState().count;</div><div class="line">            &#125;)</div><div class="line">            //打印事件</div><div class="line">            this.consoleHandler = this.$store.subscribe(()=&gt;&#123;</div><div class="line">            	console.log(&apos;我的值发生了更改~&apos;)</div><div class="line">            &#125;)</div><div class="line">    	&#125;</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line"></div><div class="line">&lt;style scoped&gt;</div><div class="line">    .wrapper&#123;</div><div class="line">        padding: 30px 15px;</div><div class="line">        text-align: center;</div><div class="line">    &#125;</div><div class="line">    .btn-box&#123;</div><div class="line">        margin-top: 20px;</div><div class="line">    &#125;</div><div class="line">    .btn&#123;</div><div class="line">        display: inline-block;</div><div class="line">        font-size: 20px;</div><div class="line">        min-width: 50px;</div><div class="line">        text-align: center;</div><div class="line">        margin: 0 10px;</div><div class="line">    &#125;</div><div class="line">&lt;/style&gt;</div></pre></td></tr></table></figure>
+<p>我们在初始的时候 添加了两个 事件监听，一个用来更新 <code>number</code>的值，另一个用来打印，我们每次数据变更都会触发这两个方法，当我们点击取消打印监听按钮的时候，之后的数据变化不会在触发打印操作~</p>
+<p>自己动手试试~</p>
+<p><strong>combineReducers</strong></p>
+<p>到此，我们已经基本实现了一个 简单版 的 <code>redux</code> ，但是还不够完美，问题在于我们还差一个函数，叫 <code>combineReducers</code> ， 它是用来合并多个 <code>reducer</code> 返回一个新的 <code>reducer</code>，以此区分不同的状态~</p>
+<p>我们在刚才的 <code>redux</code> 文件夹下的 <code>index.js</code> 添加这个方法，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// 合并reducer</div><div class="line">// key是新状态的命名空间 值是reducer，执行后会返回一个新的reducer</div><div class="line">function combineReducers (reducers) &#123;</div><div class="line">    // 第二次调用reducer ，内部会自动的把第一次的状态传递给reducer</div><div class="line">    return (state = &#123;&#125;, action) =&gt; &#123;</div><div class="line">    	// reducer默认要返回一个状态</div><div class="line">    	let newState = &#123;&#125;</div><div class="line">    	for (let key in reducers) &#123;</div><div class="line">            // 默认reducer俩参数 一个叫state，一个叫action</div><div class="line">            let s = reducers[key](state[key], action);</div><div class="line">            newState[key] = s;</div><div class="line">    	&#125;</div><div class="line">    	return newState;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着，将我们的<code>reducer</code>更换一下即可，这里就不在赘述了~</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>通过上面的学习，我们手动实现了一个<code>redux</code>，虽然比较简单，核心代码很少，但起码功能是完善的，主要是学习一种编码的思想吧，我们可以在学习一些框架或者库的同时可以多去关注，它的内部实现，然后我们开始可以自己一步一步模仿一个简单的版本，后面在不停的拓展，希望和大家一起继续加油~</p>
+<p>代码我也上传到<a href="https://github.com/Chris-wei/redux" target="_blank" rel="external">github</a>上了，有需要的小伙伴可以参考参考~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vue/" rel="tag"># Vue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/01/Wx-Auth/" rel="next" title="基于Taro框架的微信小程序JWT授权登录方案">
+                <i class="fa fa-chevron-left"></i> 基于Taro框架的微信小程序JWT授权登录方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/headImg.jpg"
+              alt="Chris wei" />
+          
+            <p class="site-author-name" itemprop="name">Chris wei</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Chris-wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>简书</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/DreamerChenwei" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010732998898" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在Vue里实现一个Redux状态管理"><span class="nav-number">1.</span> <span class="nav-text">如何在Vue里实现一个Redux状态管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码未动，目标先行"><span class="nav-number">2.</span> <span class="nav-text">代码未动，目标先行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体实现"><span class="nav-number">3.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris wei</span>
+
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
