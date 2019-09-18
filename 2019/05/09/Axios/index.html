@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="JS进阶," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="自己动手实现一个 axios前言作为一名前端er，对于数据请求的第三方工具axios，一定不会陌生，如果还是有没有用过，或者不了解的小伙伴，这里给你们准备了贴心的中文文档 ，聪明的你们一看就会~  唔，为了更好的了解和学习 axios 封装思想和实现原理，我们一起来动手来实现一个简版的 axios ~ 前期准备工欲善其事，必先利其器，我们在开始我们的项目之前，一定要做好其相关的准备工作，我们需要准">
+<meta name="keywords" content="JS进阶">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在Vue里实现一个Redux状态管理">
+<meta property="og:url" content="http://yoursite.com/2019/05/09/Axios/index.html">
+<meta property="og:site_name" content="Cryptic&#39;s Blog">
+<meta property="og:description" content="自己动手实现一个 axios前言作为一名前端er，对于数据请求的第三方工具axios，一定不会陌生，如果还是有没有用过，或者不了解的小伙伴，这里给你们准备了贴心的中文文档 ，聪明的你们一看就会~  唔，为了更好的了解和学习 axios 封装思想和实现原理，我们一起来动手来实现一个简版的 axios ~ 前期准备工欲善其事，必先利其器，我们在开始我们的项目之前，一定要做好其相关的准备工作，我们需要准">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-d6ffc5d4516d371b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-7c6a014cb8039589.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2019-09-18T11:34:38.781Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在Vue里实现一个Redux状态管理">
+<meta name="twitter:description" content="自己动手实现一个 axios前言作为一名前端er，对于数据请求的第三方工具axios，一定不会陌生，如果还是有没有用过，或者不了解的小伙伴，这里给你们准备了贴心的中文文档 ，聪明的你们一看就会~  唔，为了更好的了解和学习 axios 封装思想和实现原理，我们一起来动手来实现一个简版的 axios ~ 前期准备工欲善其事，必先利其器，我们在开始我们的项目之前，一定要做好其相关的准备工作，我们需要准">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-d6ffc5d4516d371b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/09/Axios/"/>
+
+
+
+
+
+  <title>如何在Vue里实现一个Redux状态管理 | Cryptic's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b8caac68f7b00d37aea3c9ee8ce00dd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cryptic's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/09/Axios/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">如何在Vue里实现一个Redux状态管理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-09T21:25:18+08:00">
+                2019-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">JS进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="自己动手实现一个-axios"><a href="#自己动手实现一个-axios" class="headerlink" title="自己动手实现一个 axios"></a>自己动手实现一个 axios</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>作为一名前端er，对于数据请求的第三方工具<code>axios</code>，一定不会陌生，如果还是有没有用过，或者不了解的小伙伴，这里给你们准备了贴心的<a href="http://www.axios-js.com/" target="_blank" rel="external">中文文档</a> ，聪明的你们一看就会~ </p>
+<p>唔，为了更好的了解和学习 <code>axios</code> 封装思想和实现原理，我们一起来动手来实现一个简版的 <code>axios</code> ~</p>
+<h2 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h2><p>工欲善其事，必先利其器，我们在开始我们的项目之前，一定要做好其相关的准备工作，我们需要准备的也很简单，一个 客户端（client） 方便我们调试，一个 服务端（server） 做接口测试~</p>
+<p><strong>服务端</strong></p>
+<p>服务端我这里为了方便调试，直接使用基于 <code>nodejs</code> 实现的 <code>koa</code> 框架，通过 <code>koa-router</code> 来实现接口，参考代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line">const Koa = require(&apos;koa&apos;);</div><div class="line">const KoaRouter = require(&apos;koa-router&apos;)</div><div class="line"></div><div class="line">//app 实例</div><div class="line">const app = new Koa();</div><div class="line">//router 实例</div><div class="line">const router = new KoaRouter();</div><div class="line"></div><div class="line">//请求中间件，解决跨域</div><div class="line">app.use(async (ctx,next)=&gt;&#123;</div><div class="line">    ctx.set(&apos;Access-Control-Allow-Origin&apos;, &apos;*&apos;);</div><div class="line">    ctx.set(&apos;Access-Control-Allow-Headers&apos;, &apos;content-type,token,accept&apos;);</div><div class="line">    ctx.set(&apos;Access-Control-Allow-Methods&apos;, &apos;POST,GET,OPTIONS&apos;);</div><div class="line">    ctx.set(&quot;Content-Type&quot;, &quot;application/json&quot;)</div><div class="line">    ctx.set(&apos;Access-Control-Max-Age&apos;, 10)</div><div class="line">    //处理 options</div><div class="line">    if (ctx.request.method.toLowerCase() === &apos;options&apos;)&#123;</div><div class="line">    	ctx.response.status = 200;</div><div class="line">    	ctx.body = &apos;&apos;;</div><div class="line">    &#125; else await next();</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//接口测试地址</div><div class="line">router.get(&apos;/&apos;,async  ctx=&gt;&#123;</div><div class="line">    ctx.body = &#123;</div><div class="line">    	data : &apos;Hello World&apos;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">router.get(&apos;/user/info&apos;,async ctx =&gt;&#123;</div><div class="line">    ctx.body = &#123;</div><div class="line">    	name : &apos;Chris&apos; ,</div><div class="line">    	msg : &apos;Hello World&apos;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">app.use(router.routes());</div><div class="line"></div><div class="line">//启动服务</div><div class="line">app.listen(3000,function () &#123;</div><div class="line">    console.log(&apos;app is running ~&apos;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>这里我们通过 <code>node app.js</code> 就可以启动我们的服务，如果你在服务端控制台看到 <code>app is running ~</code> 说明你的服务已经启动成功，此时你打开浏览器访问 <code>http://localhost:3000/</code> ，不出意外你能看到 <code>Hello World</code> 的返回信息，说明服务端这一块就 配置 ok 了，是不是 so easy~</p>
+<p><strong>客户端</strong></p>
+<p>客户端这块的话，emm，我们需要准备一个 <code>html</code> 文件，和 一个 <code>js</code> 文件夹，主要存放我们要实现的核心代码~ </p>
+<p><code>html</code> 文件非常简单，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE html&gt;</div><div class="line">&lt;html lang=&quot;en&quot;&gt;</div><div class="line">&lt;head&gt;</div><div class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</div><div class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no&quot;&gt;</div><div class="line">    &lt;title&gt;axios-demo&lt;/title&gt;</div><div class="line">&lt;/head&gt;</div><div class="line">&lt;body&gt;</div><div class="line">    &lt;div class=&quot;&quot;&gt;</div><div class="line">        &lt;h1&gt;axios 的简版实现&lt;/h1&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">    &lt;script src=&quot;./js/main.js&quot;&gt;&lt;/script&gt;</div><div class="line">&lt;/body&gt;</div><div class="line">&lt;/html&gt;</div></pre></td></tr></table></figure>
+<p>其中 <code>main.js</code> 是我们的要使用的<code>js</code>文件~</p>
+<p>要注意的是，由于我们的代码是基于 <code>es6</code> 模块化开发的，如果直接丢到浏览器里，是无法识别的，会报错，不过也没关系，我们可以借助第三方的打包工具帮我们搞定这些事~</p>
+<p>打包不是我们主要关注的问题，这里我就不采用<code>webpack</code>这种工具，给大家推荐一个零配置的打包工具 <a href="https://parceljs.org/" target="_blank" rel="external">Parcel</a> ，使用方式也很简单，在你的客户端目录下通过 <code>npm init -y</code> 初始化，通过 <code>npm install parcel-bundler --save-dev</code> 安装 <code>Parcel</code> ，然后在你的 <code>package.json</code> 文件中添加如下脚本:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&quot;scripts&quot;: &#123;</div><div class="line">   &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;,</div><div class="line">   &quot;dev&quot;: &quot;parcel ./*.html&quot;,</div><div class="line">   &quot;build&quot;: &quot;parcel build ./*.html&quot;</div><div class="line"> &#125;,</div></pre></td></tr></table></figure>
+<p>这样，我们可以通过 <code>npm run dev</code> 脚本打开我们的 <code>html</code> 文件，如果你们跟我们配置一样，那么你在浏览器的 <code>http://localhost:1234/</code> 地址会看到 <strong>axios 的简版实现</strong> 这几个字，并且控制台不会报错，就证明一切准备 ok 了！！</p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><p><strong>雏形</strong></p>
+<p>我们首先在客户端的 <code>js</code> 文件夹下创建一个 <code>axios</code> 的文件夹，里面存放我们自己实现的 <code>axios</code> 相关代码。</p>
+<p>在 <code>axios</code> 文件夹下新建 <code>index.js</code> 入口文件 和 <code>axios.js</code> 核心<code>js</code>文件~</p>
+<p><code>axios</code>的本质是一个类，这里我们通过 <code>class</code> 实现，即：</p>
+<p><code>axios.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">class Axios &#123;</div><div class="line">    constructor()&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">export default Axios;</div></pre></td></tr></table></figure>
+<p>通过 <code>index.js</code> 进行 <code>new</code> 初始化，导出 <code>axios</code> 实例，这也是我们在使用<code>axios</code>中 不需要 <code>new</code> 的原因~</p>
+<p><code>index.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">import Axios from &apos;./Axios&apos;</div><div class="line"></div><div class="line">const axios = new Axios();</div><div class="line"></div><div class="line">export default axios;</div></pre></td></tr></table></figure>
+<p>此时，我们只需要在 <code>main.js</code> 通过 <code>import</code> 导入即可</p>
+<p><code>main.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import axios from &apos;./axios&apos;</div><div class="line"></div><div class="line">console.log(axios)</div></pre></td></tr></table></figure>
+<p>此时整个 <code>axios</code> 雏形就已经完成了~</p>
+<p><strong>一个简单的get请求</strong></p>
+<p>我们先实现一个简单 <code>axios.get</code> 方法，即通过 <code>axios.get</code> 获取我们服务端的响应~</p>
+<p>我们回忆一下我们平时使用 <code>axios.get</code> 的时候，通常是 <code>axios.get().then</code> 的方式，那么我们首先就确定了我们的 <code>axios.get</code> 方法返回的是一个 <code>Promise</code> 对象，我们在 <code>axios.js</code> 中添加这个方法~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">get(url)&#123;</div><div class="line">    return new Promise((resolve =&gt; &#123;</div><div class="line">        let xhr = new XMLHttpRequest();</div><div class="line">        </div><div class="line">        xhr.onload = function() &#123;</div><div class="line">        	resolve(&#123;</div><div class="line">                data: JSON.parse(xhr.responseText),</div><div class="line">                status: xhr.status,</div><div class="line">                statusText: xhr.statusText</div><div class="line">        	&#125;);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        xhr.open( &apos;get&apos;, url , true );</div><div class="line">        xhr.send();</div><div class="line">    &#125;))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此时我们在 <code>main.js</code> 调用 <code>get</code> 方法 ,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">axios.get(&apos;http://127.0.0.1:3000/user/info&apos;).then(res=&gt;&#123;</div><div class="line">    console.log(res);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>控制台输出如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-d6ffc5d4516d371b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>对比官方的 <code>axios</code>，我们少了比如 <code>header</code> 之类的信息，因为官方对请求返回做了二次包装，这里我们只是简单的<code>json</code>处理，具体的要根据返回的数据类型做不同的处理~</p>
+<p><strong>默认配置</strong></p>
+<p>我们在使用官方 <code>axios</code> 的，会有很多配置项，包括全局配置，实例配置和请求配置，因此我们就来看看配置信息这一块。</p>
+<p>我们在 <code>axios</code> 文件夹下新建一个 <code>config.js</code> ，用于 <code>axios</code> 的默认配置，为了方便，我们的默认配置如下：</p>
+<p><code>config.js</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">export default &#123;</div><div class="line">    baseURL : &apos;&apos; ,</div><div class="line">    method : &apos;get&apos; ,</div><div class="line">    headers : &#123;</div><div class="line">        &apos;content-type&apos; : &apos;application/json&apos;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们将默认的配置传入到我们的构造函数中，如下:</p>
+<p><code>index.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import Axios from &apos;./Axios&apos;</div><div class="line">import config from &apos;./config&apos;</div><div class="line"></div><div class="line">const axios = new Axios(config);</div><div class="line"></div><div class="line">export default axios;</div></pre></td></tr></table></figure>
+<p>所以，我们需要在构造函数中接收一个 <code>config</code> 参数进行处理，即将默认配置写入到实例中，即：</p>
+<p><code>axios.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">constructor(config)&#123;</div><div class="line">    //配置</div><div class="line">    this.defaults = config;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样我们的 <code>get</code> 方法里请求的 <code>url</code> 就可以改写成 :</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">this.defaults.baseURL += url</div><div class="line">......</div><div class="line">xhr.open( &apos;get&apos;, this.defaults.baseURL , true );</div><div class="line">//添加header头</div><div class="line">for(let key in configs.headers)&#123;</div><div class="line">    xhr.setRequestHeader(key,configs.headers[key])</div><div class="line">&#125;</div><div class="line">......</div></pre></td></tr></table></figure>
+<p>如果你此时在<code>config.js</code> 中配置 <code>baseURL</code> 那么，你在<code>axios.get</code>中就可以省略前面的 <code>baseURL</code> ， 因为在请求之前已经帮你拼接完成了~</p>
+<p>当然，你也可以通过 <code>axios.defaults.baseURL = xxx</code>这种方式修改默认配置，都是没问题的~</p>
+<p><strong>实例配置</strong></p>
+<p>在使用官方 <code>axios</code> 的时候，我们可以通过一个<code>create</code> 方法创建一个<code>axios</code>实例，并传入配置信息即可，我们只需要在 <code>index.js</code> 中创建的 <code>axios</code> 添加一个 <code>create</code> 方法即可 。</p>
+<p><code>index.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">axios.create = function (config) &#123;</div><div class="line">    return new Axios(config);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样我们也可以通过 <code>create</code> 方法构建一个 <code>axios</code> 实例，它也拥有相应的方法~</p>
+<p>但是这么做存在一个问题，如果我们创建多个实例，传入不同的 <code>config</code> ，由于我们直接在构建的时候 通过 <code>this.defaults = config;</code> 这种方式复制，并没有切断对象的引用关系，因此会导致配置对象会被相互引用，出问题~</p>
+<p>因此，我们需要对其进行 <strong>深拷贝</strong> 赋值，即 <code>this.defaults = deepClone(config)</code> , 其中 <code>deepClone</code> 时深拷贝函数，这里不再赘述~</p>
+<p><strong>请求配置</strong></p>
+<p>我们发现官方的 <code>axios</code> 的<code>get</code>、<code>post</code>等请求会有第二个可选参数，也是 <code>config</code> ，即单独本次请求的配置，如果存在，我们需要进行配置合并，对于简单的 <code>baseURL</code>、<code>method</code> 等这种简单的配置直接覆盖，对于<code>headers</code>这种复杂的对象配置，进行对象合并，有点类似 <code>Object.assign</code> 方法~</p>
+<p>所以，我们更改我们的 <code>get</code> 方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">get(url,config)&#123;</div><div class="line"></div><div class="line">    let configs = mergeConfig(this.defaults,config);</div><div class="line"></div><div class="line">    return new Promise((resolve =&gt; &#123;</div><div class="line">    	let xhr = new XMLHttpRequest();</div><div class="line">    </div><div class="line">    	xhr.onload = function() &#123;</div><div class="line">            resolve(&#123;</div><div class="line">                data: JSON.parse(xhr.responseText),</div><div class="line">                status: xhr.status,</div><div class="line">                statusText: xhr.statusText</div><div class="line">            &#125;);</div><div class="line">    	&#125;</div><div class="line">    </div><div class="line">    	xhr.open( &apos;get&apos;, configs.baseURL + url , true );</div><div class="line">        //添加header头</div><div class="line">        for(let key in configs.headers)&#123;</div><div class="line">            xhr.setRequestHeader(key,configs.headers[key])</div><div class="line">        &#125;</div><div class="line">    	xhr.send();</div><div class="line">    &#125;))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中 <code>mergeConfig</code> 是合并两配置对象的方法，具体实现参考如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">function mergeConfig (obj1, obj2) &#123;</div><div class="line">    let target = deepClone(obj1),</div><div class="line">    	source = deepClone(obj2);</div><div class="line">    </div><div class="line">    return Object.keys(source).reduce((t,k)=&gt;&#123;</div><div class="line">    	if([&apos;url&apos;,&apos;baseURL&apos;,&apos;method&apos;].includes(k))&#123;</div><div class="line">            t[k] = source[k]</div><div class="line">    	&#125;</div><div class="line">    	if([&apos;headers&apos;].includes(k))&#123;</div><div class="line">            t[k] = Object.assign(&#123;&#125;,source[k],t[k])</div><div class="line">    	&#125;</div><div class="line">    	return t;</div><div class="line">    &#125;,target)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>ok~ 现在我们就可以通过如下方式进行请求了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">axios.get(&apos;/user/info&apos;,&#123;</div><div class="line">    baseURL : &apos;http://127.0.0.1:3000&apos; ,</div><div class="line">    headers : &#123;</div><div class="line">    	token : &apos;x-token-123456&apos;</div><div class="line">    &#125;</div><div class="line">&#125;).then(res=&gt;&#123;</div><div class="line">    console.log(res);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>可以看到控制台输出跟之前的是一样的~ </p>
+<p>细心的小伙伴可以看到 <code>header</code> 头已经添加了 <code>token</code> 信息~</p>
+<p><strong>拦截器</strong></p>
+<p>拦截器主要用于在请求之前或者请求之后可自定义对配置或者响应结果做一系列的处理，<code>axios</code>官方给我们提供了 <code>use</code> 方法，可以添加多个拦截器，使用方式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">// Add a request interceptor</div><div class="line">axios.interceptors.request.use(function (config) &#123;</div><div class="line">        // Do something before request is sent</div><div class="line">        return config;</div><div class="line">    &#125;, function (error) &#123;</div><div class="line">        // Do something with request error</div><div class="line">        return Promise.reject(error);</div><div class="line">    &#125;);</div><div class="line"> </div><div class="line">// Add a response interceptor</div><div class="line">axios.interceptors.response.use(function (response) &#123;</div><div class="line">        // Do something with response data</div><div class="line">        return response;</div><div class="line">    &#125;, function (error) &#123;</div><div class="line">        // Do something with response error</div><div class="line">        return Promise.reject(error);</div><div class="line">    &#125;);</div></pre></td></tr></table></figure>
+<p>那么，接下来我们自己来实现这么一个 <code>use</code> 方法~</p>
+<p>首先我们需要在我们的 <code>axios</code> 实例上添加一个 <code>interceptors</code> 对象，该对象有 <code>request</code> 和 <code>response</code> 两个属性，他们都拥有 <code>use</code> 方法，我们发现 <code>use</code> 方法的结构都相同，入参为两个函数，其实他们是同一个 <code>Interceptor</code> 类的不同实例而已。</p>
+<p>我们先来构建 <code>Interceptor</code> 这个类，首先在 <code>axios</code> 文件夹下新建 <code>Interceptor.js</code> 文件，并定义如下：</p>
+<p><code>Interceptor.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">export default class Interceptor &#123;</div><div class="line">    </div><div class="line">    constructor() &#123;</div><div class="line">    	this.handlers = [];</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    use( resolvedHandler, rejectedHandler ) &#123;</div><div class="line">    	this.handlers.push(&#123;</div><div class="line">            resolvedHandler,</div><div class="line">            rejectedHandler</div><div class="line">    	&#125;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里，我们 <code>new</code> 出来的的实例都会拥有 <code>use</code> 方法，并且我们通过一个 <code>handlers</code> 数组来保存，这样可以保证我们可以多调用 <code>use</code> 方法，添加多个拦截器~</p>
+<p>我们只需在 <code>Axios.js</code> 中的 <code>constructor</code> 构造函数中初始化即可。</p>
+<p><code>Axios.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">constructor(config)&#123;</div><div class="line">    //默认配置</div><div class="line">    this.defaults = deepClone(config);</div><div class="line">    //拦截器</div><div class="line">    this.interceptors = &#123;</div><div class="line">    	request : new Interceptor() ,</div><div class="line">    	response : new Interceptor()</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样尽管我们已经可以在我们的 <code>main.js</code> 中使用 <code>use</code> 方法添加拦截器了，但是还是无法正确使用，因为请求这一块还未进行处理，接下来，我们需要对我们之前的 <code>Axios.js</code> 进行改造~</p>
+<p>首先，我们统一封装一个 <code>request</code> 函数，往后所有的请求都会调用这个方法，入参需要一个 <code>config</code>，返回一个 <code>Promise</code> 对象，我们在这里对拦截器进行操作，定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">//request请求</div><div class="line">request (config) &#123;</div><div class="line">    //配置合并</div><div class="line">    let configs = mergeConfig(this.defaults, config);</div><div class="line">    //将配置转成 Promise 对象，链式调用和返回 Promise 对象</div><div class="line">    let promise = Promise.resolve(configs);</div><div class="line">    </div><div class="line">    //请求拦截器，遍历 interceptors.request 里的处理函数</div><div class="line">    let requestHandlers = this.interceptors.request.handlers;</div><div class="line">    requestHandlers.forEach(handler =&gt; &#123;</div><div class="line">    	promise = promise.then(handler.resolvedHandler, handler.rejectedHandler)</div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    //数据请求</div><div class="line">    promise = promise.then(this.send)</div><div class="line">    </div><div class="line">    //相应拦截器，遍历 interceptors.response 里的处理函数</div><div class="line">    let responseHandlers = this.interceptors.response.handlers;</div><div class="line">    responseHandlers.forEach(handler =&gt; &#123;</div><div class="line">    	promise = promise.then(handler.resolvedHandler, handler.rejectedHandler)</div><div class="line">    &#125;)</div><div class="line">    </div><div class="line">    //返回响应信息</div><div class="line">    return promise;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面，为了代码简洁，我又将 <code>send</code> 方法提出来，定义跟之前基本一致：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">//发送请求</div><div class="line">send (configs) &#123;</div><div class="line">    return new Promise((resolve =&gt; &#123;</div><div class="line">    	let xhr = new XMLHttpRequest();</div><div class="line">    </div><div class="line">    	xhr.onload = function () &#123;</div><div class="line">            resolve(&#123;</div><div class="line">            	data: JSON.parse(xhr.responseText),</div><div class="line">            	status: xhr.status,</div><div class="line">            	statusText: xhr.statusText</div><div class="line">            &#125;);</div><div class="line">    	&#125;</div><div class="line">    	xhr.open(configs.method, configs.baseURL + configs.url, true);</div><div class="line">    </div><div class="line">    	//添加header头</div><div class="line">    	for ( let key in configs.headers ) &#123;</div><div class="line">            xhr.setRequestHeader(key, configs.headers[key])</div><div class="line">    	&#125;</div><div class="line">    </div><div class="line">    	xhr.send();</div><div class="line">    &#125;))</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>哦对啦，我们之前的 <code>get</code> 方法也有一点点的不同，主要是加入了请求拦截器~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// 发送get请求</div><div class="line">get (url, config) &#123;</div><div class="line">    config.method = &apos;get&apos;;</div><div class="line">    config.url = url;</div><div class="line">    return this.request(config);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>趁热打铁，我们来试试~</p>
+<p>这里我在 <code>main.js</code> 中分别添加了 2 个响应拦截器和请求拦截器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//请求拦截器</div><div class="line">axios.interceptors.request.use(config=&gt;&#123;</div><div class="line">    console.log(&apos;请求配置信息：&apos;,config);</div><div class="line">    return config</div><div class="line">&#125;)</div><div class="line"></div><div class="line">axios.interceptors.request.use(config=&gt;&#123;</div><div class="line">    config.headers.token = &apos;x-token-654321&apos;;</div><div class="line">    return config</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//响应拦截器</div><div class="line">axios.interceptors.response.use(res=&gt;&#123;</div><div class="line">    console.log(&apos;请求响应信息&apos;,res)</div><div class="line">    return res;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">axios.interceptors.response.use(res=&gt;&#123;</div><div class="line">    res.msg = &apos;request is ok ~&apos;;</div><div class="line">    return res;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>请求拦截器分别打印了请求的配置并将请求的 <code>token</code> 值经行了修改，响应拦截器分别打印了响应信息并将响应添加了 <code>msg</code> 的属性~</p>
+<p>不出意外，你在控制台可以看到如下信息，在请求 <code>header</code> 里看到 <code>token</code> 已经被更改~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-7c6a014cb8039589.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>大功告成！</p>
+<p>总算是有点样子啦~</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，我们自己封装了一个非常简单的 <code>axios</code> 的请求库，由于篇幅有限，这里我只是用了最简单的 <code>get</code> 请求示例，<code>axios</code>源码中远不止这些，像一些异常处理、取消请求等的一系列的东西都还没有实现，这里主要是借鉴其一些思想和实现的思路，我这里只是牵个头，剩下的靠你们自己不断的去完善，动动手总是好的~</p>
+<p>文末，附上 <code>git</code> <a href="https://github.com/Chris-wei/axios" target="_blank" rel="external">地址</a> 感兴趣的小伙伴可以参考参考~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JS进阶/" rel="tag"># JS进阶</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/09/Redux/" rel="next" title="如何在Vue里实现一个Redux状态管理">
+                <i class="fa fa-chevron-left"></i> 如何在Vue里实现一个Redux状态管理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/headImg.jpg"
+              alt="Chris wei" />
+          
+            <p class="site-author-name" itemprop="name">Chris wei</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Chris-wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>简书</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/DreamerChenwei" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010732998898" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#自己动手实现一个-axios"><span class="nav-number">1.</span> <span class="nav-text">自己动手实现一个 axios</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#前期准备"><span class="nav-number">1.2.</span> <span class="nav-text">前期准备</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体实现"><span class="nav-number">1.3.</span> <span class="nav-text">具体实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#结语"><span class="nav-number">1.4.</span> <span class="nav-text">结语</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris wei</span>
+
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
