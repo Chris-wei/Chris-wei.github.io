@@ -278,6 +278,319 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/27/ES6-09/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/07/27/ES6-09/" itemprop="url">ES6必知必会 （九）—— Module</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T10:40:38+08:00">
+                2017-07-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript6</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>Module</strong></p>
+<p>1.ES6在语言标准的层面上，实现了模块功能，成为浏览器和服务器通用的模块解决方案，完全可以取代 CommonJS 和 AMD 规范，基本特点如下：</p>
+<ul>
+<li>每一个模块只加载一次， 每一个JS只执行一次， 如果下次再去加载同目录下同文件，直接从内存中读取；</li>
+<li>每一个模块内声明的变量都是局部变量， 不会污染全局作用域；</li>
+<li>模块内部的变量或者函数可以通过export导出；</li>
+<li>一个模块可以导入别的模块</li>
+</ul>
+<p>2.模块功能主要由两个命令构成：export和import。export命令用于规定模块的对外接口，import命令用于输入其他模块提供的功能；</p>
+<p>3.一个模块就是一个独立的文件，该文件内部的所有变量，外部无法获取。如果你希望外部能够读取模块内部的某个变量，就必须使用export关键字输出该变量；</p>
+<pre><code>// profile.js
+export var firstName = &apos;Michael&apos;;
+export var lastName = &apos;Jackson&apos;;
+export var year = 1958;
+
+//或者
+// profile.js
+var firstName = &apos;Michael&apos;;
+var lastName = &apos;Jackson&apos;;
+var year = 1958;
+
+export {firstName, lastName, year};
+</code></pre><p>4.export命令除了输出变量，还可以输出函数或类（class）</p>
+<pre><code>export function multiply(x, y) {
+  return x * y;
+};
+</code></pre><p>一般来说，export 输出的变量就是本来的名字，但是可以使用 as 关键字重命名</p>
+<pre><code>function Module1() { ... }
+function Module2() { ... }
+
+export {
+  Module1 as Func1,
+  Module2 as Func2
+};
+</code></pre><p>5.export语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值;</p>
+<pre><code>export var str = &apos;hello&apos;;
+setTimeout(() =&gt; str = &apos;world&apos;, 1000);
+console.log(str)
+</code></pre><p>上面代码输出变量str，值为hello，1秒之后变成world。</p>
+<p>6.export命令可以出现在模块的任何位置，只要处于模块顶层就可以。如果处于块级作用域内，就会报错；</p>
+<pre><code>function foo() {
+  export default &apos;bar&apos; // SyntaxError
+}
+foo()
+</code></pre><p>7.使用export命令定义了模块的对外接口以后，其他 JS 文件就可以通过import命令加载这个模块，import命令接受一对大括号，里面指定要从其他模块导入的变量名，大括号里面的变量名，必须与被导入模块（profile.js）对外接口的名称相同；</p>
+<pre><code>// main.js
+import {firstName, lastName, year} from &apos;./profile&apos;;
+
+function say() {
+  console.log(&apos;Hello , &apos; + firstName + &apos; &apos; + lastName);
+}
+</code></pre><p>上面代码的 import 用于加载 profile.js 文件，并从中输入变量。</p>
+<p>8.如果想为输入的变量重新取一个名字，也可以使用 as 关键字，将输入的变量重命名。</p>
+<pre><code>import { lastName as secondName } from &apos;./profile&apos;;
+</code></pre><p>9.import 后面的 from 指定模块文件的位置，可以是相对路径，也可以是绝对路径，.js后缀可以省略。如果只是模块名，不带有路径，那么必须有配置文件，告诉 JavaScript 引擎该模块的位置；</p>
+<pre><code>import { methods } from &apos;util&apos;;
+</code></pre><p>10.import命令具有提升效果，会提升到整个模块的头部，首先执行</p>
+<pre><code>func();
+
+import { func } from &apos;methods&apos;;
+</code></pre><p>上面的代码不会报错，因为 import 的执行早于 func 的调用。因为 import 命令是编译阶段执行的；</p>
+<p>11.由于import是静态执行，所以不能使用表达式和变量</p>
+<pre><code>// 报错
+import { &apos;f&apos; + &apos;oo&apos; } from &apos;methods&apos;;
+
+// 报错
+let module = &apos;methods&apos;;
+import { foo } from module;
+
+// 报错
+if (x === 1) {
+  import { foo } from &apos;module1&apos;;
+} else {
+  import { foo } from &apos;module2&apos;;
+}
+</code></pre><p>上面三种写法都会报错，因为它们用到了表达式、变量和 if 结构。在静态分析阶段，这些语法都是没法得到值的；</p>
+<p>12.import 除了指定加载某个输出值，还可以使用整体加载，即用星号（*）指定一个对象，所有输出值都加载在这个对象上面</p>
+<pre><code>// tools
+
+export function circleArea(r){
+    return Math.PI * r * r ;
+}
+
+export function rectArea( w , h ){
+    return w * h ;
+}
+
+// main.js
+//逐一加载
+import { circleArea , rectArea } from &apos;./tools&apos;;
+
+console.log( &apos;圆的面积是:&apos; + circleArea( 5 ) );
+console.log( &apos;矩形的面积是:&apos; + rectArea( 5 , 6 ) ）;
+
+//整体加载
+import * as area from &apos;./tools&apos;;
+
+console.log( &apos;圆的面积是:&apos; + area.circleArea( 5 ) );
+console.log( &apos;矩形的面积是:&apos; + area.rectArea( 5 , 6 ) ）;
+</code></pre><p>不要尝试去在运行时去改变模块整体加载所在的对象（即上例中的area）的值，是不允许的；</p>
+<p>13.export default命令，为模块指定默认输出，这样就可以在使用 import 命令的时候，不必知道所要加载的变量名或函数名；</p>
+<pre><code>// export-default.js
+export default function () {
+  console.log(&apos;foo&apos;);
+}
+
+// import-default.js
+import customName from &apos;./export-default&apos;;
+customName(); 
+// &apos;foo&apos;
+</code></pre><p>上面代码是一个模块文件 export-default.js，它的默认输出是一个函数，在其他模块加载该模块时，import 命令可以为该匿名函数指定任意名字，这时import命令后面，不使用大括号；</p>
+<p>14.export default命令用在非匿名函数前，也是可以的。</p>
+<pre><code>// export-default.js
+export default function foo() {
+  console.log(&apos;hello world&apos;);
+}
+
+// 或者写成
+
+function foo() {
+  console.log(&apos;hello world&apos;);
+}
+
+export default foo;
+</code></pre><p>要注意的是，一个模块只能有一个默认输出，因此 export default 命令只能使用一次。所以，import 命令后面才不用加大括号，因为只可能对应一个方法；实际本质上，export default 就是输出一个叫做 default 的变量或方法，系统允许你为它取任意名字；</p>
+<pre><code>// modules.js
+function add(x, y) {
+  return x + y;
+}
+export { add as default };
+// 等同于
+// export default add;
+
+// app.js
+import { default as xxx } from &apos;modules&apos;;
+// 等同于
+// import xxx from &apos;modules&apos;;
+</code></pre><p>15.由于 export default 命令其实只是输出一个叫做default的变量，所以它后面不能跟变量声明语句；</p>
+<pre><code>// 正确
+export var a = 1;
+
+// 正确
+var a = 1;
+export default a;  //等同于将变量 a 的值赋给变量 default
+
+// 错误
+export default var a = 1;
+</code></pre><p>16.export default也可以用来输出类。</p>
+<pre><code>// MyClass.js
+export default class { ... }
+
+// main.js
+import MyClass from &apos;MyClass&apos;;
+let o = new MyClass();
+</code></pre><p>17.如果在一个模块之中，先输入后输出同一个模块，import语句可以与export语句写在一起;</p>
+<pre><code>export { foo, bar } from &apos;module&apos;;
+
+// 等同于
+import { foo, bar } from &apos;module&apos;;
+export { foo, bar };
+</code></pre><p>18.const声明的常量只在当前代码块有效。如果想设置跨模块的常量（即跨多个文件），或者说一个值要被多个模块共享，可以采用下面的写法:</p>
+<pre><code>// constants.js 模块
+export const A = 1;
+export const B = 2;
+
+// test1.js 模块
+import * as constants from &apos;./constants&apos;;
+console.log(constants.A); // 1
+console.log(constants.B); // 2
+
+// test2.js 模块
+import {A, B} from &apos;./constants&apos;;
+console.log(A); // 1
+console.log(B); // 2
+</code></pre>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/26/ES6-08/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -975,475 +1288,6 @@ function scheduler(task) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/24/ES6-06/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/24/ES6-06/" itemprop="url">ES6必知必会 （六）—— Class</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-24T12:16:23+08:00">
-                2017-07-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
-                    <span itemprop="name">ECMAScript6</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>Class</strong></p>
-<p>1.在之前的JS面向对象编程中，如果定义一个构造函数，一般来说是这样：</p>
-<pre><code>function Person( name , age ) {
-    this.name = name;
-    this.age = age;
-}
-Person.prototype.say = function(){
-    return &apos;My name is &apos; + this.name + &apos;, I am &apos; + this.age + &apos; years old&apos;;
-}
-</code></pre><p>这种写法跟传统的面向对象语言（比如 C++ 和 Java）差异很大，对于一些新学习JS的程序员来说不太容易理解，ES6 引入了 Class（类）这个概念，提供了更接近传统语言的写法，上述代码用 ES6 实现就是：</p>
-<pre><code>class Person {
-  constructor( name , age ) {
-    this.name = name;
-    this.age = age;
-  }
-
-  say() {
-    return return &apos;My name is &apos; + this.name + &apos;, I am &apos; + this.age + &apos; years old&apos;;
-  }
-}
-</code></pre><p>上述代码中的constructor方法，这就是构造方法，而this关键字则代表实例对象</p>
-<p>2.constructor方法是类的默认方法，通过new命令生成对象实例时，自动调用该方法。一个类必须有constructor方法，如果没有显式定义，会被默认添加一个空的constructor方法；</p>
-<pre><code>class Person {
-}
-
-// 等同于
-class Person {
-  constructor() {}
-}
-</code></pre><p>3.constructor方法默认返回实例对象（即this），完全可以指定返回另外一个对象，但实际开发中不建议这么做；</p>
-<pre><code>class Foo {
-  constructor() {
-    return Object.create(null);
-  }
-}
-
-new Foo() instanceof Foo  //false
-</code></pre><p>此时constructor函数返回一个全新的对象，结果导致实例对象不是Foo类的实例，因此会返回 false；</p>
-<p>4.使用new运算符用于生成类的实例对象，如果忘记加上new，像函数那样调用Class，将会报错；</p>
-<pre><code>class Person {
-  // ...
-}
-
-// 报错
-var person = Person();
-
-// 正确
-var person = new Person();
-</code></pre><p>5.实例的属性除非显式定义在其本身（即定义在this对象上），否则都是定义在原型上（即定义在class上），并且，类的所有实例共享一个原型对象</p>
-<pre><code>class Person {
-
-  //自身属性
-  constructor( name , age ) {
-    this.name = name;
-    this.age = age;
-  }
-
-  //原型对象的属性
-  say() {
-    return &apos;My name is &apos; + this.name + &apos;, I am &apos; + this.age + &apos; years old&apos;;
-  }
-}
-
-var person = new Person( &apos;Jack&apos; , 23);
-person.hasOwnProperty(&apos;name&apos;)                   // true
-person.hasOwnProperty(&apos;age&apos;)                    // true
-person.hasOwnProperty(&apos;say&apos;)                    // false
-person.__proto__.hasOwnProperty(&apos;say&apos;)          // true
-</code></pre><p>上述代码中，name 和 age 实例对象person自身的属性（因为定义在this变量上） ，所以hasOwnProperty方法返回true，而say是原型对象的属性（因为定义在Person类上），所以hasOwnProperty方法返回false；</p>
-<p>6.与函数一样，可以使用表达式的形式定义一个类，即</p>
-<pre><code>const MyClass = class Me {
-  getClassName() {
-    return Me.name;
-  }
-}
-</code></pre><p>值得注意的是，这个类的名字是MyClass而不是Me，Me只在 Class 的内部代码可用，用来指代当前类；如果类的内部没用到的话，可以省略Me，写成下面的形式：</p>
-<pre><code>const MyClass = class {
-  getClassName() {
-    return Me.name;
-  }
-}
-</code></pre><p>7.采用 Class 表达式，可以写出立即执行的 Class。</p>
-<pre><code>let Person = new class {
-  constructor(name , age ) {
-    this.name = name;
-    this.age = age;
-  }
-
-  say() {
-    return &apos;My name is &apos; + this.name + &apos;, I am &apos; + this.age + &apos; years old&apos;;
-  }
-}(&apos;Jack&apos; , 23 );
-
-Person.say();   // &apos;My name is Jack, I am 23 years old&apos;
-</code></pre><p>8.ES6中类不存在变量提升，不会把类的声明提升到代码头部，即如果<strong>类使用在前，定义在后</strong>，这样会报错；</p>
-<pre><code>new Person();   //Uncaught ReferenceError : Person is not defined
-class Person{}
-</code></pre><p>9.跟ES5一样，ES6的类定义中，也不支持私有属性和私有方法，只能通过变通的方法模拟实现（命名上加下划线等）；</p>
-<p>10.可以在一个类的方法前，加上static关键字，声明其为‘静态方法’，这样就表示该方法不会被实例继承，而是直接通过类来调用；</p>
-<pre><code>class Foo {
-  static classMethod() {
-    return &apos;Hello World&apos;;
-  }
-}
-
-Foo.classMethod()   // &apos;Hello World&apos;
-
-var foo = new Foo();
-foo.classMethod()   // TypeError: foo.classMethod is not a function
-</code></pre><p>11.父类的静态方法，可以被子类继承，也可以从super对象上调用。</p>
-<pre><code>class Parent {
-  static classMethod() {
-    return &apos;Hello World&apos;;
-  }
-}
-
-//子类继承
-class Child extends Parent {
-}
-
-Child.classMethod() // &apos;Hello World&apos;
-
-//super对象上调用
-class Child extends Parent {
-  static classMethod() {
-    return super.classMethod();
-  }
-}
-
-Child.classMethod()  // &apos;Hello World&apos;
-</code></pre><p>12.静态属性指的是 Class 本身的属性，即Class.propName，而不是定义在实例对象（this）上的属性，并且目前只能有以下方式定义：</p>
-<pre><code>class Foo {
-}
-
-Foo.prop = 1;
-Foo.prop // 1
-</code></pre><p>13.Class 可以通过extends关键字实现继承，这比 ES5 的通过修改原型链实现继承，要清晰和方便很多；</p>
-<pre><code>class Parent {
-  //
-}
-
-//子类继承
-class Child extends Parent {
-}
-</code></pre><p>上面代码定义了一个Child类，该类通过extends关键字，继承了Parent类的所有属性和方法；</p>
-<p>14.子类必须在constructor方法中调用super方法，否则新建实例时会报错。这是因为子类没有自己的this对象，而是继承父类的this对象，然后对其进行加工。如果不调用super方法，子类就得不到this对象；</p>
-<pre><code>class Parent {
-  constructor(name , age ) {
-    this.name = name;
-    this.age = age;
-  }
-}
-
-//子类继承
-class Child extends Parent {
-    constructor( name , age , hobby ) {
-        super( name , age );  // 调用父类的constructor( name , age )
-        this.hobby = hobby;
-    }
-
-    say(){
-        return &apos;My name is &apos; + this.name + &apos;, I am &apos; + this.age + &apos; years old , I like &apos; + this.hobby;
-    }
-}
-</code></pre><p>15.super关键字，既可以当作函数使用，也可以当作对象使用：</p>
-<ul>
-<li><p>作为函数调用时，代表父类的构造函数，并且只能用在子类的构造函数之中，用在其他地方就会报错；</p>
-  <pre>
-  class A {}
-
-  class B extends A {
-    m() {
-          super();        // 报错
-    }
-  }
-  </pre></li>
-<li><p>作为对象时，在普通方法中，指向父类的原型对象；在静态方法中，指向父类</p>
-  <pre>
-  class A {
-    p() {
-      return 2;
-    }
-  }
-
-  class B extends A {
-    constructor() {
-      super();
-      console.log(super.p()); // 2
-    }
-  }
-
-  let b = new B();
-  </pre>  
-
-</li>
-</ul>
-<p>需要注意的是，super指向的是父类的原型对象，所以定义在父类实例上的方法或属性，是无法通过super调用的</p>
-<pre><code>class A {
-  constructor() {
-    this.p = 2;
-  }
-}
-
-class B extends A {
-  get m() {
-    return super.p;
-  }
-}
-
-let b = new B();
-b.m                 // undefined
-</code></pre><p>16.ES6 规定，通过super调用父类的方法时，super会绑定子类的 this ；</p>
-<pre><code>class A {
-  constructor() {
-    this.x = 1;
-  }
-  print() {
-    console.log(this.x);
-  }
-}
-
-class B extends A {
-  constructor() {
-    super();
-    this.x = 2;
-  }
-  m() {
-    super.print();
-  }
-}
-
-let b = new B();
-b.m() // 2
-</code></pre><p>上面代码中，super.print()虽然调用的是A.prototype.print()，但是A.prototype.print()会绑定子类B的this，导致输出的是2，而不是1。也就是说，实际上执行的是super.print.call(this)。</p>
-<p>17.由于绑定子类的this，因此如果通过super对某个属性赋值，这时super就是this，赋值的属性会变成子类实例的属性；</p>
-<pre><code>class A {
-  constructor() {
-    this.x = 1;
-  }
-}
-
-class B extends A {
-  constructor() {
-    super();
-    this.x = 2;
-    super.x = 3;
-  }
-
-  print(){
-     console.log(super.x);  // undefined
-     console.log(this.x);   // 3
-  }
-}
-
-let b = new B();
-b.print();
-</code></pre><p>上面代码中，super.x 赋值为3，这时等同于对this.x赋值为3。而当读取super.x的时候，读的是A.prototype.x，而A的原型上没有x属性，所以返回undefined。</p>
-<p>18.如果super作为对象，用在静态方法之中，这时super将指向父类，而不是父类的原型对象。</p>
-<pre><code>class Parent {
-  static myMethod(msg) {
-    console.log(&apos;static&apos;);
-  }
-
-  myMethod(msg) {
-    console.log(&apos;instance&apos;);
-  }
-}
-
-class Child extends Parent {
-  static myMethod() {
-    super.myMethod();
-  }
-
-  myMethod(msg) {
-    super.myMethod();
-  }
-}
-
-Child.myMethod(); // static 
-
-var child = new Child();
-child.myMethod(); // instance 
-</code></pre><p>上述代码表明super在静态方法之中指向父类，在普通方法之中指向父类的原型对象。</p>
-<p>19.Class 作为构造函数的语法糖，同时有prototype属性和 __proto__属性，因此同时存在两条继承链</p>
-<ul>
-<li>子类的__proto__属性，表示构造函数的继承，总是指向父类。</li>
-<li><p>子类prototype属性的__proto__属性，表示方法的继承，总是指向父类的prototype属性</p>
-<pre>
- class A {
- }
-
- class B extends A {
- }
-
- B.\__proto__ === A // true
- B.prototype.\__proto__ === A.prototype // true
-</pre>
-
-</li>
-</ul>
-<p>20.extends关键字不仅可以用来继承类，还可以用来继承原生的构造函数。因此可以在原生数据结构的基础上，定义自己的数据结构，下面就是定义了一个带版本功能的数组例子。</p>
-<pre><code>class VersionedArray extends Array {
-  constructor() {
-    super();
-    this.history = [[]];
-  }
-  commit() {
-    this.history.push(this.slice());
-  }
-  revert() {
-    this.splice(0, this.length, ...this.history[this.history.length - 1]);
-  }
-}
-
-var x = new VersionedArray();
-
-x.push(1);
-x.push(2);
-x // [1, 2]
-x.history // [[]]
-
-x.commit();
-x.history // [[], [1, 2]]
-
-x.push(3);
-x // [1, 2, 3]
-x.history // [[], [1, 2]]
-
-x.revert();
-x // [1, 2]
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1497,7 +1341,7 @@ x // [1, 2]
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">35</span>
+                <span class="site-state-item-count">36</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
