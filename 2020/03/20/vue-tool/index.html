@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Vue," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="动态导入本地图片假设我们有这么一个功能，后台返回图片的名称，前端需要自己拼接路径获取本地图片，假定这些资源是存在我们前端的 assets/images，如果你采取传统的字符串拼接的方式： 12//template&amp;lt;img :src=&amp;quot;&amp;apos;@/assets/images&amp;apos; + imgUrl&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt; 发现图片无法显示，打开">
+<meta name="keywords" content="Vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue开发中的实用技巧">
+<meta property="og:url" content="http://yoursite.com/2020/03/20/vue-tool/index.html">
+<meta property="og:site_name" content="Cryptic&#39;s Blog">
+<meta property="og:description" content="动态导入本地图片假设我们有这么一个功能，后台返回图片的名称，前端需要自己拼接路径获取本地图片，假定这些资源是存在我们前端的 assets/images，如果你采取传统的字符串拼接的方式： 12//template&amp;lt;img :src=&amp;quot;&amp;apos;@/assets/images&amp;apos; + imgUrl&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt; 发现图片无法显示，打开">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-2ccad429e8f560b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2020-03-20T10:31:29.261Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue开发中的实用技巧">
+<meta name="twitter:description" content="动态导入本地图片假设我们有这么一个功能，后台返回图片的名称，前端需要自己拼接路径获取本地图片，假定这些资源是存在我们前端的 assets/images，如果你采取传统的字符串拼接的方式： 12//template&amp;lt;img :src=&amp;quot;&amp;apos;@/assets/images&amp;apos; + imgUrl&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt; 发现图片无法显示，打开">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-2ccad429e8f560b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/03/20/vue-tool/"/>
+
+
+
+
+
+  <title>Vue开发中的实用技巧 | Cryptic's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b8caac68f7b00d37aea3c9ee8ce00dd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cryptic's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/vue-tool/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Vue开发中的实用技巧</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-03-20T18:30:38+08:00">
+                2020-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="动态导入本地图片"><a href="#动态导入本地图片" class="headerlink" title="动态导入本地图片"></a><strong>动态导入本地图片</strong></h3><p>假设我们有这么一个功能，后台返回图片的名称，前端需要自己拼接路径获取本地图片，假定这些资源是存在我们前端的 <code>assets/images</code>，如果你采取传统的字符串拼接的方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//template</div><div class="line">&lt;img :src=&quot;&apos;@/assets/images&apos; + imgUrl&quot; alt=&quot;&quot;&gt;</div></pre></td></tr></table></figure>
+<p>发现图片无法显示，打开控制台审查元素，发现路径并没有正确解析，这个跟 <code>webpack</code> 编译打包有关系，在编译过程中目录结构改变导致的。</p>
+<p>我们只需要一个 <code>require</code> 方法就可以完美解决这个问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//template</div><div class="line">&lt;img :src=&quot;require(&apos;@/assets/images&apos; + imgUrl)&quot; alt=&quot;&quot;&gt;</div></pre></td></tr></table></figure>
+<p>刷新瞧瞧，是不是可以了~</p>
+<h3 id="开发和生产的路由配置"><a href="#开发和生产的路由配置" class="headerlink" title="开发和生产的路由配置"></a><strong>开发和生产的路由配置</strong></h3><p>配置路由的时候，开发环境下不需要使用 <code>lazy-loading</code> 加载 , 仅在生产环境使用即可，因为开发模式使用 <code>lazy-loading</code> 会导致 <code>webpack</code> 热更新比较慢。</p>
+<p>可以创建2个 <code>js</code> ，分别为 <code>_import_development.js</code> 和 <code>_import_production.js</code> 用来加载我们的组件</p>
+<p><code>ps</code> : 我的页面是在 <code>views</code> 文件夹下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// _import_development.js</div><div class="line">module.exports = file =&gt; require(&apos;@/views&apos; + file + &apos;.vue&apos;).default;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// _import_production.js</div><div class="line">module.exports = file =&gt; () =&gt; import(&apos;@/views/&apos; + file + &apos;.vue&apos;)</div></pre></td></tr></table></figure>
+<p>之后我们可以在我们的路由文件中通过当前运行环境( <code>process.env.NODE_ENV</code> )来加载不同的导入文件<code>js</code>，大概就变成下面的样子了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">// router.js</div><div class="line"></div><div class="line">const _import = require(&apos;./_import_&apos; + process.env.NODE_ENV);</div><div class="line"></div><div class="line">import Vue from &apos;vue&apos;</div><div class="line">import Router from &apos;vue-router&apos;</div><div class="line"></div><div class="line">Vue.use(Router)</div><div class="line"></div><div class="line">export default new Router(&#123;</div><div class="line">    routes: [</div><div class="line">    	&#123;</div><div class="line">            path: &apos;/&apos;,</div><div class="line">            name: &apos;Index&apos;,</div><div class="line">            component: _import(&apos;/index&apos;)</div><div class="line">    	&#125;</div><div class="line">    ],</div><div class="line">    mode: &apos;history&apos;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<h3 id="带参数的自定义指令"><a href="#带参数的自定义指令" class="headerlink" title="带参数的自定义指令"></a><strong>带参数的自定义指令</strong></h3><p>我们平时书写自定义指令大部分都是以下的这种方式：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Vue.directive(&apos;background&apos;, &#123;</div><div class="line">  inserted: function (el) &#123;</div><div class="line">    // 修改背景色</div><div class="line">    el.style.backgroundColor = &apos;red&apos;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p>这样可能在某些场景下显得不够灵活，其实我们是可以给指令传递参数的，我们可以将上面的代码改成下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Vue.directive(&apos;background&apos;, &#123;</div><div class="line">  inserted: function (el,binding) &#123;</div><div class="line">    // 修改背景色</div><div class="line">    el.style.backgroundColor = binding.value</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>其中第二个参数 <code>binding</code> 是一个对象，包含下面这些属性：</p>
+<ul>
+<li><code>name</code>：指令名，不包括 <code>v-</code> 前缀。</li>
+<li><code>value</code>：指令的绑定值，例如：<code>v-background=&quot;&#39;red&#39;&quot;</code> 中，绑定值为 <code>red</code>。</li>
+<li><code>oldValue</code>：指令绑定的前一个值，仅在 <code>update</code> 和 <code>componentUpdated</code> 钩子中可用。</li>
+<li><code>expression</code> ：字符串形式的指令表达式。例如 <code>v-my-directive=&quot;1 + 1&quot;</code> 中，表达式为 <code>&quot;1 + 1&quot;</code>。</li>
+<li><code>arg</code> ：传给指令的参数，可选。例如 <code>v-my-directive:foo</code> 中，参数为 <code>&quot;foo&quot;</code>。</li>
+<li><code>modifiers</code>：一个包含修饰符的对象。例如：<code>v-my-directive.foo.bar</code> 中，修饰符对象为 <code>{ foo: true, bar: true }</code></li>
+</ul>
+<p>使用时就可以<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//固定值</div><div class="line">&lt;div class=&quot;&quot; v-background=&quot;&apos;red&apos;&quot;&gt;Hello World&lt;/div&gt;</div><div class="line"></div><div class="line">//动态传值</div><div class="line">&lt;div class=&quot;&quot; v-background=&quot;color&quot;&gt;Hello World&lt;/div&gt;</div></pre></td></tr></table></figure></p>
+<p>其中 <code>color</code> 绑定的是 <code>data</code> 里面的 <code>color</code> 值。</p>
+<p>如果你觉得这么还不够灵活，我想动态修改参数可以吗？当然没问题，请看下面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Vue.directive(&apos;style&apos;, &#123;</div><div class="line">  inserted: function (el,binding) &#123;</div><div class="line">    el.style[binding.arg] = binding.value;</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>这么一来，你想修改啥直接写就是啦。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">// 修改背景色</div><div class="line">&lt;div class=&quot;&quot; v-style:[`background`]=&quot;&apos;red&apos;&quot;&gt;Hello World&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>如果我想批量修改，<code>so easy</code> 传个对象就好了，如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Vue.directive(&apos;style&apos;, &#123;</div><div class="line">  inserted: function (el,binding) &#123;</div><div class="line">    for( let key in binding.value)&#123;</div><div class="line">      el.style[key] = binding.value[key]</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">// 批量修改</div><div class="line">&lt;div class=&quot;&quot; v-style=&quot;&#123; color : &apos;white&apos; , background : &apos;red&apos;&#125;&quot;&gt;Hello World&lt;/div&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="带参数过滤器"><a href="#带参数过滤器" class="headerlink" title="带参数过滤器"></a><strong>带参数过滤器</strong></h3><p>过滤器通常在<strong> 双花括号插值</strong>和 <strong>v-bind 表达式</strong> 中使用，经常是为了来格式化一些文本之类的。</p>
+<p>它跟自定义指令一样，也是可以带参数的，不过过滤器比起指令要简单的多。</p>
+<p>假设我们需要将后端传过来的时间戳格式化一下，一般的这么写就可以了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// ps: 这里引入了一个 moment 包</div><div class="line"></div><div class="line">Vue.filter(&apos;formatDate&apos;,function (val) &#123;</div><div class="line">    return moment.unix(val).format(&apos;YYYY-MM-DD HH:mm:ss&apos;)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>后来为了让用户可以自定义显示格式，后端增加了一个<code>formate</code>字段，我们不得不修改我们的过滤器，这时候就需要给过滤器加参数，来解决这个问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Vue.filter(&apos;formatDate&apos;,function (val,format) &#123;</div><div class="line">    return moment.unix(val).format(format)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>调用的时候只需要这么传入即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div class=&quot;&quot;&gt;&#123;&#123; timestamp | formatDate(&apos;YYYY/MM/DD HH:mm:ss&apos;) &#125;&#125;&lt;/div&gt;</div></pre></td></tr></table></figure></p>
+<p>过滤器第一个参数仍然是原始的值，<code>YYYY/MM/DD HH:mm:ss</code> 作为第二个参数传到了 <code>format</code> 中，这样的拓展性是不是更好了呢~</p>
+<h3 id="attrs解决数据多级传递"><a href="#attrs解决数据多级传递" class="headerlink" title="$attrs解决数据多级传递"></a><strong>$attrs解决数据多级传递</strong></h3><p><code>$attrs</code> 官方解释是包含了父作用域中不作为 <code>prop</code> 被识别 (且获取) 的特性绑定 (<code>class</code> 和 <code>style</code> 除外)。当一个组件没有声明任何 <code>prop</code> 时，这里会包含所有父作用域的绑定 (<code>class</code> 和 <code>style</code> 除外)，并且可以通过 <code>v-bind=&quot;$attrs&quot;</code> 传入内部组件——在创建高级别的组件时非常有用。</p>
+<p>理解起来一头雾水，其主要意思是父组件往子组件传没有在<code>props</code>里声明过的值时，子组件可以通过<code>$attrs</code>接受，且只包含父组件没有在<code>props</code>里声明的值。</p>
+<p>通常我们如果需要从父组件接收传递很多个值，那么我们就需要在 <code>props</code> 里声明需要接受的值，如果孙子组件也需要，那么就又要重复在<code>props</code>中声明，显得非常繁琐。</p>
+<p>例如我们现在有 <code>A</code>，<code>B</code>，<code>C</code> 三个组件，是父子孙的关系，如果 <code>B</code>、<code>C</code> 组件都要从 <code>A</code> 组件中继承一系列的属性：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// com-a</div><div class="line">&lt;template&gt;</div><div class="line">    &lt;com-b :title=&apos;title&apos; :desc=&apos;desc&apos; :date=&apos;date&apos;&gt;&lt;/com-b&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">// com-b</div><div class="line">&lt;template&gt;</div><div class="line">    &lt;com-c v-bind=&apos;$attrs&apos;&gt;&lt;/com-c&gt;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure></p>
+<p>这时候我们在 <code>B</code> 组件中通过 <code>$attrs</code> 就可以获取父组件传递的 <code>title</code>、<code>desc</code>和<code>date</code>，此外我们只要给 <code>C</code> 组件绑定 <code>v-bind=&#39;$attrs&#39;</code> ， 同理，<code>C</code> 组件内部也就可以通过 <code>$attrs</code> 获取到 <code>A</code> 里面的值了~</p>
+<p><code>ps:</code> <code>B</code>、<code>C</code> 组件的 <code>DOM</code> 上会绑定 <code>A</code> 传过来的属性，<code>Vue</code> 内部默认是这么处理的，要去掉的话给 <code>B</code>、<code>C</code>组件加上 <code>inheritAttrs : false</code> 属性即可。</p>
+<p><code>$listeners</code> 的用法也比较类似，不赘述了~</p>
+<h3 id="跨组件通信的另一种方式"><a href="#跨组件通信的另一种方式" class="headerlink" title="跨组件通信的另一种方式"></a><strong>跨组件通信的另一种方式</strong></h3><p>想到跨组件通信，可能会想到 <code>eventBus</code> ， <code>vuex</code> 之类的方法，实际上我们可以借助 <code>vue</code> 本身的<strong>依赖注入</strong>这种方案优雅实现</p>
+<p>我们首先需要在 <code>main.js</code> 中，定义一个 <code>eventHub</code> , 这是我们的关键点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// main.js</div><div class="line">new Vue(&#123;</div><div class="line">    el: &apos;#app&apos;,</div><div class="line">    router,</div><div class="line">    store,</div><div class="line">    components: &#123;</div><div class="line">        App</div><div class="line">    &#125;,</div><div class="line">    data: &#123;</div><div class="line">        eventHub: new Vue()</div><div class="line">    &#125;,</div><div class="line">    template: &apos;&lt;App/&gt;&apos;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>之后，在我们在需要监控的组件的生命周期中绑定一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// com-a</div><div class="line">mounted () &#123;</div><div class="line">    this.$root.eventHub.$on(&apos;update&apos;,(data)=&gt;&#123;</div><div class="line">    	console.log(data);</div><div class="line">    &#125;)</div><div class="line">&#125;,</div><div class="line">beforeDestroy () &#123;</div><div class="line">    this.$root.eventHub.$off(&apos;update&apos;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其他组件要触发改事件只需要一句话：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">emitEevent () &#123;</div><div class="line">    this.$root.eventHub.$emit(&apos;update&apos;,&#123; msg : &apos;hello world&apos; &#125;)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>值得注意的是，一定要在 <code>beforeDestroy</code> 生命周期中通过 <code>$off</code> 取消监听，不然会重复监听导致触发多次，如果只需要触发一次事件的话，<code>$once</code> 绑定会更加不错。</p>
+<h3 id="函数式组件"><a href="#函数式组件" class="headerlink" title="函数式组件"></a><strong>函数式组件</strong></h3><p><code>Vue</code> 里的函数式组件和 <code>React</code> 中的无状态组件有些类似，如果说一个组件没有管理任何状态，也没有监听任何传递给它的状态，也没有生命周期方法，那么这时候我们可以考虑使用函数式组件。</p>
+<p>函数式组件跟普通组件相比，因为没有状态管理，声明周期，只是函数，所以渲染开销低很多，以此可以优化我们的代码。</p>
+<p>通常函数式组件的声明方式有2种（局部组件为例）：</p>
+<p>一种是模版渲染方式加上 <code>functional</code> 关键字创建</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;template functional&gt;</div><div class="line">/***/</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<p>另一种是通过 <code>render</code> 渲染函数，并加上 <code>functional</code> 属性来标识创建，这种方式比模版更接近编译器，更加底层，渲染会更加迅速。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">export default &#123;</div><div class="line">    functional: true,</div><div class="line">    // Props 是可选的</div><div class="line">    props: &#123;</div><div class="line">        // ...</div><div class="line">    &#125;,</div><div class="line">    render: function (createElement, context) &#123;</div><div class="line">        // ...</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关于 <code>render</code> 函数，由于篇幅太长，这边不在赘述，想要了解更多细节和配置参数，可以参考<a href="https://cn.vuejs.org/v2/guide/render-function.html" target="_blank" rel="external">官网</a>的解释</p>
+<p>由于函数式组件没有实例，为了弥补这个问题，组件需要的一切都是通过 <code>context</code> 参数传递，它是一个包括如下字段的对象：</p>
+<ul>
+<li><code>props</code>：提供所有 <code>prop</code> 的对象</li>
+<li><code>children</code>: <code>VNode</code> 子节点的数组</li>
+<li><code>slots</code>: 一个函数，返回了包含所有插槽的对象</li>
+<li><code>scopedSlots</code>:  一个暴露传入的作用域插槽的对象。也以函数形式暴露普通插槽。</li>
+<li><code>data</code>：传递给组件的整个数据对象，作为 <code>createElement</code> 的第二个参数传入组件</li>
+<li><code>parent</code>：对父组件的引用</li>
+<li><code>listeners</code>:  一个包含了所有父组件为当前组件注册的事件监听器的对象</li>
+<li><code>injections</code>: 如果使用了 <code>inject</code> 选项，则该对象包含了应当被注入的属性。</li>
+</ul>
+<p>看起来雨里雾里，其实没那么高深！</p>
+<p>我们来个例子更直观，我们现在需要渲染一个列表，没有具体的交互，仅做展示使用，为了优化代码，我们决定使用函数式组件来渲染。</p>
+<p>列表数据格式如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// list-data</div><div class="line">[&#123;</div><div class="line">    id : 1 ,</div><div class="line">    title : &apos;学习Vue&apos;</div><div class="line">&#125;,&#123;</div><div class="line">    id : 2 ,</div><div class="line">    title : &apos;学习React&apos;</div><div class="line">&#125;,&#123;</div><div class="line">    id : 3 ,</div><div class="line">    title : &apos;学习Angular&apos;</div><div class="line">&#125;]</div></pre></td></tr></table></figure></p>
+<p>如果我们通过模版方式来做的的话，我们可以定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">// todoList.vue</div><div class="line">&lt;template functional&gt;</div><div class="line">    &lt;ul&gt;</div><div class="line">        &lt;li v-for=&quot;item in props.todoList&quot;&gt;&#123;&#123; item.title &#125;&#125;&lt;/li&gt;</div><div class="line">    &lt;/ul&gt;</div><div class="line">&lt;/template&gt;</div></pre></td></tr></table></figure>
+<p>如果我们通过 <code>render</code> 函数来创建的话（<code>.js</code>文件，不是 <code>.vue</code>文件）， 那么应该是这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">export default &#123;</div><div class="line">    functional: true,</div><div class="line">    props: &#123;</div><div class="line">    	todoList: &#123;</div><div class="line">            type: Array,</div><div class="line">            default: () =&gt; []</div><div class="line">    	&#125;</div><div class="line">    &#125;,</div><div class="line">    render: function (createElement, context) &#123;</div><div class="line">    	let oLi = context.props.todoList.map(item =&gt; &#123;</div><div class="line">            return createElement(&apos;li&apos;, &#123;</div><div class="line">            	domProps: &#123;</div><div class="line">                    innerHTML: item.title</div><div class="line">            	&#125;</div><div class="line">            &#125;)</div><div class="line">    	&#125;)</div><div class="line">    	return createElement(&apos;ul&apos;, &#123;&#125;, oLi)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们通过 <code>import</code> 在父组件导入一下，然后看看结果</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-2ccad429e8f560b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>效果一样，虽然 <code>template</code> 方式看起来简单的多，但是很多时候我还是比较倾向于 <code>render</code> 方式，因为它在修改或者条件判断的时候会比较方便，也省去了不少 <code>v-if</code>，<code>v-show</code> 这些指令，看起来更加优雅。</p>
+<h3 id="自动化导入component"><a href="#自动化导入component" class="headerlink" title="自动化导入component"></a><strong>自动化导入component</strong></h3><p>如果你定义了一系列的牛X的公共组件，然而你每次需要频繁的去 <code>import xxx from &#39;../xxx&#39;</code>，还要<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">components : &#123;</div><div class="line">    ComponentA</div><div class="line">    ComponentB</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面有种一劳永逸的方法，让你解放双手~</p>
+<p>需要借助 <code>webpack</code> 里面的 <code>require.context</code> 方法，简单了解一下，通过它获取一个特定的上下文，然后从中读取指定目录下的文件和文件内容。</p>
+<p>该方法有三个参数 <code>directory</code>，<code>useSubdirectories</code>和<code>useSubdirectories</code></p>
+<ul>
+<li><code>directory {String}</code> -读取文件的路径</li>
+<li><code>useSubdirectories {Boolean}</code> -是否遍历文件的子目录</li>
+<li><code>regExp {RegExp}</code> -匹配文件的正则</li>
+</ul>
+<p>如果我要遍历 <code>components</code> 目录下的所有公共组件，我就可以这么做：</p>
+<p>首先在<code>components</code>目录下创建一个 <code>baseComponent.js</code> 文件，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// baseComponent.js</div><div class="line"></div><div class="line">import Vue from &apos;vue&apos;</div><div class="line">const autoRequireComponent = require.context(&apos;./&apos;, false, /.vue$/)</div><div class="line"></div><div class="line">autoRequireComponent.keys().forEach(file =&gt; &#123;</div><div class="line">    //获取组件配置信息</div><div class="line">    const componentConfig = autoRequireComponent(file).default</div><div class="line">    //获取组件的名称 , 将 ./UButton.vue 名称替换成 UButton</div><div class="line">    const componentName = file.replace(/^\.\//, &apos;&apos;).replace(/\.\w+$/, &apos;&apos;)</div><div class="line">    //注册组件</div><div class="line">    Vue.component(componentName, componentConfig)</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>其中 <code>autoRequireComponent.keys()</code> 返回的就是一个文件名称的数组，类似于 <code>[&#39;UButton&#39;,&#39;UInput&#39;]</code>，然后遍历并通过 <code>Vue.component</code> 方法注册到全局</p>
+<p>最后在 <code>main.js</code> 中 <code>import</code> 一下就搞定了，现在你可以在任意组件中调用你的公共组件了！</p>
+<p>该方法在批量处理一些文件的时候会有奇效！</p>
+<p>以上就是我日常开发中遇到或者总结到的一些东西，如果你有更好更优雅的方式，记得分享哈~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Vue/" rel="tag"># Vue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/31/Webpack/" rel="next" title="从0到1教你学习并配置webpack">
+                <i class="fa fa-chevron-left"></i> 从0到1教你学习并配置webpack
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/headImg.jpg"
+              alt="Chris wei" />
+          
+            <p class="site-author-name" itemprop="name">Chris wei</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Chris-wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>简书</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/DreamerChenwei" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010732998898" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态导入本地图片"><span class="nav-number">1.</span> <span class="nav-text">动态导入本地图片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发和生产的路由配置"><span class="nav-number">2.</span> <span class="nav-text">开发和生产的路由配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#带参数的自定义指令"><span class="nav-number">3.</span> <span class="nav-text">带参数的自定义指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#带参数过滤器"><span class="nav-number">4.</span> <span class="nav-text">带参数过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#attrs解决数据多级传递"><span class="nav-number">5.</span> <span class="nav-text">$attrs解决数据多级传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨组件通信的另一种方式"><span class="nav-number">6.</span> <span class="nav-text">跨组件通信的另一种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数式组件"><span class="nav-number">7.</span> <span class="nav-text">函数式组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动化导入component"><span class="nav-number">8.</span> <span class="nav-text">自动化导入component</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris wei</span>
+
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

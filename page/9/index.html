@@ -278,6 +278,318 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/26/Queue/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/26/Queue/" itemprop="url">JS中的算法与数据结构——队列(Queue)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T11:00:18+08:00">
+                2017-09-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="队列-Queue"><a href="#队列-Queue" class="headerlink" title="队列(Queue)"></a>队列(Queue)</h2><p>我们之前说到了<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>，它是一种比较高效的数据结构，遵循 先入后出(LIFO，last-in-first-out) 的原则。而今天我们要讨论的<strong>队列</strong>，它也是一种特殊的列表，它与栈不同的是， 队列只能在队尾插入元素，在队首删除元素，就像我们平时排队买票一样~</p>
+<p>队列用于存储按顺序排列的数据，遵循 先进先出(FIFO，First-In-First-Out) 的原则，也是计算机常用的一种数据结构，别用于很多地方，比如提交给操作系统的一系列进程，打印池任务等。</p>
+<p>同栈有点类似，队列的操作主要也是有两种：向队列中插入新元素和删除队列中的元素，即入队和出队操作，我们采用 enqueue 和 dequeue 两个方法。</p>
+<p>除此之外，队列还有一些其他的操作，比如读取队首的元素，该操作仅返回对头元素并不将它从队列中删除，类似栈的 peek 方法；back 方法读取队尾的元素；toString 方法可以打印当前队列中所有的元素；clear 方法清空当前队列等。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-f602bd5d69c30052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="队列数据定义"></p>
+<p>我们定义好数据类型，可以通过JS中的数组去实现它。</p>
+<h2 id="队列的实现"><a href="#队列的实现" class="headerlink" title="队列的实现"></a>队列的实现</h2><pre><code>//定义队列
+
+function Queue(){
+    this.dataStore = [];
+    this.enqueue = enqueue;     //入队
+    this.dequeue = dequeue;     //出队
+    this.front = front;         //查看队首元素
+    this.back = back;           //查看队尾元素
+    this.toString = toString;   //显示队列所有元素
+    this.clear = clear;         //清空当前队列
+    this.empty = empty;         //判断当前队列是否为空
+}
+</code></pre><p>我们先来实现入队操作：</p>
+<p><strong>enqueue：向队列添加元素</strong></p>
+<pre><code>//向队列末尾添加一个元素，直接调用 push 方法即可
+
+function enqueue ( element ) {
+    this.dataStore.push( element );
+}
+</code></pre><p>因为JS中的数组具有其他语言没有的有点，可以直接利用 shift 方法删除数组的第一个元素，因此，出队操作的实现就变得很简单了。</p>
+<p><strong>dequeue：删除队首的元素</strong></p>
+<pre><code>//删除队列首的元素，可以利用 JS 数组中的 shift 方法
+
+function dequeue () {
+    if( this.empty() ) return &apos;This queue is empty&apos;;
+    else this.dataStore.shift();
+}
+</code></pre><p>我们注意的，上面我做了一个判断，队列是否还有元素，因为去删除空队列的元素是没有意义的，那么，我们就来看看 empty 方法是如何实现的。</p>
+<p><strong>empty：判断队列是否为空</strong></p>
+<pre><code>//我们通过判断 dataStore 的长度就可知道队列是否为空
+
+function empty(){
+    if( this.dataStore.length == 0 ) return true;
+    else return false;
+}
+</code></pre><p>我们先来看看测试一下这几个方法，</p>
+<pre><code>var queue = new Queue();
+
+console.log( queue.empty() );       //true
+
+//添加几个元素
+queue.enqueue(&apos;Apple&apos;);
+queue.enqueue(&apos;Banana&apos;);
+queue.enqueue(&apos;Pear&apos;);
+
+console.log( queue.empty() );       // false
+</code></pre><p>现在，我不知道谁在第一个，谁是最后一个，我们可以利用 front 和 back 方法分别来查看，</p>
+<p><strong>front：查看队首元素</strong></p>
+<pre><code>//查看队首元素，直接返回数组首个元素即可
+
+function front(){
+    if( this.empty() ) return &apos;This queue is empty&apos;;
+    else return this.dataStore[0]；
+}
+</code></pre><p><strong>back：查看队尾元素</strong></p>
+<pre><code>//查看队首元素，直接返回数组最后一个元素即可
+
+//读取队列尾的元素
+function back () {
+    if( this.empty() ) return &apos;This queue is empty&apos;;
+    else return this.dataStore[ this.dataStore.length - 1 ];
+}
+</code></pre><p>我们先看看对不对：</p>
+<pre><code>//查看队首元素
+console.log( queue.front() );  // Apple
+//查看队尾元素  
+console.log( queue.back() );   // Pear
+
+//出队
+queue.dequeue();
+
+//查看队首元素
+console.log( queue.front() );  // Banana
+//查看队尾元素  
+console.log( queue.back() );   // Pear
+</code></pre><p>没问题！现在，我想看看，总共有多少水果，toString方法来实现，</p>
+<p><strong>toString：查看队列中所有元素</strong></p>
+<pre><code>//查看对了所有元素，我这里采用数组的 join 方法实现
+
+function toString(){
+    return this.dataStore.join(&apos;\n&apos;);
+}
+</code></pre><p>现在，你可以看看你还有什么水果没吃的了,</p>
+<pre><code>console.log( queue.toString() )     //  Apple
+                                    //  Banana
+                                    //  Pear
+</code></pre><p>我们就剩下一个 clear 方法了，如果你已经把所有水果都吃完了，那么你应该使用 clear 方法，</p>
+<pre><code>//清空当前队列，也很简单，我们直接将 dataStore 数值清空即可
+
+function clear(){
+    delete this.dataStore;
+    this.dataStor = [];
+}
+</code></pre><p>至此，我们已经用JS实现了一个队列，怎么样，是不是觉得JS的数组超级好用，省去了不少麻烦，有木有！！</p>
+<pre><code>//清空队列
+
+queue.clear();
+
+console.log( queue.empty() );    // true
+</code></pre><p>下面，我们利用队列来实现基数排序。</p>
+<p>基数排序（radix sort）属于“分配式排序”（distribution sort），它是透过键值的部份资讯，将要排序的元素分配至某些“桶”中，藉以达到排序的作用，基数排序法是属于稳定性的排序，其时间复杂度为O (nlog(r)m)，其中r为所采取的基数，而m为堆数，在某些时候，基数排序法的效率高于其它的稳定性排序法。</p>
+<p>先看一下基数排序的的实现步骤（以两位数为例），需要扫描两次，第一次按个位数字进行排序，第二次按十位数字排序，每个数字根据对应的数值分配到到不同的盒子里，最后将盒子的数字依次取出，组成新的列表即为排序好的数字。</p>
+<ol>
+<li>假设我们有一串数字，分别为 73, 22, 93, 43, 55, 14, 28, 65, 39, 81</li>
+<li>首先根据个位数字排序，放到不同的盒子里，如下图<br><img src="http://upload-images.jianshu.io/upload_images/6633377-d6ded31eef9d4349.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次排序"></li>
+<li>接下来将这些盒子中的数值重新串接起来，成为以下的数列：81, 22, 73, 93, 43, 14, 55, 65, 28, 39</li>
+<li>然后根据十位数字排序，再放到不同的盒子里，如下图<br><img src="http://upload-images.jianshu.io/upload_images/6633377-5f6c62e8c84b52ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次排序"></li>
+<li>接下来将这些盒子中的数值重新串接起来，整个数列已经排序完毕：14, 22, 28, 39, 43, 55, 65, 73, 81, 93</li>
+</ol>
+<p>我们已经了解了基数排序的算法思想，接着我们要结合队列去实现它，一起来看看吧。</p>
+<pre><code>//基数排序
+
+var queues = [];    //定义队列数组
+var nums = [];      //定义数字数组
+
+//选十个0~99的随机数进行排序
+for ( var i = 0 ; i &lt; 10 ; i ++ ){
+    queues[i] = new Queue();
+    nums[i] = Math.floor( Math.random() * 101 );
+}
+
+//排序之前
+console.log( &apos;before radix sort: &apos; + nums );
+
+//基数排序
+distribution( nums , queues , 10 , 1 );
+collect( queues , nums );
+distribution( nums , queues , 10 , 10 );
+collect( queues , nums );
+
+//排序之后
+console.info(&apos;after radix sort: &apos; + nums );
+
+//根据相应的（个位和十位）数值，将数字分配到相应队列
+
+function distribution ( nums , queues , n , digit ) {  //digit表示个位或者十位的值
+    for( var i = 0 ; i &lt; n ; i++ ){
+        if( digit == 1){
+            queues[ nums[i] % 10 ].enqueue( nums[i] );
+        }else{
+            queues[ Math.floor( nums[i] / 10 ) ].enqueue( nums[i] );
+        }
+    }
+}
+
+//从队列中收集数字
+
+function collect ( queues , nums ) {
+    var i = 0;
+    for ( var digit = 0 ; digit &lt; 10 ; digit ++ ){
+        while ( !queues[digit].empty() ){
+            nums[ i++ ] = queues[digit].front();
+            queues[digit].dequeue();
+        }
+    }
+}
+</code></pre><p>我这里贴出两组测试的结果，大家自己动手实践一下。</p>
+<pre><code>//第一组测试
+
+before radix sort: 23,39,2,67,90,41,47,21,98,13
+after radix sort: 2,13,21,23,39,41,47,67,90,98
+
+//第二组测试
+
+before radix sort: 29,62,38,16,55,26,33,54,76,65
+after radix sort: 16,26,29,33,38,54,55,62,65,76
+</code></pre><p>至此，我们队列也就告一段落了，大家还可以往深入拓展，比如优先队列，循环队列等，希望大家能发散思维，多动手实践，一起加油！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/23/List/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -770,159 +1082,11 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/02/vue-music/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/08/02/vue-music/" itemprop="url">Vue初学者的福音——QQ音乐移动端官网</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-02T09:55:38+08:00">
-                2017-08-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>有不少的小伙伴在学习新框架后，感觉很迷茫，不知道如何正确使用该框架，没有实际的上手项目可以实战，就不清楚自己对新框架的掌握程度~<br>作为目前国内很火的MVVM框架——Vue，很多初学者跟我一样，在看完文档后表示不知道该框架正确的使用姿势，恰巧，最近做Vue项目有点心得，就顺手撸了一个Vue仿QQ音乐移动端官网的demo供初学者学习，让你掌握Vue正确的使用方法~</p>
-<p>项目地址为 <a href="https://github.com/Chris-wei/vue-music" target="_blank" rel="external">传送门</a></p>
-<p>不多说了，我们先看看最后的效果图~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cca85345688a05.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="推荐"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-bd35457dfdd690ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排行榜"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-45863c4e860fa984.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="搜索"></p>
-<p>实际上整个项目并不复杂，但是麻雀虽小五脏俱全，小小的项目中包含了 Vue，Vuex，Vue-router 等一些常用的开发库，让你摆脱原来 jQuery 的繁琐的 dom 操作，深入了解vue的组件化编程，体会数据驱动带来的快感！</p>
-<p>ps：本项目中的数据全部来源于QQ音乐官方接口，但是由于QQ音乐官方接口的限制，本项目暂时采用的是zepto的jsonp模拟请求，实际项目开发中推荐使用axios；</p>
-<p>带你入坑了，接下来，请开始你们的表演~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/">12</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -971,7 +1135,7 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">36</span>
+                <span class="site-state-item-count">37</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1061,7 +1225,7 @@ console.log(fruits.contains(&apos;Watermelon&apos;));     // false
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2019</span>
+  <span itemprop="copyrightYear">2020</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
