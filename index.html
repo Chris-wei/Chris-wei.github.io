@@ -278,6 +278,225 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/Auto-deploy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/04/24/Auto-deploy/" itemprop="url">利用Python实现前端自动化打包部署</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-24T19:30:38+08:00">
+                2020-04-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index">
+                    <span itemprop="name">Python</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://upload-images.jianshu.io/upload_images/6633377-b2fcbc7235891245.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>人生苦短，我用<code>python</code>~</p>
+<p>作为一名专职前端开发的我，为了帮助解决目前工作中的一些繁琐的工作（主要是处理 <code>excel</code> 数据），解放程序员双手，前阵子就刚刚入了 <code>python</code> 的坑，毕竟也算是门工具语言，都已经加入少儿编程了，哈哈哈！</p>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>实践是检验学习成果的唯一标准！</p>
+<p>在我学习过程中，一直琢磨着如何将学习的理论与我所掌握的知识结合起来，来解决或者处理实际问题，于是就有了 前端自动化打包部署 的念头。</p>
+<p>尽快近几年，市面上关于自动化部署的工具层出不穷，比如当下比较流行的<code>Jenkins</code>，尽管如此，我还是想自己试一试~</p>
+<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>初学乍道，切不可眼高手低，先给自己定个小目标，先实现一个最简单版本。</p>
+<p>工欲善其事，必先利其器，开发环境的配置是开发的第一步。</p>
+<p>关于 <code>python</code> 的安装配置我就不赘述了。</p>
+<p>为了方便测试，我本地利用 <code>VM</code> 虚拟机安装了 <code>centos</code> 系统，安装并配置 <code>nginx</code> 充当了服务器。</p>
+<h3 id="难点分析"><a href="#难点分析" class="headerlink" title="难点分析"></a>难点分析</h3><p>要想实现打包，核心需要考虑下面2个问题：</p>
+<ul>
+<li>在 <code>python</code> 脚本中如何去执行前端的打包命令<code>npm run build</code>（这里以<code>vue</code>项目作为测试）</li>
+<li>在 <code>python</code> 脚本中如何连接服务器将打包好的问题上传到服务器的指定目录中去</li>
+</ul>
+<h3 id="理论求证"><a href="#理论求证" class="headerlink" title="理论求证"></a>理论求证</h3><p>通过查阅资料得知，<code>python</code>中的 <code>os</code> 模块提供了非常丰富的方法用来处理文件和目录，其中 <code>os</code>模块中的<code>system()</code>函数可以方便地运行其他程序或者脚本，其语法如下：</p>
+<p><code>os.system(command)</code></p>
+<p><code>command</code>  要执行的命令，相当于<code>在Windows</code>的<code>cmd</code>窗口中输入的命令。如果要向程序或者脚本传递参数，可以使用空格分隔程序及多个参数，该方法返回结果如果为 0，则表示命令执行成功,其它值则表示错误。</p>
+<p>这样就解决了第一个问题。</p>
+<p>关于服务器连接这一块，可以使用<code>python</code>的一个第三方模块 <code>paramiko</code>，它实现了<code>SSHv2</code>协议，允许我们直接使用<code>SSH</code>协议对远程服务器执行操作，关于 <code>paramiko</code> 的更多知识和用法，请戳<a href="https://www.cnblogs.com/xiao-apple36/p/9144092.html#_label3_0" target="_blank" rel="external">这里</a></p>
+<p>这样上面两个难点就解决了，我们就可以开工了。</p>
+<h3 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h3><p>首先定义一个类 <code>SSHConnect</code> 后续的方法我们都会在这个类里面完善</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class SSHConnect:</div><div class="line">    # 定义一个私有变量，用来保存ssh连接通道，初始化为None</div><div class="line">    __transport = None</div></pre></td></tr></table></figure>
+<p><strong>初始构造函数</strong></p>
+<p>我们需要在构造函数中定义我们需要的参数，初始化我们的连接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 初始化构造函数（主机，用户名，密码，端口，默认22）</div><div class="line">def __init__(self, hostname, username, password, port=22):</div><div class="line">    self.hostname = hostname</div><div class="line">    self.port = port</div><div class="line">    self.username = username</div><div class="line">    self.password = password</div><div class="line">    # 创建 ssh 连接通道</div><div class="line">    self.connect()</div></pre></td></tr></table></figure>
+<p><strong>建立 ssh 连接通道</strong></p>
+<p>我们在构造函数中最后调用了一个 <code>connect</code> 方法建立 <code>ssh</code> 连接通道，现在我们来具体的实现它</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 建立ssh连接通道，并绑定在 __transport 上</div><div class="line">def connect(self):</div><div class="line">    try:</div><div class="line">        # 设置SSH连接的远程主机地址和端口</div><div class="line">        self.__transport = paramiko.Transport((self.hostname, self.port))</div><div class="line">        # 通过用户名和密码连接SSH服务端</div><div class="line">        self.__transport.connect(username=self.username, password=self.password)</div><div class="line">    except Exception as e:</div><div class="line">        # 连接出错</div><div class="line">        print(e)</div></pre></td></tr></table></figure>
+<p><strong>执行打包</strong></p>
+<p>现在我们需要创建一个打包方法，执行 <code>npm run build</code> 命令，利用我们 <code>os.system</code> 方法，入参是 <code>work_path</code> 是打包项目所在的目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 前端打包（入参work_path为项目目录）</div><div class="line">def build(self, work_path):</div><div class="line">    # 开始打包</div><div class="line">    print(&apos;########### run build ############&apos;)</div><div class="line">    # 打包命令</div><div class="line">    cmd = &apos;npm run build&apos;</div><div class="line">    # 切换到需要项目目录</div><div class="line">    os.chdir(work_path)</div><div class="line">    # 当前项目目录下执行打包命令</div><div class="line">    if os.system(cmd) == 0:</div><div class="line">        # 打包完成</div><div class="line">        print(&apos;########### build complete ############&apos;)</div></pre></td></tr></table></figure>
+<p>只有一点要注意，就是要通过 <code>os.chdir(work_path)</code> 方法切换到项目的所在目录，打包当前的项目。</p>
+<p><strong>文件上传</strong></p>
+<p>打包结束后，我们需要将打包好的 <code>dist</code> 文件夹下的文件上传到服务器，因此，我们需要创建一个文件上传方法，我们通过 <code>paramiko.SFTPClient</code> 方法创建 <code>sftp</code> 来完成</p>
+<p>该方法入参需要两个参数，一个是本地项目打包后的<code>dist</code>路径 <code>local_path</code>，另一个是要上传到服务器的目标目录 <code>target_path</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"># 文件上传</div><div class="line">def upload(self, local_path, target_path):</div><div class="line">    # 判断路径问题</div><div class="line">    if not os.path.exists(local_path):</div><div class="line">        return print(&apos;local path is not exist&apos;)</div><div class="line"></div><div class="line">    print(&apos;文件上传中...&apos;)</div><div class="line"></div><div class="line">    # 实例化一个 sftp 对象,指定连接的通道</div><div class="line">    sftp = paramiko.SFTPClient.from_transport(self.__transport)</div><div class="line">    # 打包后的文件路径</div><div class="line">    local_path = os.path.join(local_path, &apos;dist&apos;)</div><div class="line">    # 本地路径转换，将windows下的 \ 转成 /</div><div class="line">    local_path = &apos;/&apos;.join(local_path.split(&apos;\\&apos;))</div><div class="line">    # 递归上传文件</div><div class="line">    self.upload_file(sftp, local_path, target_path)</div><div class="line"></div><div class="line">    print(&apos;文件上传完成...&apos;)</div><div class="line">    # 关闭连接</div><div class="line">    self.close()</div></pre></td></tr></table></figure>
+<p>为了方便操作，需要将 <code>windows</code> 中的路径分隔符<code>\</code>转成 <code>linux</code> 下的分隔符<code>/</code></p>
+<p>此外，该方法中调用了另外两个方法，分别是 <code>upload_file</code> 和 <code>close</code>，<code>close</code> 方法的定义很简单，直接调用 <code>__transport.close()</code> 方法即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 关闭连接</div><div class="line">def close(self):</div><div class="line">    self.__transport.close()</div></pre></td></tr></table></figure>
+<p>考虑到我们的 <code>static</code> 不是文件，而是一个文件夹，因此需要递归遍历，并将其拷贝到服务器上，所以我们定义了<code>upload_file</code> 方法，专门负责这个事情。</p>
+<p><strong>执行<code>linux</code>命令</strong></p>
+<p>上面我们也提到了，需要递归遍历<code>static</code>并上传到服务器，那么上传到服务器的目录结构肯定需要跟原来的 <code>static</code> 保持一致，因此对服务器的操作肯定是不可少的，需要执行<code>linux</code>命令，我们需要一个 <code>exec</code> 方法来实现这个功能，入参就是 <code>linux</code> 命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"># 执行linux命令</div><div class="line">def exec(self, command):</div><div class="line">    </div><div class="line">    # 创建 ssh 客户端</div><div class="line">    ssh = paramiko.SSHClient()</div><div class="line">    # 指定连接的通道</div><div class="line">    ssh._transport = self.__transport</div><div class="line">    </div><div class="line">    # 调用 exec_command 方法执行命令</div><div class="line">    stdin, stdout, stderr = ssh.exec_command(command)</div><div class="line">    </div><div class="line">    # 获取命令结果，返回是二进制，需要编码一下</div><div class="line">    res = stdout.read().decode(&apos;utf-8&apos;)</div><div class="line">    # 获取错误信息</div><div class="line">    error = stderr.read().decode(&apos;utf-8&apos;)</div><div class="line">    </div><div class="line">    # 如果没出错</div><div class="line">    if error.strip():</div><div class="line">        # 返回错误信息</div><div class="line">        return error</div><div class="line">    else:</div><div class="line">        # 返回结果</div><div class="line">        return res</div></pre></td></tr></table></figure>
+<p>现在你可以连接服务器测试一下，这个方法的正确性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh = SSHConnect(hostname=&apos;x.x.x.x&apos;, username=&apos;root&apos;, password=&apos;xxx&apos;)</div><div class="line">print(ssh.exec(r&apos;df -h&apos;))</div></pre></td></tr></table></figure>
+<p>我们连接到服务器并尝试调用 <code>linux</code> 中的 <code>df -h</code> 命令查看我们系统文件系统的磁盘使用情况，不出意外的话，会看到控制台返回的信息</p>
+<p>ps：命令 <code>df -h</code> 前面的 <code>r</code> 是为了让<code>python</code>解释器不转义</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-bdad636a53781df0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><strong>递归上传文件</strong></p>
+<p>准备工作做好以后，我们就可以来是实现我们的递归上传的方法 <code>upload_file</code> 了，主要是通过前面创建的 <code>sftp</code> 对象的 <code>put</code> 方法，将本地文件上传到对应的服务器中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"># 递归上传文件</div><div class="line">def upload_file(self, sftp, local_path, target_path):</div><div class="line">    # 判断当前路径是否是文件夹</div><div class="line">    if not os.path.isdir(local_path):</div><div class="line">        # 如果是文件，获取文件名</div><div class="line">        file_name = os.path.basename(local_path)</div><div class="line">        # 检查服务器文件夹是否存在</div><div class="line">        self.check_remote_dir(sftp, target_path)</div><div class="line">        # 服务器创建文件</div><div class="line">        target_file_path = os.path.join(target_path, file_name).replace(&apos;\\&apos;, &apos;/&apos;)</div><div class="line">        # 上传到服务器</div><div class="line">        sftp.put(local_path, target_file_path)</div><div class="line">    else:</div><div class="line">        # 查看当前文件夹下的子文件</div><div class="line">        file_list = os.listdir(local_path)</div><div class="line">        # 遍历子文件</div><div class="line">        for p in file_list:</div><div class="line">            # 拼接当前文件路径</div><div class="line">            current_local_path = os.path.join(local_path, p).replace(&apos;\\&apos;, &apos;/&apos;)</div><div class="line">            # 拼接服务器文件路径</div><div class="line">            current_target_path = os.path.join(target_path, p).replace(&apos;\\&apos;, &apos;/&apos;)</div><div class="line">            # 如果已经是文件，服务器就不需要创建文件夹了</div><div class="line">            if os.path.isfile(current_local_path):</div><div class="line">                # 提取当前文件所在的文件夹</div><div class="line">                current_target_path = os.path.split(current_target_path)[0]</div><div class="line">            # 递归判断</div><div class="line">            self.upload_file(sftp, current_local_path, current_target_path)</div></pre></td></tr></table></figure>
+<p>上述方法中添加了一个 <code>check_remote_dir</code> 方法，用来检测服务器端是否已经存在了文件夹，如果服务端没有我们就创建一个，定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 创建服务器文件夹</div><div class="line">def check_remote_dir(self, sftp, target_path):</div><div class="line">    try:</div><div class="line">        # 判断文件夹是否存在</div><div class="line">        sftp.stat(target_path)</div><div class="line">    except IOError:</div><div class="line">        # 创建文件夹</div><div class="line">        self.exec(r&apos;mkdir -p %s &apos; % target_path)</div></pre></td></tr></table></figure>
+<p>非常巧妙的利用了 <code>sftp.stat</code> 方法查看文件信息来区分的。</p>
+<p><strong>合并流程，自动发布</strong></p>
+<p>现在基本的方法我们都已经实现了，接下来我们需要将它们合并到 <code>auto_deploy</code> 方法中，真正实现自动发布。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 自动化打包部署</div><div class="line">def auto_deploy(self, local_path, target_path):</div><div class="line">    # 打包构建</div><div class="line">    self.build(local_path)</div><div class="line">    # 文件上传</div><div class="line">    self.upload(local_path, target_path)</div></pre></td></tr></table></figure>
+<p>ok~ 我们来调用 <code>auto_deploy</code> 方法测试一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    # 项目目录</div><div class="line">    project_path = r&apos;D:\learn\vue-demo&apos;</div><div class="line">    # 服务器目录</div><div class="line">    remote_path = r&apos;/www/project&apos;</div><div class="line">    </div><div class="line">    # 实例化</div><div class="line">    ssh = SSHConnect(hostname=&apos;x.x.x.x&apos;, username=&apos;root&apos;, password=&apos;xxx&apos;)</div><div class="line">    # 自动打包部署</div><div class="line">    ssh.auto_deploy(project_path, remote_path)</div></pre></td></tr></table></figure>
+<p>如果一切顺利，就可以看到控制台输出成功！！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-a5ddce19860ed18d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>再看看服务器文件是否已上传成功。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-63ab2fa1c351407a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>并尝试访问我的主页！</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-754a8571a49a4de7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>非常完美！</p>
+<p><code>Congratulations!</code> 你已经 <code>get</code> 了这项技能，点个赞吧！</p>
+<p><strong>服务器清空</strong></p>
+<p>到这里的话，我们的功能已基本完成了，只是还有一个小小的问题遗留，如果我们不断的迭代优化，那么如果我们不清除服务器的目录的话，会堆积越来越多的旧的文件，占用服务器的空间，因此我们需要在打包上传前清空一下。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-7887d00337534761.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>不妨定义一个<code>clear_remote_dir</code>方法来实现这个功能</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 清空文件夹</div><div class="line">def clear_remote_dir(self, target_path):</div><div class="line">    if target_path[-1] == &apos;/&apos;:</div><div class="line">        cmd = f&apos;rm -rf &#123;target_path&#125;*&apos;</div><div class="line">    else:</div><div class="line">        cmd = f&apos;rm -rf &#123;target_path&#125;/*&apos;</div><div class="line">    self.exec(cmd)</div></pre></td></tr></table></figure>
+<p>之后把它添加到 <code>auto_delpoy</code> 方法中 <code>self.upload</code> 之前就好了~</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>勉强算是完成了一个小工具吧，这个过程对我来说也算是对 <code>python</code> 的一次小小的实践吧，也算是颇有收获了。</p>
+<p>对于上述的代码，完全还可以通过 <code>sys.argv</code> 通过命令行参数解析的方式来实现真正的 <code>cmd</code> 调用，笔者在这里就不赘述了，感兴趣的小伙伴可以自己去实践一下。</p>
+<p>可以看到<code>python</code> 在语法上的简洁和优雅，这一点也是让我感觉还是挺舒服的，对我个人来说，可能后面更多是作为一门工具语言来使用，最大程度的去解决实际问题。</p>
+<p><a href="https://gitee.com/chenweihome/codes/k3e9zpvtahyb1m640cidf60" target="_blank" rel="external">完成代码请戳</a></p>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://www.cnblogs.com/xiao-apple36/p/9144092.html#_label3_0" target="_blank" rel="external">Python模块学习 - Paramiko</a></p>
+<p><a href="https://www.runoob.com/python/os-file-methods.html" target="_blank" rel="external">Python3 OS 文件/目录方法</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/20/vue-tool/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -910,256 +1129,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/Ast/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/10/10/Ast/" itemprop="url">聊一聊 Javascript 中的 AST</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-10T20:00:00+08:00">
-                2019-10-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS进阶/" itemprop="url" rel="index">
-                    <span itemprop="name">JS进阶</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="什么是抽象语法树-Abstract-Syntax-Tree-，AST-？"><a href="#什么是抽象语法树-Abstract-Syntax-Tree-，AST-？" class="headerlink" title="什么是抽象语法树(Abstract Syntax Tree ，AST)？"></a>什么是抽象语法树(<code>Abstract Syntax Tree ，AST</code>)？</h2><p>百度百科是这么解释的：</p>
-<p>在计算机科学中，抽象语法树（Abstract Syntax Tree，AST），或简称语法树（Syntax tree），是源代码语法结构的一种抽象表示。它以树状的形式表现编程语言的语法结构，树上的每个节点都表示源代码中的一种结构。</p>
-<p>听起来还是很绕，没关系，你可以简单理解为 <strong>它就是你所写代码的的树状结构化表现形式</strong>。</p>
-<p>有了这棵树，我们就可以通过操纵这颗树，精准的定位到声明语句、赋值语句、运算语句等等，实现对代码的分析、优化、变更等操作。</p>
-<p>AST在日常业务中也许很难涉及到，有可能你还没有听过，但其实很多时候你已经在使用它了，只是没有太多关注而已，现在流行的 <code>webpack</code>，<code>eslint</code> 等很多插件或者包都有涉及~</p>
-<h2 id="抽象语法树能做什么？"><a href="#抽象语法树能做什么？" class="headerlink" title="抽象语法树能做什么？"></a>抽象语法树能做什么？</h2><p>聊到<code>AST</code>的用途，其应用非常广泛，下面我简单罗列了一些：</p>
-<ul>
-<li><code>IDE</code>的错误提示、代码格式化、代码高亮、代码自动补全等</li>
-<li><code>JSLint</code>、<code>JSHint</code>对代码错误或风格的检查等</li>
-<li><code>webpack</code>、<code>rollup</code>进行代码打包等</li>
-<li><code>CoffeeScript</code>、<code>TypeScript</code>、<code>JSX</code>等转化为原生<code>Javascript</code></li>
-</ul>
-<p>其实它的用途，还不止这些，如果说你已经不满足于实现枯燥的业务功能，想写出类似<code>react</code>、<code>vue</code>这样的牛逼框架，或者想自己搞一套类似<code>webpack</code>、<code>rollup</code>这样的前端自动化打包工具，那你就必须弄懂<code>AST</code>。</p>
-<h2 id="如何生成AST？"><a href="#如何生成AST？" class="headerlink" title="如何生成AST？"></a>如何生成AST？</h2><p>在了解如何生成<code>AST</code>之前，有必要了解一下<code>Parser</code>（常见的<code>Parser</code>有<code>esprima</code>、<code>traceur</code>、<code>acorn</code>、<code>shift</code>等）</p>
-<p><code>JS Parser</code>其实是一个解析器，它是将<code>js</code>源码转化为抽象语法树（<code>AST</code>）的解析器。</p>
-<p>整个解析过程主要分为以下两个步骤：</p>
-<ul>
-<li>分词：将整个代码字符串分割成最小语法单元数组</li>
-<li>语法分析：在分词基础上建立分析语法单元之间的关系</li>
-</ul>
-<p><strong>什么是语法单元？</strong></p>
-<p>语法单元是被解析语法当中具备实际意义的最小单元，简单的来理解就是自然语言中的词语。</p>
-<p>举个例子来说，下面这段话：</p>
-<p><strong>“2019年是祖国70周年”</strong> </p>
-<p>我们可以把这句话拆分成最小单元，即：2019年、是、祖国、70、周年。</p>
-<p>这就是我们所说的分词，也是最小单元，因为如果我们把它再拆分出去的话，那就没有什么实际意义了。</p>
-<p><code>Javascript</code> 代码中的语法单元主要包括以下这么几种：</p>
-<ul>
-<li>关键字：例如 <code>var</code>、<code>let</code>、<code>const</code>等</li>
-<li>标识符：没有被引号括起来的连续字符，可能是一个变量，也可能是 <code>if</code>、<code>else</code> 这些关键字，又或者是 <code>true</code>、<code>false</code> 这些内置常量</li>
-<li>运算符： <code>+</code>、<code>-</code>、 <code>*</code>、<code>/</code> 等</li>
-<li>数字：像十六进制，十进制，八进制以及科学表达式等语法</li>
-<li>字符串：因为对计算机而言，字符串的内容会参与计算或显示</li>
-<li>空格：连续的空格，换行，缩进等</li>
-<li>注释：行注释或块注释都是一个不可拆分的最小语法单元</li>
-<li>其他：大括号、小括号、分号、冒号等</li>
-</ul>
-<p>如果我们以最简单的复制语句为例的话，如下？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a = 1;</div></pre></td></tr></table></figure></p>
-<p>通过分词，我们可以得到如下结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Keyword&quot;,</div><div class="line">        &quot;value&quot;: &quot;var&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">        &quot;value&quot;: &quot;a&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Punctuator&quot;,</div><div class="line">        &quot;value&quot;: &quot;=&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Numeric&quot;,</div><div class="line">        &quot;value&quot;: &quot;1&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Punctuator&quot;,</div><div class="line">        &quot;value&quot;: &quot;;&quot;</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
-<p>为了方便，我直接在 <a href="https://esprima.org/demo/parse.html#" target="_blank" rel="external">esprima/parser</a> 这个网站生成分词的~</p>
-<p><strong>什么是语法分析？</strong></p>
-<p>上面我们已经得到了我们分词的结果，需要将词汇进行一个立体的组合，确定词语之间的关系，确定词语最终的表达含义。</p>
-<p>简单来说语法分析是对语句和表达式识别，确定之前的关系，这是个递归过程。</p>
-<p>上面我们通过语法分析，可以得到如下结果：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;type&quot;: &quot;Program&quot;,</div><div class="line">    &quot;body&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;type&quot;: &quot;VariableDeclaration&quot;,</div><div class="line">            &quot;declarations&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;type&quot;: &quot;VariableDeclarator&quot;,</div><div class="line">                    &quot;id&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                        &quot;name&quot;: &quot;a&quot;</div><div class="line">                    &#125;,</div><div class="line">                    &quot;init&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Literal&quot;,</div><div class="line">                        &quot;value&quot;: 1,</div><div class="line">                        &quot;raw&quot;: &quot;1&quot;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line">            &quot;kind&quot;: &quot;var&quot;</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    &quot;sourceType&quot;: &quot;script&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这就是 <code>var a = 1</code> 所转换的 <code>AST</code>；</p>
-<p>这里推荐一下<code>astexplorer AST</code>的可视化工具，<a href="https://astexplorer.net/" target="_blank" rel="external">astexplorer</a>，可以直接进行对代码进行<code>AST</code>转换~</p>
-<h2 id="AST-到底怎么用？"><a href="#AST-到底怎么用？" class="headerlink" title="AST 到底怎么用？"></a>AST 到底怎么用？</h2><p>上面画了很大篇幅聊了聊<code>AST</code>是什么以及它是如何生成的，说到底，还是不知道<code>AST</code>这玩意有啥用，到底怎么使用。。</p>
-<p>ok~ 接下来我们来一起见证奇迹。</p>
-<p>我相信大部分同学对 <code>babel</code> 这个库不陌生，现在的做前端模块化开发过程中中一定少不了它，因为它可以帮你将 <code>ECMAScript 2015+</code> 版本的代码转换为向后兼容的 <code>JavaScript</code> 语法，以便能够运行在当前和旧版本的浏览器或其他环境中，你不用为新语法的兼容性考虑~</p>
-<p>而实际上呢，<code>babel</code> 中的很多功能都是靠修改 <code>AST</code> 实现的。</p>
-<p>首先，我们来看一个简单的例子，我们如何将 <code>es6</code> 中的 <strong><code>箭头函数</code></strong> 转换成 <code>es5</code> 中的 <strong>普通函数</strong>，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const sum=(a,b)=&gt;a+b;</div></pre></td></tr></table></figure>
-<p>我们如何将上面简单的 <code>sum</code> 箭头函数转换成下面的形式：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const sum = function(a,b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>想想看，有什么思路？</p>
-<p>如果说你不了解 <code>AST</code> 的话，这无疑是一个很困难的问题，根本无从下手，如果你了解 <code>AST</code> 的话，这将是一个非常 <code>easy</code> 的例子。</p>
-<p>接下来我们看看如何实现？</p>
-<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><p>需要操作 <code>AST</code> 代码，这里，我们需要借助两个库，分别是 <code>@babel/core</code> 和 <code>babel-types</code>。</p>
-<p>其中 <code>@babel/core</code> 是 <code>babel</code> 的核心库，用来实现核心转换引擎，<code>babel-types</code> 类型判断，用于生成<code>AST</code>零部件</p>
-<p><code>cd</code> 到一个你喜欢的目录，通过 <code>npm -y init</code> 初始化操作后，通过 <code>npm i @babel/core babel-types -D</code> 安装依赖</p>
-<h3 id="目标分析"><a href="#目标分析" class="headerlink" title="目标分析"></a>目标分析</h3><p>要进行转换之前，我们需要进行分析，首先我们先通过 <a href="https://astexplorer.net/" target="_blank" rel="external">astexplorer</a> 查看目标代码跟我们现在的代码有什么区别。</p>
-<p>源代码的 <code>AST</code> 结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">// 源代码的 AST</div><div class="line">&#123;</div><div class="line">    &quot;type&quot;: &quot;Program&quot;,</div><div class="line">    &quot;start&quot;: 0,</div><div class="line">    &quot;end&quot;: 21,</div><div class="line">    &quot;body&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;type&quot;: &quot;VariableDeclaration&quot;,</div><div class="line">            &quot;start&quot;: 0,</div><div class="line">            &quot;end&quot;: 21,</div><div class="line">            &quot;declarations&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;type&quot;: &quot;VariableDeclarator&quot;,</div><div class="line">                    &quot;start&quot;: 6,</div><div class="line">                    &quot;end&quot;: 20,</div><div class="line">                    &quot;id&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                        &quot;start&quot;: 6,</div><div class="line">                        &quot;end&quot;: 9,</div><div class="line">                        &quot;name&quot;: &quot;sum&quot;</div><div class="line">                    &#125;,</div><div class="line">                    &quot;init&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;ArrowFunctionExpression&quot;,</div><div class="line">                        &quot;start&quot;: 10,</div><div class="line">                        &quot;end&quot;: 20,</div><div class="line">                        &quot;id&quot;: null,</div><div class="line">                        &quot;expression&quot;: true,</div><div class="line">                        &quot;generator&quot;: false,</div><div class="line">                        &quot;async&quot;: false,</div><div class="line">                        &quot;params&quot;: [</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 11,</div><div class="line">                                &quot;end&quot;: 12,</div><div class="line">                                &quot;name&quot;: &quot;a&quot;</div><div class="line">                            &#125;,</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 13,</div><div class="line">                                &quot;end&quot;: 14,</div><div class="line">                                &quot;name&quot;: &quot;b&quot;</div><div class="line">                            &#125;</div><div class="line">                        ],</div><div class="line">                        &quot;body&quot;: &#123;</div><div class="line">                            &quot;type&quot;: &quot;BinaryExpression&quot;,</div><div class="line">                            &quot;start&quot;: 17,</div><div class="line">                            &quot;end&quot;: 20,</div><div class="line">                            &quot;left&quot;: &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 17,</div><div class="line">                                &quot;end&quot;: 18,</div><div class="line">                                &quot;name&quot;: &quot;a&quot;</div><div class="line">                            &#125;,</div><div class="line">                            &quot;operator&quot;: &quot;+&quot;,</div><div class="line">                            &quot;right&quot;: &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 19,</div><div class="line">                                &quot;end&quot;: 20,</div><div class="line">                                &quot;name&quot;: &quot;b&quot;</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line">            &quot;kind&quot;: &quot;const&quot;</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    &quot;sourceType&quot;: &quot;module&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>目标代码的 <code>AST</code> 结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">// 目标代码的 `AST`</div><div class="line">&#123;</div><div class="line">    &quot;type&quot;: &quot;Program&quot;,</div><div class="line">    &quot;start&quot;: 0,</div><div class="line">    &quot;end&quot;: 48,</div><div class="line">    &quot;body&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;type&quot;: &quot;VariableDeclaration&quot;,</div><div class="line">            &quot;start&quot;: 0,</div><div class="line">            &quot;end&quot;: 48,</div><div class="line">            &quot;declarations&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;type&quot;: &quot;VariableDeclarator&quot;,</div><div class="line">                    &quot;start&quot;: 6,</div><div class="line">                    &quot;end&quot;: 47,</div><div class="line">                    &quot;id&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                        &quot;start&quot;: 6,</div><div class="line">                        &quot;end&quot;: 9,</div><div class="line">                        &quot;name&quot;: &quot;sum&quot;</div><div class="line">                    &#125;,</div><div class="line">                    &quot;init&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;FunctionExpression&quot;,</div><div class="line">                        &quot;start&quot;: 12,</div><div class="line">                        &quot;end&quot;: 47,</div><div class="line">                        &quot;id&quot;: null,</div><div class="line">                        &quot;expression&quot;: false,</div><div class="line">                        &quot;generator&quot;: false,</div><div class="line">                        &quot;async&quot;: false,</div><div class="line">                        &quot;params&quot;: [</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 22,</div><div class="line">                                &quot;end&quot;: 23,</div><div class="line">                                &quot;name&quot;: &quot;a&quot;</div><div class="line">                            &#125;,</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 25,</div><div class="line">                                &quot;end&quot;: 26,</div><div class="line">                                &quot;name&quot;: &quot;b&quot;</div><div class="line">                            &#125;</div><div class="line">                        ],</div><div class="line">                        &quot;body&quot;: &#123;</div><div class="line">                            &quot;type&quot;: &quot;BlockStatement&quot;,</div><div class="line">                            &quot;start&quot;: 28,</div><div class="line">                            &quot;end&quot;: 47,</div><div class="line">                            &quot;body&quot;: [</div><div class="line">                                &#123;</div><div class="line">                                    &quot;type&quot;: &quot;ReturnStatement&quot;,</div><div class="line">                                    &quot;start&quot;: 32,</div><div class="line">                                    &quot;end&quot;: 45,</div><div class="line">                                    &quot;argument&quot;: &#123;</div><div class="line">                                        &quot;type&quot;: &quot;BinaryExpression&quot;,</div><div class="line">                                        &quot;start&quot;: 39,</div><div class="line">                                        &quot;end&quot;: 44,</div><div class="line">                                        &quot;left&quot;: &#123;</div><div class="line">                                            &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                            &quot;start&quot;: 39,</div><div class="line">                                            &quot;end&quot;: 40,</div><div class="line">                                            &quot;name&quot;: &quot;a&quot;</div><div class="line">                                        &#125;,</div><div class="line">                                        &quot;operator&quot;: &quot;+&quot;,</div><div class="line">                                        &quot;right&quot;: &#123;</div><div class="line">                                            &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                            &quot;start&quot;: 43,</div><div class="line">                                            &quot;end&quot;: 44,</div><div class="line">                                            &quot;name&quot;: &quot;b&quot;</div><div class="line">                                        &#125;</div><div class="line">                                    &#125;</div><div class="line">                                &#125;</div><div class="line">                            ]</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line">            &quot;kind&quot;: &quot;const&quot;</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    &quot;sourceType&quot;: &quot;module&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中里面的 <code>start</code> 和 <code>end</code> 我们不用在意，其只是为了标记其所在代码的位置。</p>
-<p>我们关心的是 <code>body</code> 里面的内容，通过对比，我们发现主要不同就在于 <code>init</code> 这一段，一个是 <code>ArrowFunctionExpression</code> , 另一个是 <code>FunctionExpression</code> ， 我们只需要将 <code>ArrowFunctionExpression</code> 下的内容改造成跟 <code>FunctionExpression</code> 即可。</p>
-<h3 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h3><p>我们建一个 <code>arrow.js</code> 的文件，引入上面的两个库，即</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//babel 核心库，用来实现核心转换引擎</div><div class="line">const babel = require(&apos;@babel/core&apos;)</div><div class="line">//类型判断，生成AST零部件</div><div class="line">const types = require(&apos;babel-types&apos;)</div><div class="line"></div><div class="line">//源代码</div><div class="line">const code = `const sum=(a,b)=&gt;a+b;` //目标代码 const sum = function(a,b)&#123; return a + b &#125;</div></pre></td></tr></table></figure>
-<p>这里我们需要用到 <code>babel</code> 中的 <code>transform</code> 方法，它可以将 <code>js</code> 代码转换成 <code>AST</code> ，过程中可以通过使用 <code>plugins</code> 对 <code>AST</code> 进行改造，最终生成新的 <code>AST</code> 和 <code>js</code> 代码，其整个过程用网上一个比较贴切的图就是：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-61a94f771f7ffe37.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>关于 <code>babel transform</code> 详细用法，这里不多做讨论，感兴趣的话可以去<a href="https://www.babeljs.cn/docs/babel-core" target="_blank" rel="external">官网</a>了解~</p>
-<p>其主要用法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//transform方法转换code</div><div class="line">//babel先将代码转换成ast，然后进行遍历，最后输出code</div><div class="line"></div><div class="line">let result = babel.transform(code,&#123;</div><div class="line">    plugins:[</div><div class="line">    	&#123;</div><div class="line">            visitor</div><div class="line">    	&#125;</div><div class="line">    ]</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>其核心在于插件 <code>visitor</code> 的实现。</p>
-<p>它是一个插件对象，可以对特定类型的节点进行处理，这里我们需要处理的节点是<code>ArrowFunctionExpression</code>，它常见的配置方式有两种：</p>
-<p>一种是单一处理，结构如下，其中 <code>path</code> 代表当前遍历的路径 <code>path.node</code> 代表当前变量的节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">let visitor = &#123;</div><div class="line">    ArrowFunctionExpression(path)&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>另一种是用于输入和输出双向处理，结构如下，参数 <code>node</code> 表示当前遍历的节点</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">let visitor = &#123;</div><div class="line">     ArrowFunctionExpression : &#123;</div><div class="line">    	enter(node)&#123;</div><div class="line">    	    </div><div class="line">    	&#125;,</div><div class="line">     	leave(node)&#123;</div><div class="line">     	    </div><div class="line">     	&#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我们只需要处理一次，所以采用第一种方式。</p>
-<p>通过分析目标代码的 <code>AST</code>，我们发现，需要一个 <code>FunctionExpression</code> ， 这时候我们就需要用到 <code>babel-types</code> ，它的作用就是帮助我们生产这些节点</p>
-<p>我们通过其 <code>npm</code> 包的<a href="https://www.npmjs.com/package/babel-types" target="_blank" rel="external">文档</a>查看，构建一个 <code>FunctionExpression</code> 需要的参数如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-ee12c1b5feaf791e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="functionExpression"></p>
-<p>参照 <code>AST</code> 我们可以看到其 <code>id</code> 为 <code>null</code>，<code>params</code> 是原 <code>ArrowFunctionExpression</code> 中的 <code>params</code>，<code>body</code> 是一个<code>blockStatement</code>，我们也可以通过查看 <code>babel-types</code> 文档，用 <code>t.blockStatement(body, directives)</code> 来创建，依次类推，照猫画虎，最终得到的结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//原 params</div><div class="line">let params = path.node.params;</div><div class="line">//创建一个blockStatement</div><div class="line">let blockStatement = types.blockStatement([</div><div class="line">	types.returnStatement(types.binaryExpression(</div><div class="line">        &apos;+&apos;,</div><div class="line">        types.identifier(&apos;a&apos;),</div><div class="line">        types.identifier(&apos;b&apos;)</div><div class="line">	))</div><div class="line">]);</div><div class="line">//创建一个函数</div><div class="line">let func = types.functionExpression(null, params, blockStatement, false, false);</div></pre></td></tr></table></figure>
-<p>最后通过 <code>path.replaceWith(func);</code> 将其替换即可；</p>
-<p>完成代码如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">//babel 核心库，用来实现核心转换引擎</div><div class="line">const babel = require(&apos;@babel/core&apos;)</div><div class="line">//类型判断，生成AST零部件</div><div class="line">const types = require(&apos;babel-types&apos;)</div><div class="line"></div><div class="line">//源代码</div><div class="line">const code = `const sum=(a,b)=&gt;a+b;` //目标代码 const sum = function(a,b)&#123; return a + b &#125;</div><div class="line"></div><div class="line">//插件对象，可以对特定类型的节点进行处理</div><div class="line">let visitor = &#123;</div><div class="line">    //代表处理 ArrowFunctionExpression 节点</div><div class="line">    ArrowFunctionExpression(path)&#123;</div><div class="line">    	let params = path.node.params;</div><div class="line">    	//创建一个blockStatement</div><div class="line">    	let blockStatement = types.blockStatement([</div><div class="line">            types.returnStatement(types.binaryExpression(</div><div class="line">            	&apos;+&apos;,</div><div class="line">            	types.identifier(&apos;a&apos;),</div><div class="line">            	types.identifier(&apos;b&apos;)</div><div class="line">            ))</div><div class="line">    	]);</div><div class="line">    	//创建一个函数</div><div class="line">    	let func = types.functionExpression(null, params, blockStatement, false, false);</div><div class="line">    	//替换</div><div class="line">    	path.replaceWith(func);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//transform方法转换code</div><div class="line">//babel先将代码转换成ast，然后进行遍历，最后输出code</div><div class="line">let result = babel.transform(code,&#123;</div><div class="line">    plugins:[</div><div class="line">        &#123;</div><div class="line">            visitor</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;)</div><div class="line"></div><div class="line">console.log(result.code);</div></pre></td></tr></table></figure>
-<p>执行代码，打印结果如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-e01a7036c772d62d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="result"></p>
-<p>至此，我们的函数转换完成，达到预期效果。</p>
-<p>怎么样，有没有很神奇！！</p>
-<p>其实也没那么复杂，主要是要分析其 <code>AST</code> 的结构，只要弄懂我们需要干什么，那么放手去做就是~</p>
-<p><code>pass</code>：细心的同学发现，上面的代码其实可以优化的，因为我们的 <code>returnStatement</code> 其实也是跟源代码的 <code>returnStatement</code> 是一致的，我们只需要拿来复用即可，因此上述的代码还可以改成下面这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let blockStatement = types.blockStatement([</div><div class="line">    types.returnStatement(path.node.body)</div><div class="line">]);</div></pre></td></tr></table></figure>
-<h2 id="趁热打铁"><a href="#趁热打铁" class="headerlink" title="趁热打铁"></a>趁热打铁</h2><p>上面刚刚认识了如何使用 <code>AST</code> 进行代码改造，不妨趁热打铁，再来试试下面这个问题。</p>
-<p>如何将 <code>es6</code> 中的 <code>class</code> 改造成 <code>es5</code> 的 <code>function</code> 形式~</p>
-<p>源代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 源代码</div><div class="line">class Person &#123;</div><div class="line">  constructor(name) &#123;</div><div class="line">      this.name=name;</div><div class="line">  &#125;</div><div class="line">  sayName() &#123;</div><div class="line">      return this.name;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>目标代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 目标代码</div><div class="line"></div><div class="line">function Person(name) &#123;</div><div class="line">    this.name = name;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype.getName = function () &#123;</div><div class="line">    return this.name;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>有了上面的基础，照猫画虎即可，这里我将不在赘述，过程很重要，这里我仅粘贴核心的转换代码，以供参考。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">ClassDeclaration (path) &#123;</div><div class="line">    let node = path.node; //当前节点</div><div class="line">    let id = node.id;	//节点id</div><div class="line">    let methods = node.body.body; // 方法数组</div><div class="line">    let constructorFunction = null; // 构造方法</div><div class="line">    let functions = []; // 目标方法</div><div class="line">    </div><div class="line">    methods.forEach(method =&gt; &#123;</div><div class="line">    	//如果是构造方法</div><div class="line">    	if ( method.kind === &apos;constructor&apos; ) &#123;</div><div class="line">    		constructorFunction = types.functionDeclaration(id, method.params, method.body, false, false);</div><div class="line">    		functions.push(constructorFunction)</div><div class="line">    	&#125; else &#123;</div><div class="line">    		//普通方法</div><div class="line">    		let memberExpression = types.memberExpression(types.memberExpression(id, types.identifier(&apos;prototype&apos;), false), method.key, false);</div><div class="line">    		let functionExpression = types.functionExpression(null, method.params, method.body, false, false);</div><div class="line">    		let assignmentExpression = types.assignmentExpression(&apos;=&apos;, memberExpression, functionExpression);</div><div class="line">    		functions.push(types.expressionStatement(assignmentExpression));</div><div class="line">    	&#125;</div><div class="line">    &#125;)</div><div class="line">    //判断，replaceWithMultiple用于多重替换</div><div class="line">    if(functions.length === 1)&#123;</div><div class="line">    	path.replaceWith(functions[0])</div><div class="line">    &#125;else&#123;</div><div class="line">    	path.replaceWithMultiple(functions)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>日常工作中，我们大多数时候关注的只是 <code>js</code> 代码本身，而没有通过 <code>AST</code> 去重新认识和诠释自己的代码~</p>
-<p>本文也只是通过对 <code>AST</code> 的一些介绍，起一个抛砖引玉的作用，让你对它 有一个初步的认识，对它不在感觉那么陌生。</p>
-<p>对代码的追求和探索是无止境的~</p>
-<p>如果你愿意，你可以通过它构建任何你想要的<code>js</code>代码~</p>
-<p>加油！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1213,7 +1182,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1224,7 +1193,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1235,7 +1204,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

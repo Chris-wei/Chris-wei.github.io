@@ -278,6 +278,256 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/10/Ast/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/10/10/Ast/" itemprop="url">聊一聊 Javascript 中的 AST</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-10T20:00:00+08:00">
+                2019-10-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">JS进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="什么是抽象语法树-Abstract-Syntax-Tree-，AST-？"><a href="#什么是抽象语法树-Abstract-Syntax-Tree-，AST-？" class="headerlink" title="什么是抽象语法树(Abstract Syntax Tree ，AST)？"></a>什么是抽象语法树(<code>Abstract Syntax Tree ，AST</code>)？</h2><p>百度百科是这么解释的：</p>
+<p>在计算机科学中，抽象语法树（Abstract Syntax Tree，AST），或简称语法树（Syntax tree），是源代码语法结构的一种抽象表示。它以树状的形式表现编程语言的语法结构，树上的每个节点都表示源代码中的一种结构。</p>
+<p>听起来还是很绕，没关系，你可以简单理解为 <strong>它就是你所写代码的的树状结构化表现形式</strong>。</p>
+<p>有了这棵树，我们就可以通过操纵这颗树，精准的定位到声明语句、赋值语句、运算语句等等，实现对代码的分析、优化、变更等操作。</p>
+<p>AST在日常业务中也许很难涉及到，有可能你还没有听过，但其实很多时候你已经在使用它了，只是没有太多关注而已，现在流行的 <code>webpack</code>，<code>eslint</code> 等很多插件或者包都有涉及~</p>
+<h2 id="抽象语法树能做什么？"><a href="#抽象语法树能做什么？" class="headerlink" title="抽象语法树能做什么？"></a>抽象语法树能做什么？</h2><p>聊到<code>AST</code>的用途，其应用非常广泛，下面我简单罗列了一些：</p>
+<ul>
+<li><code>IDE</code>的错误提示、代码格式化、代码高亮、代码自动补全等</li>
+<li><code>JSLint</code>、<code>JSHint</code>对代码错误或风格的检查等</li>
+<li><code>webpack</code>、<code>rollup</code>进行代码打包等</li>
+<li><code>CoffeeScript</code>、<code>TypeScript</code>、<code>JSX</code>等转化为原生<code>Javascript</code></li>
+</ul>
+<p>其实它的用途，还不止这些，如果说你已经不满足于实现枯燥的业务功能，想写出类似<code>react</code>、<code>vue</code>这样的牛逼框架，或者想自己搞一套类似<code>webpack</code>、<code>rollup</code>这样的前端自动化打包工具，那你就必须弄懂<code>AST</code>。</p>
+<h2 id="如何生成AST？"><a href="#如何生成AST？" class="headerlink" title="如何生成AST？"></a>如何生成AST？</h2><p>在了解如何生成<code>AST</code>之前，有必要了解一下<code>Parser</code>（常见的<code>Parser</code>有<code>esprima</code>、<code>traceur</code>、<code>acorn</code>、<code>shift</code>等）</p>
+<p><code>JS Parser</code>其实是一个解析器，它是将<code>js</code>源码转化为抽象语法树（<code>AST</code>）的解析器。</p>
+<p>整个解析过程主要分为以下两个步骤：</p>
+<ul>
+<li>分词：将整个代码字符串分割成最小语法单元数组</li>
+<li>语法分析：在分词基础上建立分析语法单元之间的关系</li>
+</ul>
+<p><strong>什么是语法单元？</strong></p>
+<p>语法单元是被解析语法当中具备实际意义的最小单元，简单的来理解就是自然语言中的词语。</p>
+<p>举个例子来说，下面这段话：</p>
+<p><strong>“2019年是祖国70周年”</strong> </p>
+<p>我们可以把这句话拆分成最小单元，即：2019年、是、祖国、70、周年。</p>
+<p>这就是我们所说的分词，也是最小单元，因为如果我们把它再拆分出去的话，那就没有什么实际意义了。</p>
+<p><code>Javascript</code> 代码中的语法单元主要包括以下这么几种：</p>
+<ul>
+<li>关键字：例如 <code>var</code>、<code>let</code>、<code>const</code>等</li>
+<li>标识符：没有被引号括起来的连续字符，可能是一个变量，也可能是 <code>if</code>、<code>else</code> 这些关键字，又或者是 <code>true</code>、<code>false</code> 这些内置常量</li>
+<li>运算符： <code>+</code>、<code>-</code>、 <code>*</code>、<code>/</code> 等</li>
+<li>数字：像十六进制，十进制，八进制以及科学表达式等语法</li>
+<li>字符串：因为对计算机而言，字符串的内容会参与计算或显示</li>
+<li>空格：连续的空格，换行，缩进等</li>
+<li>注释：行注释或块注释都是一个不可拆分的最小语法单元</li>
+<li>其他：大括号、小括号、分号、冒号等</li>
+</ul>
+<p>如果我们以最简单的复制语句为例的话，如下？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a = 1;</div></pre></td></tr></table></figure></p>
+<p>通过分词，我们可以得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Keyword&quot;,</div><div class="line">        &quot;value&quot;: &quot;var&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">        &quot;value&quot;: &quot;a&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Punctuator&quot;,</div><div class="line">        &quot;value&quot;: &quot;=&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Numeric&quot;,</div><div class="line">        &quot;value&quot;: &quot;1&quot;</div><div class="line">    &#125;,</div><div class="line">    &#123;</div><div class="line">        &quot;type&quot;: &quot;Punctuator&quot;,</div><div class="line">        &quot;value&quot;: &quot;;&quot;</div><div class="line">    &#125;</div><div class="line">]</div></pre></td></tr></table></figure>
+<p>为了方便，我直接在 <a href="https://esprima.org/demo/parse.html#" target="_blank" rel="external">esprima/parser</a> 这个网站生成分词的~</p>
+<p><strong>什么是语法分析？</strong></p>
+<p>上面我们已经得到了我们分词的结果，需要将词汇进行一个立体的组合，确定词语之间的关系，确定词语最终的表达含义。</p>
+<p>简单来说语法分析是对语句和表达式识别，确定之前的关系，这是个递归过程。</p>
+<p>上面我们通过语法分析，可以得到如下结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    &quot;type&quot;: &quot;Program&quot;,</div><div class="line">    &quot;body&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;type&quot;: &quot;VariableDeclaration&quot;,</div><div class="line">            &quot;declarations&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;type&quot;: &quot;VariableDeclarator&quot;,</div><div class="line">                    &quot;id&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                        &quot;name&quot;: &quot;a&quot;</div><div class="line">                    &#125;,</div><div class="line">                    &quot;init&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Literal&quot;,</div><div class="line">                        &quot;value&quot;: 1,</div><div class="line">                        &quot;raw&quot;: &quot;1&quot;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line">            &quot;kind&quot;: &quot;var&quot;</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    &quot;sourceType&quot;: &quot;script&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这就是 <code>var a = 1</code> 所转换的 <code>AST</code>；</p>
+<p>这里推荐一下<code>astexplorer AST</code>的可视化工具，<a href="https://astexplorer.net/" target="_blank" rel="external">astexplorer</a>，可以直接进行对代码进行<code>AST</code>转换~</p>
+<h2 id="AST-到底怎么用？"><a href="#AST-到底怎么用？" class="headerlink" title="AST 到底怎么用？"></a>AST 到底怎么用？</h2><p>上面画了很大篇幅聊了聊<code>AST</code>是什么以及它是如何生成的，说到底，还是不知道<code>AST</code>这玩意有啥用，到底怎么使用。。</p>
+<p>ok~ 接下来我们来一起见证奇迹。</p>
+<p>我相信大部分同学对 <code>babel</code> 这个库不陌生，现在的做前端模块化开发过程中中一定少不了它，因为它可以帮你将 <code>ECMAScript 2015+</code> 版本的代码转换为向后兼容的 <code>JavaScript</code> 语法，以便能够运行在当前和旧版本的浏览器或其他环境中，你不用为新语法的兼容性考虑~</p>
+<p>而实际上呢，<code>babel</code> 中的很多功能都是靠修改 <code>AST</code> 实现的。</p>
+<p>首先，我们来看一个简单的例子，我们如何将 <code>es6</code> 中的 <strong><code>箭头函数</code></strong> 转换成 <code>es5</code> 中的 <strong>普通函数</strong>，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">const sum=(a,b)=&gt;a+b;</div></pre></td></tr></table></figure>
+<p>我们如何将上面简单的 <code>sum</code> 箭头函数转换成下面的形式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">const sum = function(a,b)&#123;</div><div class="line">    return a+b;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>想想看，有什么思路？</p>
+<p>如果说你不了解 <code>AST</code> 的话，这无疑是一个很困难的问题，根本无从下手，如果你了解 <code>AST</code> 的话，这将是一个非常 <code>easy</code> 的例子。</p>
+<p>接下来我们看看如何实现？</p>
+<h3 id="安装依赖"><a href="#安装依赖" class="headerlink" title="安装依赖"></a>安装依赖</h3><p>需要操作 <code>AST</code> 代码，这里，我们需要借助两个库，分别是 <code>@babel/core</code> 和 <code>babel-types</code>。</p>
+<p>其中 <code>@babel/core</code> 是 <code>babel</code> 的核心库，用来实现核心转换引擎，<code>babel-types</code> 类型判断，用于生成<code>AST</code>零部件</p>
+<p><code>cd</code> 到一个你喜欢的目录，通过 <code>npm -y init</code> 初始化操作后，通过 <code>npm i @babel/core babel-types -D</code> 安装依赖</p>
+<h3 id="目标分析"><a href="#目标分析" class="headerlink" title="目标分析"></a>目标分析</h3><p>要进行转换之前，我们需要进行分析，首先我们先通过 <a href="https://astexplorer.net/" target="_blank" rel="external">astexplorer</a> 查看目标代码跟我们现在的代码有什么区别。</p>
+<p>源代码的 <code>AST</code> 结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div></pre></td><td class="code"><pre><div class="line">// 源代码的 AST</div><div class="line">&#123;</div><div class="line">    &quot;type&quot;: &quot;Program&quot;,</div><div class="line">    &quot;start&quot;: 0,</div><div class="line">    &quot;end&quot;: 21,</div><div class="line">    &quot;body&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;type&quot;: &quot;VariableDeclaration&quot;,</div><div class="line">            &quot;start&quot;: 0,</div><div class="line">            &quot;end&quot;: 21,</div><div class="line">            &quot;declarations&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;type&quot;: &quot;VariableDeclarator&quot;,</div><div class="line">                    &quot;start&quot;: 6,</div><div class="line">                    &quot;end&quot;: 20,</div><div class="line">                    &quot;id&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                        &quot;start&quot;: 6,</div><div class="line">                        &quot;end&quot;: 9,</div><div class="line">                        &quot;name&quot;: &quot;sum&quot;</div><div class="line">                    &#125;,</div><div class="line">                    &quot;init&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;ArrowFunctionExpression&quot;,</div><div class="line">                        &quot;start&quot;: 10,</div><div class="line">                        &quot;end&quot;: 20,</div><div class="line">                        &quot;id&quot;: null,</div><div class="line">                        &quot;expression&quot;: true,</div><div class="line">                        &quot;generator&quot;: false,</div><div class="line">                        &quot;async&quot;: false,</div><div class="line">                        &quot;params&quot;: [</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 11,</div><div class="line">                                &quot;end&quot;: 12,</div><div class="line">                                &quot;name&quot;: &quot;a&quot;</div><div class="line">                            &#125;,</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 13,</div><div class="line">                                &quot;end&quot;: 14,</div><div class="line">                                &quot;name&quot;: &quot;b&quot;</div><div class="line">                            &#125;</div><div class="line">                        ],</div><div class="line">                        &quot;body&quot;: &#123;</div><div class="line">                            &quot;type&quot;: &quot;BinaryExpression&quot;,</div><div class="line">                            &quot;start&quot;: 17,</div><div class="line">                            &quot;end&quot;: 20,</div><div class="line">                            &quot;left&quot;: &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 17,</div><div class="line">                                &quot;end&quot;: 18,</div><div class="line">                                &quot;name&quot;: &quot;a&quot;</div><div class="line">                            &#125;,</div><div class="line">                            &quot;operator&quot;: &quot;+&quot;,</div><div class="line">                            &quot;right&quot;: &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 19,</div><div class="line">                                &quot;end&quot;: 20,</div><div class="line">                                &quot;name&quot;: &quot;b&quot;</div><div class="line">                            &#125;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line">            &quot;kind&quot;: &quot;const&quot;</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    &quot;sourceType&quot;: &quot;module&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>目标代码的 <code>AST</code> 结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div></pre></td><td class="code"><pre><div class="line">// 目标代码的 `AST`</div><div class="line">&#123;</div><div class="line">    &quot;type&quot;: &quot;Program&quot;,</div><div class="line">    &quot;start&quot;: 0,</div><div class="line">    &quot;end&quot;: 48,</div><div class="line">    &quot;body&quot;: [</div><div class="line">        &#123;</div><div class="line">            &quot;type&quot;: &quot;VariableDeclaration&quot;,</div><div class="line">            &quot;start&quot;: 0,</div><div class="line">            &quot;end&quot;: 48,</div><div class="line">            &quot;declarations&quot;: [</div><div class="line">                &#123;</div><div class="line">                    &quot;type&quot;: &quot;VariableDeclarator&quot;,</div><div class="line">                    &quot;start&quot;: 6,</div><div class="line">                    &quot;end&quot;: 47,</div><div class="line">                    &quot;id&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                        &quot;start&quot;: 6,</div><div class="line">                        &quot;end&quot;: 9,</div><div class="line">                        &quot;name&quot;: &quot;sum&quot;</div><div class="line">                    &#125;,</div><div class="line">                    &quot;init&quot;: &#123;</div><div class="line">                        &quot;type&quot;: &quot;FunctionExpression&quot;,</div><div class="line">                        &quot;start&quot;: 12,</div><div class="line">                        &quot;end&quot;: 47,</div><div class="line">                        &quot;id&quot;: null,</div><div class="line">                        &quot;expression&quot;: false,</div><div class="line">                        &quot;generator&quot;: false,</div><div class="line">                        &quot;async&quot;: false,</div><div class="line">                        &quot;params&quot;: [</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 22,</div><div class="line">                                &quot;end&quot;: 23,</div><div class="line">                                &quot;name&quot;: &quot;a&quot;</div><div class="line">                            &#125;,</div><div class="line">                            &#123;</div><div class="line">                                &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                &quot;start&quot;: 25,</div><div class="line">                                &quot;end&quot;: 26,</div><div class="line">                                &quot;name&quot;: &quot;b&quot;</div><div class="line">                            &#125;</div><div class="line">                        ],</div><div class="line">                        &quot;body&quot;: &#123;</div><div class="line">                            &quot;type&quot;: &quot;BlockStatement&quot;,</div><div class="line">                            &quot;start&quot;: 28,</div><div class="line">                            &quot;end&quot;: 47,</div><div class="line">                            &quot;body&quot;: [</div><div class="line">                                &#123;</div><div class="line">                                    &quot;type&quot;: &quot;ReturnStatement&quot;,</div><div class="line">                                    &quot;start&quot;: 32,</div><div class="line">                                    &quot;end&quot;: 45,</div><div class="line">                                    &quot;argument&quot;: &#123;</div><div class="line">                                        &quot;type&quot;: &quot;BinaryExpression&quot;,</div><div class="line">                                        &quot;start&quot;: 39,</div><div class="line">                                        &quot;end&quot;: 44,</div><div class="line">                                        &quot;left&quot;: &#123;</div><div class="line">                                            &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                            &quot;start&quot;: 39,</div><div class="line">                                            &quot;end&quot;: 40,</div><div class="line">                                            &quot;name&quot;: &quot;a&quot;</div><div class="line">                                        &#125;,</div><div class="line">                                        &quot;operator&quot;: &quot;+&quot;,</div><div class="line">                                        &quot;right&quot;: &#123;</div><div class="line">                                            &quot;type&quot;: &quot;Identifier&quot;,</div><div class="line">                                            &quot;start&quot;: 43,</div><div class="line">                                            &quot;end&quot;: 44,</div><div class="line">                                            &quot;name&quot;: &quot;b&quot;</div><div class="line">                                        &#125;</div><div class="line">                                    &#125;</div><div class="line">                                &#125;</div><div class="line">                            ]</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            ],</div><div class="line">            &quot;kind&quot;: &quot;const&quot;</div><div class="line">        &#125;</div><div class="line">    ],</div><div class="line">    &quot;sourceType&quot;: &quot;module&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中里面的 <code>start</code> 和 <code>end</code> 我们不用在意，其只是为了标记其所在代码的位置。</p>
+<p>我们关心的是 <code>body</code> 里面的内容，通过对比，我们发现主要不同就在于 <code>init</code> 这一段，一个是 <code>ArrowFunctionExpression</code> , 另一个是 <code>FunctionExpression</code> ， 我们只需要将 <code>ArrowFunctionExpression</code> 下的内容改造成跟 <code>FunctionExpression</code> 即可。</p>
+<h3 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h3><p>我们建一个 <code>arrow.js</code> 的文件，引入上面的两个库，即</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//babel 核心库，用来实现核心转换引擎</div><div class="line">const babel = require(&apos;@babel/core&apos;)</div><div class="line">//类型判断，生成AST零部件</div><div class="line">const types = require(&apos;babel-types&apos;)</div><div class="line"></div><div class="line">//源代码</div><div class="line">const code = `const sum=(a,b)=&gt;a+b;` //目标代码 const sum = function(a,b)&#123; return a + b &#125;</div></pre></td></tr></table></figure>
+<p>这里我们需要用到 <code>babel</code> 中的 <code>transform</code> 方法，它可以将 <code>js</code> 代码转换成 <code>AST</code> ，过程中可以通过使用 <code>plugins</code> 对 <code>AST</code> 进行改造，最终生成新的 <code>AST</code> 和 <code>js</code> 代码，其整个过程用网上一个比较贴切的图就是：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-61a94f771f7ffe37.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>关于 <code>babel transform</code> 详细用法，这里不多做讨论，感兴趣的话可以去<a href="https://www.babeljs.cn/docs/babel-core" target="_blank" rel="external">官网</a>了解~</p>
+<p>其主要用法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//transform方法转换code</div><div class="line">//babel先将代码转换成ast，然后进行遍历，最后输出code</div><div class="line"></div><div class="line">let result = babel.transform(code,&#123;</div><div class="line">    plugins:[</div><div class="line">    	&#123;</div><div class="line">            visitor</div><div class="line">    	&#125;</div><div class="line">    ]</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>其核心在于插件 <code>visitor</code> 的实现。</p>
+<p>它是一个插件对象，可以对特定类型的节点进行处理，这里我们需要处理的节点是<code>ArrowFunctionExpression</code>，它常见的配置方式有两种：</p>
+<p>一种是单一处理，结构如下，其中 <code>path</code> 代表当前遍历的路径 <code>path.node</code> 代表当前变量的节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">let visitor = &#123;</div><div class="line">    ArrowFunctionExpression(path)&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另一种是用于输入和输出双向处理，结构如下，参数 <code>node</code> 表示当前遍历的节点</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">let visitor = &#123;</div><div class="line">     ArrowFunctionExpression : &#123;</div><div class="line">    	enter(node)&#123;</div><div class="line">    	    </div><div class="line">    	&#125;,</div><div class="line">     	leave(node)&#123;</div><div class="line">     	    </div><div class="line">     	&#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我们只需要处理一次，所以采用第一种方式。</p>
+<p>通过分析目标代码的 <code>AST</code>，我们发现，需要一个 <code>FunctionExpression</code> ， 这时候我们就需要用到 <code>babel-types</code> ，它的作用就是帮助我们生产这些节点</p>
+<p>我们通过其 <code>npm</code> 包的<a href="https://www.npmjs.com/package/babel-types" target="_blank" rel="external">文档</a>查看，构建一个 <code>FunctionExpression</code> 需要的参数如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-ee12c1b5feaf791e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="functionExpression"></p>
+<p>参照 <code>AST</code> 我们可以看到其 <code>id</code> 为 <code>null</code>，<code>params</code> 是原 <code>ArrowFunctionExpression</code> 中的 <code>params</code>，<code>body</code> 是一个<code>blockStatement</code>，我们也可以通过查看 <code>babel-types</code> 文档，用 <code>t.blockStatement(body, directives)</code> 来创建，依次类推，照猫画虎，最终得到的结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//原 params</div><div class="line">let params = path.node.params;</div><div class="line">//创建一个blockStatement</div><div class="line">let blockStatement = types.blockStatement([</div><div class="line">	types.returnStatement(types.binaryExpression(</div><div class="line">        &apos;+&apos;,</div><div class="line">        types.identifier(&apos;a&apos;),</div><div class="line">        types.identifier(&apos;b&apos;)</div><div class="line">	))</div><div class="line">]);</div><div class="line">//创建一个函数</div><div class="line">let func = types.functionExpression(null, params, blockStatement, false, false);</div></pre></td></tr></table></figure>
+<p>最后通过 <code>path.replaceWith(func);</code> 将其替换即可；</p>
+<p>完成代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">//babel 核心库，用来实现核心转换引擎</div><div class="line">const babel = require(&apos;@babel/core&apos;)</div><div class="line">//类型判断，生成AST零部件</div><div class="line">const types = require(&apos;babel-types&apos;)</div><div class="line"></div><div class="line">//源代码</div><div class="line">const code = `const sum=(a,b)=&gt;a+b;` //目标代码 const sum = function(a,b)&#123; return a + b &#125;</div><div class="line"></div><div class="line">//插件对象，可以对特定类型的节点进行处理</div><div class="line">let visitor = &#123;</div><div class="line">    //代表处理 ArrowFunctionExpression 节点</div><div class="line">    ArrowFunctionExpression(path)&#123;</div><div class="line">    	let params = path.node.params;</div><div class="line">    	//创建一个blockStatement</div><div class="line">    	let blockStatement = types.blockStatement([</div><div class="line">            types.returnStatement(types.binaryExpression(</div><div class="line">            	&apos;+&apos;,</div><div class="line">            	types.identifier(&apos;a&apos;),</div><div class="line">            	types.identifier(&apos;b&apos;)</div><div class="line">            ))</div><div class="line">    	]);</div><div class="line">    	//创建一个函数</div><div class="line">    	let func = types.functionExpression(null, params, blockStatement, false, false);</div><div class="line">    	//替换</div><div class="line">    	path.replaceWith(func);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//transform方法转换code</div><div class="line">//babel先将代码转换成ast，然后进行遍历，最后输出code</div><div class="line">let result = babel.transform(code,&#123;</div><div class="line">    plugins:[</div><div class="line">        &#123;</div><div class="line">            visitor</div><div class="line">        &#125;</div><div class="line">    ]</div><div class="line">&#125;)</div><div class="line"></div><div class="line">console.log(result.code);</div></pre></td></tr></table></figure>
+<p>执行代码，打印结果如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/6633377-e01a7036c772d62d.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="result"></p>
+<p>至此，我们的函数转换完成，达到预期效果。</p>
+<p>怎么样，有没有很神奇！！</p>
+<p>其实也没那么复杂，主要是要分析其 <code>AST</code> 的结构，只要弄懂我们需要干什么，那么放手去做就是~</p>
+<p><code>pass</code>：细心的同学发现，上面的代码其实可以优化的，因为我们的 <code>returnStatement</code> 其实也是跟源代码的 <code>returnStatement</code> 是一致的，我们只需要拿来复用即可，因此上述的代码还可以改成下面这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let blockStatement = types.blockStatement([</div><div class="line">    types.returnStatement(path.node.body)</div><div class="line">]);</div></pre></td></tr></table></figure>
+<h2 id="趁热打铁"><a href="#趁热打铁" class="headerlink" title="趁热打铁"></a>趁热打铁</h2><p>上面刚刚认识了如何使用 <code>AST</code> 进行代码改造，不妨趁热打铁，再来试试下面这个问题。</p>
+<p>如何将 <code>es6</code> 中的 <code>class</code> 改造成 <code>es5</code> 的 <code>function</code> 形式~</p>
+<p>源代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 源代码</div><div class="line">class Person &#123;</div><div class="line">  constructor(name) &#123;</div><div class="line">      this.name=name;</div><div class="line">  &#125;</div><div class="line">  sayName() &#123;</div><div class="line">      return this.name;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>目标代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 目标代码</div><div class="line"></div><div class="line">function Person(name) &#123;</div><div class="line">    this.name = name;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Person.prototype.getName = function () &#123;</div><div class="line">    return this.name;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>有了上面的基础，照猫画虎即可，这里我将不在赘述，过程很重要，这里我仅粘贴核心的转换代码，以供参考。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">ClassDeclaration (path) &#123;</div><div class="line">    let node = path.node; //当前节点</div><div class="line">    let id = node.id;	//节点id</div><div class="line">    let methods = node.body.body; // 方法数组</div><div class="line">    let constructorFunction = null; // 构造方法</div><div class="line">    let functions = []; // 目标方法</div><div class="line">    </div><div class="line">    methods.forEach(method =&gt; &#123;</div><div class="line">    	//如果是构造方法</div><div class="line">    	if ( method.kind === &apos;constructor&apos; ) &#123;</div><div class="line">    		constructorFunction = types.functionDeclaration(id, method.params, method.body, false, false);</div><div class="line">    		functions.push(constructorFunction)</div><div class="line">    	&#125; else &#123;</div><div class="line">    		//普通方法</div><div class="line">    		let memberExpression = types.memberExpression(types.memberExpression(id, types.identifier(&apos;prototype&apos;), false), method.key, false);</div><div class="line">    		let functionExpression = types.functionExpression(null, method.params, method.body, false, false);</div><div class="line">    		let assignmentExpression = types.assignmentExpression(&apos;=&apos;, memberExpression, functionExpression);</div><div class="line">    		functions.push(types.expressionStatement(assignmentExpression));</div><div class="line">    	&#125;</div><div class="line">    &#125;)</div><div class="line">    //判断，replaceWithMultiple用于多重替换</div><div class="line">    if(functions.length === 1)&#123;</div><div class="line">    	path.replaceWith(functions[0])</div><div class="line">    &#125;else&#123;</div><div class="line">    	path.replaceWithMultiple(functions)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>日常工作中，我们大多数时候关注的只是 <code>js</code> 代码本身，而没有通过 <code>AST</code> 去重新认识和诠释自己的代码~</p>
+<p>本文也只是通过对 <code>AST</code> 的一些介绍，起一个抛砖引玉的作用，让你对它 有一个初步的认识，对它不在感觉那么陌生。</p>
+<p>对代码的追求和探索是无止境的~</p>
+<p>如果你愿意，你可以通过它构建任何你想要的<code>js</code>代码~</p>
+<p>加油！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/18/Axios/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -711,195 +961,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/01/Wx-Auth/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/03/01/Wx-Auth/" itemprop="url">基于Taro框架的微信小程序JWT授权登录方案</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-01T16:30:20+08:00">
-                2019-03-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/小程序/" itemprop="url" rel="index">
-                    <span itemprop="name">小程序</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>小程序这两年可谓是风风火火，已经涉及到了行业的方方面面，作为一枚前端码农，为了紧跟时代的步伐，满足市场的需要，楼主也步入了小程序的坑中，一探究竟，从最初的原生开发，过渡到<a href="https://tencent.github.io/wepy/" target="_blank" rel="external">WePY</a>的引入，又转到了<a href="http://mpvue.com/" target="_blank" rel="external">mpvue</a>的框架，最近又准备踩踩<a href="https://taro.aotu.io/" target="_blank" rel="external">Taro</a>的坑 了~</p>
-<p>之所以从<code>mpvue</code>框架迁移到<code>Taro</code>框架，一是由于该框架是京东凹凸实验室开发维护的，目前来看比较活跃，更新迭代速度比较快，质量上有一定的保障；二是该框架支持多端统一，一劳永逸，为后面拓展H5等其他业务奠定基础~</p>
-<p>因业务需求，我们采用<code>JWT</code>进行身份鉴权，所以才有了这篇<code>JWT</code>授权登录 解(cai)决(keng)方(zhi)案(nan)，如果对<code>JWT</code>还不是很了解的小伙伴，请猛戳<a href="http://www.ruanyifeng.com/blog/2018/07/json_web_token-tutorial.html" target="_blank" rel="external">这里</a>~</p>
-<p>ok，不废话了，直接进入你们最想看到代码环节~</p>
-<h3 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h3><p>关于<code>Taro</code>的安装的使用，我这里就不再赘述了，具体的步骤可以参考<a href="https://nervjs.github.io/taro/docs/GETTING-STARTED.html" target="_blank" rel="external">官网</a>给出的教程，我们直接来看看授权登录这一块~</p>
-<p><code>FBI WARNING</code> : 本文相关的代码是跟楼主目前公司的有些业务场景有关，如有不同，请自行更改即可~</p>
-<p>初始化<code>Taro</code>项目时，我们需要选择使用<code>Redux</code>模版，进行状态管理，然后默默等待依赖安装完成，通过<code>npm run dev:weapp</code>命令就可以启动我们的小程序服务了~</p>
-<p>接下来跟着我的步骤走下去~</p>
-<p><strong>step1</strong></p>
-<p>首先，我们需要使用到<code>Redux</code>定义一些<code>app</code>相关的数据，方便我们后面的判断和使用~</p>
-<p><code>Redux</code>三步走，<code>reducer</code>、<code>constant</code>、<code>action</code> 我这里就直接贴代码了~</p>
-<ul>
-<li><p><code>constants</code>目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//constants  app.js</div><div class="line"></div><div class="line">//更改app登录状态</div><div class="line">export const CHANGE_APP_ON_LAUNCH = &apos;change_app_on_launch&apos;;</div><div class="line"></div><div class="line">//写入授权信息</div><div class="line">export const INSERT_AUTHORIZE = &apos;insert_authorize&apos;;</div></pre></td></tr></table></figure>
-</li>
-<li><p><code>actions</code>目录</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// actions app.js</div><div class="line"></div><div class="line">import * as constants from &apos;../constants/app&apos;</div><div class="line"></div><div class="line">//更改登录状态</div><div class="line">export const changeAppOnLaunch = () =&gt; (&#123;</div><div class="line">    type : constants.CHANGE_APP_ON_LAUNCH</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//写入请求token</div><div class="line">export const insertToken = (authorize) =&gt; (&#123;</div><div class="line">    type : constants.INSERT_AUTHORIZE ,</div><div class="line">    authorize</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<ul>
-<li><code>recuders</code>目录</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">import * as constants from &apos;../constants/app&apos;</div><div class="line"></div><div class="line">const INITIAL_STATE =&#123;</div><div class="line">	//请求接口域名地址</div><div class="line">	baseURL : &apos;https://xx.xxx.xx/&apos; ,</div><div class="line">	//应用首次加载</div><div class="line">	appOnLaunch : true ,</div><div class="line">	//请求token</div><div class="line">	authorize : &apos;&apos;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default function app( state = INITIAL_STATE , action )&#123;</div><div class="line">    switch (action.type)&#123;</div><div class="line">    	case constants.CHANGE_APP_ON_LAUNCH :</div><div class="line">            return &#123;</div><div class="line">            	...state ,</div><div class="line">            	appOnLaunch : false</div><div class="line">            &#125;;</div><div class="line">    	case constants.INSERT_AUTHORIZE :</div><div class="line">            return &#123;</div><div class="line">            	...state ,</div><div class="line">            	authorize : action.authorize</div><div class="line">            &#125;;</div><div class="line">    	default :</div><div class="line">            return state;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>最后不要忘记将其通过 <code>combineReducers</code> 方法合并到 <code>Redux</code> 里面去~</p>
-<p>为了方便后面的使用，这里我在入口文件 <code>app.js</code> 中将 <code>store</code> 直接挂在到了 <code>Taro</code> 对象上，这样我们也就可以在后面通过<code>Taro.$store</code>这种方式直接获取进行操作处理，即：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"> //app.js</div><div class="line"></div><div class="line"> componentDidMount() &#123;</div><div class="line">    //将redux状态挂载到 Taro 对象上，方便使用</div><div class="line">    Taro.$store = store;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>step2</strong></p>
-<p>我们在<code>src</code>创建一个<code>utils</code>文件夹，用来存放我们一些公用的方法之类的文件~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-c46de07621f2a6c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>由于微信小程序的限制，我们无法得知用户的登录状态是否过期，所以我们必须要通过<code>wx.checkSession</code> 来接口检测当前用户登录态是否有效，做对应的逻辑处理~</p>
-<p>因此，我们创建一个<code>auth.js</code>文件，用来微信登录，获取获取授权信息，其流程可以参考官方的这张时序图！</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-fa6824f472a70a00.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>我们的<code>JWT</code>就是上面图所提到的自定义登录状态，它一般是长这样的</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-033f45a7f08b05b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>其中<code>exp</code>是令牌过期时间，<code>iat</code>令牌签发时间，<code>nbf</code>令牌生效时间，<code>token</code>是用户状态，包含用户的身份信息，我们主要会用到<code>exp</code> 和 <code>token</code> 两个字段，用来判断令牌是否过期和发送请求携带用户身份~</p>
-<p>因此，我的做法是，在用户进入小程序的时候通过<code>Taro.checkSession()</code>，检查<code>session_key</code>是否过期，如果过期需要通过 <code>Taro.login()</code>重新登录进行授权，获取<code>JWT</code>授权信息，否则就判断用户的令牌是否过期，如果过期就要重新刷新令牌，重新获取，其代码如下~</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div></pre></td><td class="code"><pre><div class="line">// auth.js</div><div class="line"></div><div class="line">import Taro from &apos;@tarojs/taro&apos;</div><div class="line">import &#123; insertToken , changeAppOnLaunch &#125; from &apos;../actions/app&apos;</div><div class="line">//获取数据</div><div class="line">export default class Auth &#123;</div><div class="line">//app授权</div><div class="line">static appCheckAuth()&#123;</div><div class="line">    return new Promise(function (resolve) &#123;</div><div class="line">    	const state = Taro.$store.getState();</div><div class="line">    	//如果有授权信息</div><div class="line">    	if( Auth.checkAuth() &amp;&amp; !state.app.appOnLaunch )&#123;</div><div class="line">            //直接返回</div><div class="line">            resolve(true);</div><div class="line">    	&#125;else&#123;</div><div class="line">            //判断session_key是否过期</div><div class="line">            Taro.checkSession().then(async ()=&gt;&#123;</div><div class="line">                //未过期检查token是否有效</div><div class="line">                if( !Auth.checkAuth() )&#123;</div><div class="line">                    //判断是否 token 请求成功</div><div class="line">                    let flag = await getAuthToken();</div><div class="line">                    if( flag ) &#123;</div><div class="line">                        //更新app状态</div><div class="line">                        Taro.$store.dispatch(changeAppOnLaunch());</div><div class="line">                        resolve(true);</div><div class="line">                    &#125;else&#123;</div><div class="line">                      //提示</div><div class="line">                        Taro.showToast(&#123;</div><div class="line">                        title : &apos;获取授权信息失败&apos; ,</div><div class="line">                        icon : &apos;none&apos; ,</div><div class="line">                        mask : true</div><div class="line">                        &#125;)</div><div class="line">                    &#125;</div><div class="line">                &#125;else&#123;</div><div class="line">                    //更新app状态</div><div class="line">                    Taro.$store.dispatch(changeAppOnLaunch());</div><div class="line">                    //token 没有过期，直接返回</div><div class="line">                    resolve(true);</div><div class="line">                &#125;</div><div class="line">            &#125;).catch(async (err)=&gt; &#123;</div><div class="line">            	console.log(err);</div><div class="line">            	let flag = await getAuthToken();</div><div class="line">            	//判断是否 token 请求成功</div><div class="line">            	if( flag ) &#123;</div><div class="line">                    //更新app状态</div><div class="line">                    Taro.$store.dispatch(changeAppOnLaunch());</div><div class="line">                    resolve(true);</div><div class="line">            	&#125;else&#123;</div><div class="line">                    //提示</div><div class="line">                    Taro.showToast(&#123;</div><div class="line">                    	title : &apos;获取授权信息失败&apos; ,</div><div class="line">                    	icon : &apos;none&apos; ,</div><div class="line">                    	mask : true</div><div class="line">                    &#125;)</div><div class="line">            	&#125;</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">    &#125;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">    // 检查令牌是否有效 true--&gt; 有效  false--&gt; 无效</div><div class="line">    static checkAuth()&#123;</div><div class="line">        const state = Taro.$store.getState();</div><div class="line">        //从缓存读取授权信息</div><div class="line">        let authorize = state.authorize || Taro.getStorageSync(&apos;authorize&apos;) || &#123;&#125;,</div><div class="line">            expiryTime = 0,</div><div class="line">            nowTime = ~~(Date.now() / 1000);</div><div class="line"></div><div class="line">    	if (authorize.exp) &#123;</div><div class="line">            expiryTime = authorize.exp;</div><div class="line">    	&#125;</div><div class="line"></div><div class="line">    	return expiryTime - nowTime &gt; 300;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //获取token</div><div class="line">    static getToken()&#123;</div><div class="line">    	const state = Taro.$store.getState();</div><div class="line">    	let authorize = state.authorize || Taro.getStorageSync(&apos;authorize&apos;);</div><div class="line">    	return authorize.token;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//授权用户 token</div><div class="line">async function getAuthToken()&#123;</div><div class="line">	const state = Taro.$store.getState();</div><div class="line">	//login</div><div class="line">	let res = await Taro.login();</div><div class="line">	//获取token</div><div class="line">	let response = await Taro.request(&#123;</div><div class="line">            url : `$&#123;state.app.baseURL&#125;api/xxx/xxx` ,</div><div class="line">            data : &#123;</div><div class="line">            	code : res.code</div><div class="line">            &#125; ,</div><div class="line">            method : &apos;POST&apos;</div><div class="line">	&#125;)</div><div class="line">    //判断是否成功</div><div class="line">    if( response.data.data &amp;&amp; response.data.data.authorize )&#123;</div><div class="line">        //写入token</div><div class="line">        let authorize = response.data.data.authorize;</div><div class="line">        saveAuthToken(authorize);</div><div class="line">        return true;</div><div class="line">    &#125;else&#123;</div><div class="line">        console.log(&apos;获取token失败&apos;);</div><div class="line">        return false;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//写入信息</div><div class="line">function saveAuthToken (authorize) &#123;</div><div class="line">    //写入状态管理</div><div class="line">    Taro.$store.dispatch(insertToken(authorize));</div><div class="line">    //写入缓存</div><div class="line">    Taro.setStorageSync(&apos;authorize&apos;,authorize)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面总共定义不少方法，我都有注释，相信大家也都能看懂，其主要思想就是，如果用户首次进入小程序，通过<code>login</code>进行登录，并将令牌存入本地，后面通过<code>getToken</code>方法进行获取请求的令牌，以后用户在进入小程序的时候，就进行授权信息和登录状态检测，如果登录过期或者令牌过期则通过<code>getAuthToken</code>方法进行请求，获取最新的身份令牌！</p>
-<p>上面之所以要触发一次 <code>changeAppOnLaunch</code> 是因为用户每次进入需要进行一次<code>checkSeesion</code>检测，如果用户本次<code>session_key</code>未过期，一般来说本次小程序生命周期内就就不需要在进行<code>checkSession</code>检测了，因此我们用一个状态来标识用户是否是重新进入小程序~</p>
-<p><strong>step3</strong></p>
-<p>假定我们的页面的初始化请求都写在<code>componentDidMount</code>生命周期内，那么现在我们要做的就是要在页面接口请求之前去判断是否已经获取到<code>token</code>，如果有<code>token</code>则进行正常的接口请求，否则就通过上面的登录获取<code>token</code>，不然就会导致接口未携带令牌而发生错误~</p>
-<p>那么问题来了，我们如何阻塞<code>componentDidMount</code>而保证每次接口请求之前都已经拿到了<code>token</code>呢，这里我的做法就是对<code>Component</code>进行二次封装，采用的是<code>ES7</code>提供的<strong>装饰器</strong>，关于装饰器的使用，可以瞄一眼这篇<a href="https://juejin.im/post/59f1c484f265da431c6f8940" target="_blank" rel="external">文章</a>~</p>
-<p>通过装饰器，我们可以将<code>Component</code>进行二次封装，可以根据业务情况将授权、分享等全部进行归一化处理，这里我们创建一个<code>pageInit.js</code>，来实现这个功能~</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div></pre></td><td class="code"><pre><div class="line">//pageInit.js</div><div class="line"></div><div class="line">import Taro from &apos;@tarojs/taro&apos;</div><div class="line">import auth from &apos;../utils/auth&apos;</div><div class="line">function pageInit() &#123;</div><div class="line">    return function Component(Component) &#123;</div><div class="line">        return class extends Component &#123;</div><div class="line"></div><div class="line">        constructor (props)&#123;</div><div class="line">            super(props);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //onLoad</div><div class="line">        componentWillMount()&#123;</div><div class="line">            //初始分享信息</div><div class="line">            initShareMenu(this.state);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //阻塞 didMount ， 鉴权</div><div class="line">        async componentDidMount() &#123;</div><div class="line">            let result = await auth.appCheckAuth();</div><div class="line">            //授权成功</div><div class="line">            if( result )&#123;</div><div class="line">            	//调用父组件的函数</div><div class="line">            	super.componentDidMount &amp;&amp; super.componentDidMount();</div><div class="line">            &#125;else&#123;</div><div class="line">            	//授权失败</div><div class="line">            	Taro.showToast(&#123;</div><div class="line">                    title : &apos;授权失败&apos; ,</div><div class="line">                    icon : &apos;none&apos; ,</div><div class="line">                    mask : true</div><div class="line">            	&#125;)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //重写分享</div><div class="line">        onShareAppMessage()&#123;</div><div class="line">            let shareOptions = super.onShareAppMessage();</div><div class="line">            //如果当前页面配置分享使用配置的</div><div class="line">            if( shareOptions ) return shareOptions;</div><div class="line">            //默认分享</div><div class="line">            return &#123;</div><div class="line">            	title : &apos;默认分享内容&apos;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //重新下拉刷新</div><div class="line">        onPullDownRefresh()&#123;</div><div class="line">            if(super.onPullDownRefresh)&#123;</div><div class="line">            	super.onPullDownRefresh();</div><div class="line">            	setTimeout(() =&gt; &#123;</div><div class="line">            		Taro.stopPullDownRefresh();</div><div class="line">            	&#125;, 1500)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/**</div><div class="line"> * 初始化分享信息</div><div class="line"> */</div><div class="line">function initShareMenu (state) &#123;</div><div class="line">    // 初始化页面分享信息</div><div class="line">    if ( state &amp;&amp; state.canShare ) &#123;</div><div class="line">    	Taro.showShareMenu(&#123;</div><div class="line">            withShareTicket: false</div><div class="line">    	&#125;)</div><div class="line">    &#125; else &#123;</div><div class="line">    	Taro.hideShareMenu();</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default pageInit;</div></pre></td></tr></table></figure>
-<p>核心思想是，通过<code>async</code> 和 <code>await</code> 阻塞，让其先执行自身的 <code>componentDidMount</code> 方法，拿到授权信息后，在调用父类的 <code>componentDidMount</code> 方法，这样就可以保证授权信息获取到再进行接口请求了~</p>
-<p>我们要做的就是在页面内通过 <strong><code>@pageInit()</code></strong> 进行装饰即可~</p>
-<p>这里我做了个测试，在清空全部授权信息后，在页面进行一次接口请求，可以看到先执行的是 <code>lite</code> 获取用户令牌，然后进行页面的接口请求，保证了执行顺序不会错乱~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-17f657dc8c405916.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>ok，到此为止，我们基本上已经算是完成了整套体系，接下来就是在接口请求中加上<code>token</code>就好了，这里我就补不贴代码了~<br>完成的代码可去仓库自行<a href="https://github.com/Chris-wei/taro" target="_blank" rel="external">查看</a>~</p>
-<p><code>Taro</code>对于我来说，也算是属于初探，这篇文章也是希望能给跟我一样萌新的小伙伴一个抛砖引玉的作用，如果有哪里写的不对的地方，还请批评斧正~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -953,7 +1014,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">37</span>
+                <span class="site-state-item-count">38</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -964,7 +1025,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -975,7 +1036,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
