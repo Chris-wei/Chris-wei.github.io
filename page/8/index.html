@@ -900,7 +900,7 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Linked-List/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Dictionary/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chris wei">
@@ -919,7 +919,7 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
         
           <h2 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/09/27/Linked-List/" itemprop="url">JS中的算法与数据结构——链表(Linked-list)</a></h2>
+                <a class="post-title-link" href="/2017/09/27/Dictionary/" itemprop="url">JS中的算法与数据结构——字典(Dictionary)</a></h2>
         
 
         <div class="post-meta">
@@ -991,262 +991,133 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
       
         
           
-            <h2 id="链表-Linked-list"><a href="#链表-Linked-list" class="headerlink" title="链表(Linked-list)"></a>链表(Linked-list)</h2><p>前面我们讨论了如何使用<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>、<a href="http://www.jianshu.com/p/1157aaccad36" target="_blank" rel="external">队列</a>进行存数数据，他们其实都是<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>的一种，底层存储的数据的数据结构都是数组。</p>
-<p>但是数组不总是最佳的数据结构，因为，在很多编程语言中，数组的长度都是固定的，如果数组已被数据填满，再要加入新的元素是非常困难的。而且，对于数组的删除和添加操作，通常需要将数组中的其他元素向前或者向后平移，这些操作也是十分繁琐的。</p>
-<p>然而，JS中数组却不存在上述问题，主要是因为他们被实现了成了对象，但是与其他语言相比（比如C或Java），那么它的效率会低很多。</p>
-<p>这时候，我们可以考虑使用链表(Linked-list) 来替代它，除了对数据的随机访问，链表几乎可以在任何可以使用一维数组的情况中。如果你正巧在使用C或者Java等高级语言，你会发现链表的表现要优于数组很多。</p>
-<p>链表其实有许多的种类：单向链表、双向链表、单向循环链表和双向循环链表，接下来，我们基于对象来实现一个单向链表，因为它的使用最为广泛。</p>
-<h2 id="链表的定义"><a href="#链表的定义" class="headerlink" title="链表的定义"></a>链表的定义</h2><p>首先，要实现链表，我们先搞懂一些链表的基本东西，因为这很重要！</p>
-<p>链表是一组节点组成的集合，每个节点都使用一个对象的引用来指向它的后一个节点。指向另一节点的引用讲做链。下面我画了一个简单的链接结构图，方便大家理解。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-caa2e934886c5ae1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="链表结构图"></p>
-<p>其中，data中保存着数据，next保存着下一个链表的引用。上图中，我们说 data2 跟在 data1 后面，而不是说 data2 是链表中的第二个元素。上图，值得注意的是，我们将链表的尾元素指向了 null 节点，表示链接结束的位置。</p>
-<p>由于链表的起始点的确定比较麻烦，因此很多链表的实现都会在链表的最前面添加一个特殊的节点，称为 <strong>头节点</strong>，表示链表的头部。进过改造，链表就成了如下的样子：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5c1f96efff0c90ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="有头节点的链表"></p>
-<p>向链表中<strong>插入一个节点</strong>的效率很高，需要修改它前面的节点(前驱)，使其指向新加入的节点，而将新节点指向原来前驱节点指向的节点即可。下面我将用图片演示如何在 data2 节点 后面插入 data4 节点。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a75cba57042a50f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="插入节点"></p>
-<p>同样，从链表中删除一个节点，也很简单。只需将待删节点的前驱节点指向待删节点的，同时将待删节点指向null，那么节点就删除成功了。下面我们用图片演示如何从链表中删除 data4 节点。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-aa4650d34f9a0ca4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="删除节点"></p>
-<h2 id="链表的设计"><a href="#链表的设计" class="headerlink" title="链表的设计"></a>链表的设计</h2><p>我们设计链表包含两个类，一个是 Node 类用来表示节点，另一个事 LinkedList 类提供插入节点、删除节点等一些操作。</p>
-<p><strong>Node类</strong></p>
-<p>Node类包含连个属性： element 用来保存节点上的数据，next 用来保存指向下一个节点的链接，具体实现如下：</p>
-<pre><code>//节点
-function Node(element) {
-    this.element = element;   //当前节点的元素
-    this.next = null;         //下一个节点链接
-}
-</code></pre><p><strong>LinkedList类</strong></p>
-<p>LinkedList类提供了对链表进行操作的方法，包括插入删除节点，查找给定的值等。值得注意的是，它只有一个<br>属性，那就是使用一个 Node 对象来保存该链表的头节点。</p>
-<p>它的构造函数的实现如下：</p>
-<pre><code>//链表类
-function LList () {
-    this.head = new Node( &apos;head&apos; );     //头节点
-    this.find = find;                   //查找节点
-    this.insert = insert;               //插入节点
-    this.remove = remove;               //删除节点
-    this.findPrev = findPrev;           //查找前一个节点
-    this.display = display;             //显示链表
-}
-</code></pre><p>head节点的next属性初始化为 null ，当有新元素插入时，next会指向新的元素。</p>
-<p>接下来，我们来看看具体方法的实现。</p>
-<p><strong>insert：向链表插入一个节点</strong></p>
-<p>我们先分析分析insert方法，想要插入一个节点，我们必须明确要在哪个节点的前面或后面插入。我们先来看看，如何在一个已知节点的后面插入一个节点。</p>
-<p>在一个已知节点后插入新节点，我们首先得找到该节点，为此，我们需要一个 find 方法用来遍历链表，查找给定的数据。如果找到，该方法就返回保存该数据的节点。那么，我们先实现 find 方法。</p>
-<p><strong>find：查找给定节点</strong></p>
-<pre><code>//查找给定节点
+            <h2 id="字典-Dictionary"><a href="#字典-Dictionary" class="headerlink" title="字典(Dictionary)"></a>字典(Dictionary)</h2><p>字典(Dictionary)是一种以 <strong>键-值对</strong> 形式存储数据的数据结构 ，就如同我们平时查看通讯录一样，要找一个电话，首先先找到该号码的机主名字，名字找到了，紧接着电话号码也就有了。这里的键就是你用来查找的东西，本例中指代的就是名字，值就是查找得到的结果，也就是对应的电话号码。</p>
+<p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
+<h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
+<p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cbda4fe5fdd62c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据类型定义"></p>
+<p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
+<pre><code>//字典类
 
-function find ( item ) {
-    var currNode = this.head;
-    while ( currNode.element != item ){
-        currNode = currNode.next;
-    }
-    return currNode;
+function Dictionary () {
+    this.dataStore = [];
+    this.add = add;         // 添加元素
+    this.find = find;       // 查找元素
+    this.remove = remove;   // 删除元素
+    this.count = count;     // 字典中元素个数
+    this.showAll = showAll; // 显示字典元素
+    this.clear = clear;     // 清空字典
 }
-</code></pre><p>find 方法同时展示了如何在链表上移动。首先，创建一个新节点，将链表的头节点赋给这个新创建的节点，然后在链表上循环，如果当前节点的 element 属性和我们要找的信息不符，就将当前节点移动到下一个节点，如果查找成功，该方法返回包含该数据的节点；否则，就会返回null。</p>
-<p>一旦找到了节点，我们就可以将新的节点插入到链表中了，将新节点的 next 属性设置为后面节点的 next 属性对应的值，然后设置后面节点的 next 属性指向新的节点，具体实现如下：</p>
-<pre><code>//插入节点
+</code></pre><p><strong>add：向字典添加一个元素</strong></p>
+<p>上面我们也提到，字典是以 键值对 的方式存储数据的，因此，add 方法就需要接受两个参数，分别是 键和值 ，其中键表示其在字典中的索引，实现如下</p>
+<pre><code>//向字典添加元素
 
-function insert ( newElement , item ) {
-    var newNode = new Node( newElement );
-    var currNode = this.find( item );
-    newNode.next = currNode.next;
-    currNode.next = newNode;
+function add( key , value ){
+    this.dataStore[key] = value;
 }
-</code></pre><p>现在我们可以测试我们的链表了。等等，我们先来定义一个 display 方法显示链表的元素，不然我们怎么知道对不对呢？</p>
-<p><strong>display：显示链表</strong></p>
-<pre><code>//显示链表元素
+</code></pre><p>没错，就是这么简单！接着我们来看看 find 方法</p>
+<p><strong>find：查找字典中的元素</strong></p>
+<p>我们是以键值对方式存储的，因此我们只需要传入需要查找的键，就可以顺理成章的取到对应的值，这对应于JS中的数组也是十分简单的；</p>
+<pre><code>//查找字典中的元素
 
-function display () {
-    var currNode = this.head;
-    while ( !(currNode.next == null) ){
-        console.log( currNode.next.element );
-        currNode = currNode.next;
+function find( key ){
+    return this.dataStore[key];
+}
+</code></pre><p>有了添加和查找，接下来就是删除了！</p>
+<p><strong>remove：删除字典中的一个元素</strong></p>
+<p>要想删除字典中的一个元素，即删除一个 键值对 ， 我们需要借助 JS 提供的一个内置的函数 ： delete ，这个函数我们并不陌生，它可以同时删除键和与其对应的值，那么 remove 方法定义就很简单了</p>
+<pre><code>//删除一个元素
+
+function remove( key ){
+    if( this.dataStore[key] ) delete this.dataStore[key];
+    else return &apos;Not Found&apos;;
+}
+</code></pre><p>除此之外，我们还想显示字典中的所有键值对，showAll 方法来完成。</p>
+<p><strong>showAll：显示字典中所以键值对</strong></p>
+<pre><code>//显示字典元素
+
+function showAll () {
+    for( var key in this.dataStore ){
+        console.log( key + &apos;-&gt;&apos; + this.dataStore[key] );
     }
 }
-</code></pre><p>实现原理同上，将头节点赋给一个新的变量，然后循环链表，直到当前节点的 next 属性为 null 时停止循环，我们循环过程中将每个节点的数据打印出来就好了。</p>
-<pre><code>var fruits = new LList();
+</code></pre><p>我们已经完成了字典的基本操作，现在我们做个小测试，</p>
+<pre><code>//实例化字典类
 
-fruits.insert(&apos;Apple&apos; , &apos;head&apos;);
-fruits.insert(&apos;Banana&apos; , &apos;Apple&apos;);
-fruits.insert(&apos;Pear&apos; , &apos;Banana&apos;);
+var directory = new Dictionary();
 
-console.log(fruits.display());       // Apple
-                                     // Banana
-                                     // Pear
-</code></pre><p><strong>remove：从链表中删除一个节点</strong></p>
-<pre><code>从链表中删除节点时，我们先要找个待删除节点的前一个节点，找到后，我们修改它的 next 属性，使其不在指向待删除的节点，而是待删除节点的下一个节点。那么，我们就得需要定义一个 findPrevious 方法遍历链表，检查每一个节点的下一个节点是否存储待删除的数据。如果找到，返回该节点，这样就可以修改它的 next 属性了。 findPrevious 的实现如下：
+//添加元素
 
-//查找带删除节点的前一个节点
+directory.add( &apos;Jack&apos; , &apos;138****5505&apos; );
+directory.add( &apos;Alice&apos; , &apos;156****6606&apos;);
+directory.add( &apos;Tom&apos; , &apos;180****8808&apos;);
 
-function findPrev( item ) {
-    var currNode = this.head;
-    while ( !( currNode.next == null) &amp;&amp; ( currNode.next.element != item )){
-        currNode = currNode.next;
+//显示字典
+
+directory.showAll();         // Jack-&gt;138****5505
+                             // Alice-&gt;156****6606
+                             // Tom-&gt;180****8808
+
+directory.remove( &apos;Tom&apos; );
+directory.showAll();         // Jack-&gt;138****5505
+                             // Alice-&gt;156****6606
+</code></pre><p> 我们定义的时候看到了还有两个方法没有实现呢，一个是 count ， 另一个是 clear ，下面我们一起来实现。</p>
+<p> <strong>count：查看字典中元素的个数</strong></p>
+<p> 该方法有时候会很有用，不过实现起来可能会跟你想的不太一样，我们先看看如何实现的</p>
+<pre><code>//查看字典中元素的个数
+
+function count(){
+    var n = 0 ;
+    for ( var key in this.dataStore ){
+        ++n;
     }
-    return currNode;
+    return n;
 }
-</code></pre><p>这样，remove 方法的实现也就迎刃而解了</p>
-<pre><code>//删除节点
+</code></pre><p>怎么样，是不是跟想的不太一样，为什么不用 length 属性，不是很简单么？其实不然，我们的键为字符串的时候，数组的 length 属性就不起作用了，请看下面的例子：</p>
+<pre><code>var nums = [ 0 , 1 , 2 ] ;
 
-function remove ( item ) {
-    var prevNode = this.findPrev( item );
-    if( !( prevNode.next == null ) ){
-        prevNode.next = prevNode.next.next;
-    }
-}
-</code></pre><p>我们接着写一段测试程序，测试一下 remove 方法：</p>
-<pre><code>// 接着上面的代码，我们再添加一个水果
+console.log(nums.length)        // 3
 
-fruits.insert(&apos;Grape&apos; , &apos;Pear&apos;);
-console.log(fruits.display());      // Apple
-                                    // Banana
-                                    // Pear
-                                    // Grape
+var directory = [];
+directory[&apos;Jack&apos;] = &apos;138****5505&apos;;
+directory[&apos;Alice&apos;] = &apos;156****6606&apos;;
+directory[&apos;Tom&apos;] = &apos;180****8808&apos;;
 
-// 我们把香蕉吃掉
+console.log(directory.length)   // 0
+</code></pre><p>现在是不是又了解了一个坑！哈哈，我们把最后一个clear方法实现一下。</p>
+<p><strong>clear：清空字典</strong></p>
+<pre><code>//清空字典
 
-fruits.remove(&apos;Banana&apos;);
-console.log(fruits.display());      // Apple
-                                    // Pear
-                                    // Grape
-</code></pre><p>Great！成功了，现在你已经可以实现一个基本的单向链表了。</p>
-<h2 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h2><p>尽管从链表的头节点遍历链表很简单，但是反过来，从后向前遍历却不容易。我们可以通过给Node类增加一个previous属性，让其指向前驱节点的链接，这样就形成了双向链表，如下图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5194e2f358ea4b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="双向链表"></p>
-<p>此时，向链表插入一个节点就要更改节点的前驱和后继了，但是删除节点的效率提高了，不再需要寻找待删除节点的前驱节点了。</p>
-<h2 id="双向链表的实现"><a href="#双向链表的实现" class="headerlink" title="双向链表的实现"></a>双向链表的实现</h2><p>要实现双向链表，首先需要给 Node 类增加一个 previous 属性：</p>
-<pre><code>//节点类
-
-function Node(element) {
-    this.element = element;   //当前节点的元素
-    this.next = null;         //下一个节点链接
-    this.previous = null;     //上一个节点链接
-}
-</code></pre><p>双向链表的 insert 方法与单链表相似，但需要设置新节点的 previous 属性，使其指向该节点的前驱，定义如下：</p>
-<pre><code>//插入节点
-function insert ( newElement , item ) {
-    var newNode = new Node( newElement );
-    var currNode = this.find( item );
-    newNode.next = currNode.next;
-    newNode.previous = currNode;
-    currNode.next = newNode;
-}
-</code></pre><p>双向链表的删除 remove 方法比单链表效率高，不需要查找前驱节点，只要找出待删除节点，然后将该节点的前驱 next 属性指向待删除节点的后继，设置该节点后继 previous 属性，指向待删除节点的前驱即可。定义如下：</p>
-<pre><code>//删除节点
-
-function remove ( item ) {
-    var currNode = this.find ( item );
-    if( !( currNode.next == null ) ){
-        currNode.previous.next = currNode.next;
-        currNode.next.previous = currNode.previous;
-        currNode.next = null;
-        currNode.previous = null;
+function clear(){
+    for( var key in this.dataStore ){
+        delete this.dataStore[key];
     }
 }
-</code></pre><p>还有一些反向显示链表 dispReverse，查找链表最后一个元素 findLast 等方法，相信你已经有了思路，这里我给出一个基本双向链表的完成代码，供大家参考。</p>
-<pre><code> //节点
+</code></pre><p>至此，字典的功能已基本完成了，我们利用上述的代码继续走下去，测试测试</p>
+<pre><code>console.log(directory.count());     // 2
+directory.clear();
+console.log(directory.count());     // 0
+</code></pre><p>字典中我们通常都是用键来取值，所以我们无须关心s数据在字典中的实际存储顺序，但我们希望能看到显示字典内容的时候是有序的，这也很简单，我们只需稍微改造一下我们的 showAll 方法即可。</p>
+<pre><code>//改造后的showAll
 
-function Node(element) {
-    this.element = element;   //当前节点的元素
-    this.next = null;         //下一个节点链接
-    this.previous = null;         //上一个节点链接
-}
-
-//链表类
-
-function LList () {
-    this.head = new Node( &apos;head&apos; );
-    this.find = find;
-    this.findLast = findLast;
-    this.insert = insert;
-    this.remove = remove;
-    this.display = display;
-    this.dispReverse = dispReverse;
-}
-
-//查找元素
-
-function find ( item ) {
-    var currNode = this.head;
-    while ( currNode.element != item ){
-        currNode = currNode.next;
-    }
-    return currNode;
-}
-
-//查找链表中的最后一个元素
-
-function findLast () {
-    var currNode = this.head;
-    while ( !( currNode.next == null )){
-        currNode = currNode.next;
-    }
-    return currNode;
-}
-
-
-//插入节点
-
-function insert ( newElement , item ) {
-    var newNode = new Node( newElement );
-    var currNode = this.find( item );
-    newNode.next = currNode.next;
-    newNode.previous = currNode;
-    currNode.next = newNode;
-}
-
-//显示链表元素
-
-function display () {
-    var currNode = this.head;
-    while ( !(currNode.next == null) ){
-        console.debug( currNode.next.element );
-        currNode = currNode.next;
+function showAll(){
+    var sortKeys = Object.keys(this.dataStore).sort();
+    for( var key in sortKeys ){
+        console.log( sortKeys[key] + &apos;-&gt;&apos; + this.dataStore[sortKeys[key]] );
     }
 }
+</code></pre><p>和我们之前的方法唯一的区别就是，我们拿到了键之后，对其进行了一次 sort 排序，下面我们看看新方法的输出。</p>
+<pre><code>// 重新打印上述字典
 
-//反向显示链表元素
+directory.showAll();        //  Alice-&gt;156****6606
+                            //  Jack-&gt;138****5505
+                            //  Tom-&gt;180****8808
+</code></pre><p>要注意的是，上述 showAll 方法中，进行 Object.keys().sort()排序后，返回的是新的一个数组，类似下面的形式，</p>
+<pre><code>//sortKeys
 
-function dispReverse () {
-    var currNode = this.findLast();
-    while ( !( currNode.previous == null )){
-        console.log( currNode.element );
-        currNode = currNode.previous;
-    }
-}
-
-//删除节点
-
-function remove ( item ) {
-    var currNode = this.find ( item );
-    if( !( currNode.next == null ) ){
-        currNode.previous.next = currNode.next;
-        currNode.next.previous = currNode.previous;
-        currNode.next = null;
-        currNode.previous = null;
-    }
-}
-
-var fruits = new LList();
-
-fruits.insert(&apos;Apple&apos; , &apos;head&apos;);
-fruits.insert(&apos;Banana&apos; , &apos;Apple&apos;);
-fruits.insert(&apos;Pear&apos; , &apos;Banana&apos;);
-fruits.insert(&apos;Grape&apos; , &apos;Pear&apos;);
-
-console.log( fruits.display() );        // Apple
-                                        // Banana
-                                        // Pear
-                                        // Grape
-
-console.log( fruits.dispReverse() );    // Grape
-                                        // Pear
-                                        // Banana
-                                        // Apple
-</code></pre><h2 id="循环链表"><a href="#循环链表" class="headerlink" title="循环链表"></a>循环链表</h2><p>   循环链表和单链表相似，节点类型都是一样，唯一的区别是，在创建循环链表的时候，让其头节点的 next 属性执行它本身，即</p>
-<pre><code>head.next = head;
-</code></pre><p>这种行为会导致链表中每个节点的 next 属性都指向链表的头节点，换句话说，也就是链表的尾节点指向了头节点，形成了一个循环链表，如下图所示：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7c1220c3cd9fd481.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="循环链表"></p>
-<p>原理相信你已经懂了，循环链表这里就不贴代码了，相信你自己能独立完成！</p>
-<p>至此，我们对链表有了比较深刻的认识，如果想让我们的链表更加健全，我们还可发挥自己的思维，给链表添加比如向前移动几个节点，向后移动几个节点，显示当前节点等方法，大家一起加油！</p>
+[&quot;Alice&quot;, &quot;Jack&quot;, &quot;Tom&quot;]
+</code></pre><p>此时，数组的 key 是 0、1、2，这样是不是就清晰很多了呢？</p>
+<p>至此，我们已基本了解了字典的一些内容，并且我们可以用JS自己去实现一个字典了，有木有很棒！接下来，大家加油~</p>
 
           
         
