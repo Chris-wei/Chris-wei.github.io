@@ -103,22 +103,22 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="Nuxt微信开发–授权登录到项目部署之前一直用 Vue 做微信端的SPA（Single-Page Application - 单页应用程序）开发，授权都是后端来做的，前端只需拉接口填充数据即可。 由于数据都是异步获取的，可能会出现页面加载完成但是数据却并未全部填充完毕的情况，为了提高用户体验，后来的项目改用了 Nuxt 框架，采用服务端渲染，一切都比较顺利，唯独就是就是踩了微信授权的坑。 当然，如">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-be9eff1e4942f535.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-4d811ac13919fd3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-69a598b5919bcadc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-ef66fcb07e0da4dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-6602dfc5bab584c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-33c68d379fb991f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-956371b779209a88.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d09028c43b1dc935.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d038dff22f1c142b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-37c8210a66063501.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-0a2123f080b8618f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-10-31T09:25:27.501Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180533838.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180607785.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180645759.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180717891.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180753395.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180837227.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180906773.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611180935324.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181008906.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181043273.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181112370.png">
+<meta property="og:updated_time" content="2020-06-11T10:11:22.323Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nuxt微信开发--授权登录到项目部署">
 <meta name="twitter:description" content="Nuxt微信开发–授权登录到项目部署之前一直用 Vue 做微信端的SPA（Single-Page Application - 单页应用程序）开发，授权都是后端来做的，前端只需拉接口填充数据即可。 由于数据都是异步获取的，可能会出现页面加载完成但是数据却并未全部填充完毕的情况，为了提高用户体验，后来的项目改用了 Nuxt 框架，采用服务端渲染，一切都比较顺利，唯独就是就是踩了微信授权的坑。 当然，如">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-be9eff1e4942f535.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611180533838.png">
 
 
 
@@ -393,18 +393,18 @@ $ npm install
 </code></pre><p>启动项目</p>
 <pre><code>$ npm run dev
 </code></pre><p>访问<code>localhost:3000</code>，如果你看到如下的界面，证明你已经安装成功了</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-be9eff1e4942f535.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="首页"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180533838.png" alt="首页"></p>
 <p>我们发现其实官方已经帮我们做了 demo ，我们只要对其进行改造即可。</p>
 <h2 id="微信授权设置"><a href="#微信授权设置" class="headerlink" title="微信授权设置"></a>微信授权设置</h2><p>要想进行微信授权，你需要有一个自己的服务器、域名（如果没有，只能对测试号调试，微信规定了正式号必须使用域名），微信授权的官方文档<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140842" target="_blank" rel="external">参考这里</a></p>
 <p><strong>申请微信公众平台测试号</strong></p>
 <p>1.我们进入<a href="https://mp.weixin.qq.com/" target="_blank" rel="external">微信公众平台</a> 申请一个测试号，使用测试号来开发是一个不错的选择，申请成功之后进入后台，<br>右下角侧边栏会有一个<strong>开发者工具</strong>选项，我们点击进入之后，选择 <strong>公众平台测试帐号</strong></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-4d811ac13919fd3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="公众号测试配置"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180607785.png" alt="公众号测试配置"></p>
 <p>不出意外，你会拿到两个重要的数据 appID 和 appsercet，如下</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-69a598b5919bcadc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="测试号信息"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180645759.png" alt="测试号信息"></p>
 <p>2.我们需要将用户绑定到测试账号上来，扫描下方的<strong>测试号二维码</strong>，成功后你的信息会出现右侧的列表中，这一步很关键，之前没有做这一步导致获取不到用户信息！</p>
 <p>3.最后，我们还需要设置回调域名，即</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ef66fcb07e0da4dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="回调域名"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6602dfc5bab584c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="回调域名设置"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180717891.png" alt="回调域名"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180753395.png" alt="回调域名设置"></p>
 <p><strong>要注意的是：</strong><br>1、这里填写的是域名（是一个字符串），而不是URL，因此请勿加<a href="http://等协议头；" target="_blank" rel="external">http://等协议头；</a><br>2、授权回调域名配置规范为全域名，比如需要网页授权的域名为：<code>www.qq.com</code>，配置以后此域名下面的页面 <code>http://www.qq.com/music.html 、 http://www.qq.com/login.html</code> 都可以进行OAuth2.0鉴权。但<code>http://pay.qq.com 、 http://music.qq.com 、 http://qq.com</code>无法进行OAuth2.0鉴权。</p>
 <p>到此，微信授权的后台配置我们已基本完成，接下来就是我们编写服务端代码的</p>
 <h2 id="服务端代码"><a href="#服务端代码" class="headerlink" title="服务端代码"></a>服务端代码</h2><p>我们按照微信官方的授权步骤来看，主要分为一下几个4步：</p>
@@ -494,10 +494,10 @@ router.use(oauth)
 
 export default router
 </code></pre><p>嗯，现在如果你浏览器访问 <code>http://localhost:3000/api/oauth</code>，不出意外，你会看到下面的界面：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-33c68d379fb991f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="微信授权提示"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180837227.png" alt="微信授权提示"></p>
 <p>恭喜你，你已经成功了一半了！</p>
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>我们的项目是运行在 3000 端口，现在要放到服务器上，通过 80 端口去访问它，我们要用到 nginx 来做转发（对于nginx的安装这里不多做赘述，建议不懂得小伙伴去看看），需要对其进行配置，这里，我们找到nginx安装目录下的 nignx.conf 进行简单的配置即可，我这里给出一个参考：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-956371b779209a88.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Nginx配置"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180906773.png" alt="Nginx配置"></p>
 <p>接下来就是要部署我们的 Nuxt 项目，它的部署与vue稍微有点不同，我们需要在我们的项目中，先在本地运行</p>
 <pre><code>npm run build
 </code></pre><p>进行打包，之后本地创建一个 package.json 的文件（除去原本项目中dev的依赖），如下：</p>
@@ -524,15 +524,15 @@ export default router
   }
 }
 </code></pre><p>将打包好的 <strong>.nuxt 文件夹</strong> ， <strong>bulid 文件夹</strong> 和 <strong>package.json 文件</strong>一起放到 服务器的项目目录下（我这里使用的是vue-ssr）,<br>进入该文件夹，运行<code>npm install</code>安装依赖，完成后运行<code>npm start</code>，项目即可运行，接着我们访问 <code>api/oauth</code> 接口，会弹起微信授权，如图所示</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d09028c43b1dc935.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="微信授权"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180935324.png" alt="微信授权"></p>
 <p>确认登录之后，授权成功，可以拉取到用户信息，如下图</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d038dff22f1c142b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="授权成功"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181008906.png" alt="授权成功"></p>
 <p>同时，我们还可以在服务器端看到日志打印的个人信息如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-37c8210a66063501.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="服务端打印"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181043273.png" alt="服务端打印"></p>
 <p>到此，我们整个授权微信完成了，接下来只要将用户信息存入数据库即可~</p>
 <p>嗯，补充一点，如果项目需要挂到服务器后台运行，这里我推荐使用 pm2 进行管理，有关 pm2 的用法网上教程也比较多，使用起来也很方便，这里我只是针对 Nuxt 项目而言，</p>
 <p>执行命令 <code>pm2 start npm -- start</code> ，项目会被挂载在后台，并输出如下界面</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-0a2123f080b8618f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="pm2"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181112370.png" alt="pm2"></p>
 <p>当然，你也可以采用 <code>pm2 list</code> 查看当前的所有运行的node应用，这个 id 为当前应用的 id；<br>如果你要退出该应用，请使用<code>pm2 delete _id</code>即可~</p>
 
       

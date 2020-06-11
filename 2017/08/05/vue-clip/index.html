@@ -103,15 +103,15 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~ 废话不多说，先上效果图，无图无真相嘛~  可以在控制台看出图片压缩的信息：  本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题； 整个项目的核心">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-3c5c4111e4df639b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-e90a928bbbe2e6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-7ea49a2ef17a893e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-09-15T02:46:07.862Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611183143938.gif">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611183223302.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061118325820.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611183331390.png">
+<meta property="og:updated_time" content="2020-06-11T10:33:51.432Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于vue的移动端图片裁剪压缩处理">
 <meta name="twitter:description" content="前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~ 废话不多说，先上效果图，无图无真相嘛~  可以在控制台看出图片压缩的信息：  本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题； 整个项目的核心">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611183143938.gif">
 
 
 
@@ -373,15 +373,15 @@
       
         <p>前端时间做Vue项目的时候，要用到图片压缩处理，网上查阅了资料后，发现并不能满足实际的业务需求；于是，自己结合网上的资料写了一个，有兴趣的小伙伴不妨试试~</p>
 <p>废话不多说，先上效果图，无图无真相嘛~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-72a12831c84f3f13.gif?imageMogr2/auto-orient/strip" alt="效果图"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611183143938.gif" alt="效果图"></p>
 <p>可以在控制台看出图片压缩的信息：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-3c5c4111e4df639b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="压缩信息"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611183223302.png" alt="压缩信息"></p>
 <p>本项目主要依赖有两个库，一个是 cropper 第三方图片裁剪库 ， 另一个是 exif ，获取图片源信息，主要是用来解决 ios 图片旋转的问题；</p>
 <p>整个项目的核心 代码是 clipper.js ，其主要使用方式是直接给 input[file] 控件，添加change事件，并调用 methods 中的change方法，这里要传 event 对象， change 方法接收两个参数，第一个是 event 对象，第二个参数是一个对象，resultObj表示要展示的结果 img 对象，aspectRatio 表示宽高比，另外参数可以根据实际情况添加，主要参考<a href="http://blog.csdn.net/qq727013465/article/details/51823231" target="_blank" rel="external">cropper文档说明</a></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e90a928bbbe2e6d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="使用方法"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118325820.png" alt="使用方法"></p>
 <p>整个项目实现思路是，触发 change 事件后，动态添加 整个裁剪对象 ， 通过移动裁剪框，判断当前裁剪框的位置和大小，通过canvas将裁剪框范围内的图片信息提取出来，转成base64编码，放到 img 标签的 src 属性里，在此之前，会经过一次图片大小判断，如果上传的图片大于100K ，会通过 compress 函数对其经行压缩，压缩也是借助 canvas 对象，通过计算压缩比进行等比例的压缩，达到最终的效果；</p>
 <p>图片压缩后的上传放在 postImg 函数里，目前是本地模拟，实际开发中请自行根据需求进行编写，等到上传成功之后销毁整个裁剪对象就大功告成了。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7ea49a2ef17a893e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="图片上传"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611183331390.png" alt="图片上传"></p>
 <p>整个项目已经托管在github上，核心代码都有较为详细的注释，有需要的小伙伴可以自行下载看看，如果觉得不错的话，记得给个star哈~<br><a href="https://github.com/Chris-wei/vue-clip" target="_blank" rel="external">项目传送门</a></p>
 <p>ps：由于编辑器的问题，强迫症请忽略那些红色波浪线…</p>
 

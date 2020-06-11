@@ -103,17 +103,17 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="微信小程序中的组件前言之前做小程序开发的时候，对于开发来说比较头疼的莫过于自定义组件了，当时官方对这方面的文档也只是寥寥几句，一笔带过而已，所以写起来真的是非常非常痛苦！！ 好在微信小程序的库从 1.6.3 开始，官方对于自定义组件这一块有了比较大的变动，首先比较明显的感觉就是文档比以前全多了，有木有！（小程序文档），现在小程序支持简洁的组件化编程，可以将页面内的功能模块抽象成自定义组件，以便在不">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-10e5d522dd5ff26c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-8758f47a69d720c6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-5fcdda5de280b2be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-653fab53734cc628.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-e4f93dffc44aa3f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-cd07a086bb687d80.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-12-13T11:40:10.932Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611184959199.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611185026220.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611185054286.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611185125365.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611185151800.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611185227972.png">
+<meta property="og:updated_time" content="2020-06-11T10:52:40.415Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手把手教你实现微信小程序中的自定义组件">
 <meta name="twitter:description" content="微信小程序中的组件前言之前做小程序开发的时候，对于开发来说比较头疼的莫过于自定义组件了，当时官方对这方面的文档也只是寥寥几句，一笔带过而已，所以写起来真的是非常非常痛苦！！ 好在微信小程序的库从 1.6.3 开始，官方对于自定义组件这一块有了比较大的变动，首先比较明显的感觉就是文档比以前全多了，有木有！（小程序文档），现在小程序支持简洁的组件化编程，可以将页面内的功能模块抽象成自定义组件，以便在不">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-10e5d522dd5ff26c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611184959199.png">
 
 
 
@@ -377,10 +377,10 @@
 <p>好在微信小程序的库从 1.6.3 开始，官方对于自定义组件这一块有了比较大的变动，首先比较明显的感觉就是文档比以前全多了，有木有！（<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/custom-component/" target="_blank" rel="external">小程序文档</a>），现在小程序支持简洁的组件化编程，可以将页面内的功能模块抽象成自定义组件，以便在不同的页面中复用，提高自己代码的可读性，降低自己维护代码的成本！</p>
 <p>本篇文章就是手把手教你实现小程序中自定义组件，坐稳啦~</p>
 <h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>要做自定义组件，我们先定一个小目标，比如说我们在小程序中实现一下 WEUI 中的弹窗组件，基本效果图如下。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-10e5d522dd5ff26c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="WEUI弹框"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611184959199.png" alt="WEUI弹框"></p>
 <p><strong>Step1</strong></p>
 <p>我们初始化一个小程序（本示例基础版本库为 1.7 ），删掉里面的示例代码，并新建一个 <code>components</code> 文件夹，用于存放我们以后开发中的所用组件，今天我们的目的是实现一个 弹框 组件，因此，我们在 <code>components</code> 组件中新建一个 <code>Dialog</code> 文件夹来存放我们的弹窗组件，在 <code>Dialog</code> 下右击新建 <code>Component</code> 并命名为 <code>dialog</code> 后，会生成对应的 <code>json wxml wxss js</code> 4个文件，也就是一个自定义组件的组成部分，此时你的项目结构应该如下图所示：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-8758f47a69d720c6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="项目结构"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185026220.png" alt="项目结构"></p>
 <p><strong>Step2</strong></p>
 <p>组件初始化工作准备完成，接下来就是组件的相关配置，首先我们需要声明自定义组件，也就是将 <code>dialog.json</code> 中 <code>component</code> 字段设为 <code>true</code> ：</p>
 <pre><code>{
@@ -623,12 +623,12 @@ Page({
 </code></pre><p>到此！大功告成！</p>
 <p><strong>step5</strong></p>
 <p>让我们测试一下试试看：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5fcdda5de280b2be.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="初始化"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185054286.png" alt="初始化"></p>
 <p>点击按钮之后呢，会出现如下效果：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-653fab53734cc628.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="弹窗出现"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185125365.png" alt="弹窗出现"></p>
 <p>点击取消或者确定按钮的话，我们在事件中设置了弹窗会关闭，并会打印出相应的信息，具体点击完应该怎么做，就看你们自己发挥了，我只能帮你到这里了~</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-e4f93dffc44aa3f7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="点击取消"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-cd07a086bb687d80.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="点击确定"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185151800.png" alt="点击取消"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185227972.png" alt="点击确定"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>现在，你已经基本掌握了小程序中的自定义组件开发技巧，怎么样，是不是很棒，应该给自己点个赞，打个call。<br>总体来说，小程序推出自定义组件后，感觉方便了很多，还没有 get 的小伙伴们，赶紧学习学习，以后多用组件化开发，就不会那么难受了，加油哦~</p>
 <p>具体代码，我已经托管到 <a href="https://github.com/Chris-wei/wx-component/" target="_blank" rel="external">github</a> 上了，欢迎 <code>issue</code>~</p>
 

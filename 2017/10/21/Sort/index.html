@@ -106,17 +106,17 @@
 <meta property="og:image" content="http://img.blog.csdn.net/20160916160748389">
 <meta property="og:image" content="http://img.blog.csdn.net/20160916164754013">
 <meta property="og:image" content="http://img.blog.csdn.net/20160916173802597">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-14cc62576597097d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-94a6272f64e5718d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-43826cb5648b511e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-12d6be73db344ad3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-6dc7281cb69ae834.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-6b4cc5b3a8a51913.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182055996.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182125595.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061118215573.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182239674.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182316692.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182407658.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182438567.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061118252772.png">
 <meta property="og:image" content="http://img.blog.csdn.net/20160917001326254">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-ba8b8cc60e3df1a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-04-13T03:34:50.764Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611182742804.png">
+<meta property="og:updated_time" content="2020-06-11T10:27:52.593Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JS中的算法与数据结构——排序（Sort）">
 <meta name="twitter:description" content="排序算法（Sort）引言我们平时对计算机中存储的数据执行的两种最常见的操作就是排序和查找，对于计算机的排序和查找的研究，自计算机诞生以来就没有停止过。如今又是大数据，云计算的时代，对数据的排序和查找的速度、效率要求更高，因此要对排序和查找的算法进行专门的数据结构设计，（例如我们上一篇聊到的二叉查找树就是其中一种），以便让我们对数据的操作更加简洁高效。 这一篇我们将会介绍一些数据排序的基本算法和高级">
@@ -489,32 +489,32 @@ console.log( &apos;插入排序:&apos; + insertionSort( dataStore) );
 // 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
 // 插入排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
 </code></pre><p>我们已经学习了三种基本的排序算法，其中冒泡排序是最慢的，插入排序是最快的，我们可以在运行的过程中通过 console.time(‘sortName’) 和 console.timeEnd(‘sortName’) 两个输出来看他们的效率如何，我这里给出一组值作为参考，实际中需要大量的数据测试和反复实验，进行数理统计后才能被视为有效的统计；</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-14cc62576597097d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排序时间比较"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182055996.png" alt="排序时间比较"></p>
 <h2 id="高级排序算法"><a href="#高级排序算法" class="headerlink" title="高级排序算法"></a>高级排序算法</h2><p><strong>4.希尔排序（Shell Sort）</strong></p>
 <p>我们首先要学习的就是希尔排序，又称缩小增量排序，这个算法是在插入排序的基础上做了很大的改善，与插入排序不同的是，它首先会比较位置较远的元素，而非相邻的元素。这种方案可以使离正确位置很远的元素能够快速回到合适的位置，当算法进行遍历时，所有元素的间距会不断的减小，直到数据的末尾，此时比较的就是相邻元素了。</p>
 <p>该方法的基本思想是：先将整个待排元素序列分割成若干个子序列（由相隔某个“增量”的元素组成的）分别进行直接插入排序，然后依次缩减增量再进行排序，待整个序列中的元素基本有序（增量足够小）时，再对全体元素进行一次直接插入排序。因为直接插入排序在元素基本有序的情况下（接近最好情况），效率是很高的，因此希尔排序在时间效率上有较大提高。</p>
 <p>好吧，我还是用个案例来解释，这样会更清晰，我们以下面一组数据为例：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-94a6272f64e5718d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据集"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182125595.png" alt="数据集"></p>
 <ul>
 <li>第一次 gap(增量) = 10 / 2 = 5 , 会按照下面进行分组得到五组数据（49，13）、（38，27）、（65，49）、（97，55）、（26，4），这样进行组内排序之后（13，49）、（27，38）、（49，65）、（55，97）、（4，26）</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-43826cb5648b511e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次分组"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118215573.png" alt="第一次分组"></p>
 <p>此时，数据会排成如下结构</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-12d6be73db344ad3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182239674.png" alt="第一次排序"></p>
 <ul>
 <li>第二次 gap = 5 / 2 = 2 , 此时可以得到两个分组，如下</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6dc7281cb69ae834.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次分组"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182316692.png" alt="第二次分组"></p>
 <p>再通过组内排序之后，可以得到</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6b4cc5b3a8a51913.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182407658.png" alt="第二次排序"></p>
 <ul>
 <li>第三次 gap = 2 / 2 = 1 ， 即不用分组，进行排序后</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第三次排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182438567.png" alt="第三次排序"></p>
 <ul>
 <li>第四次 gap = 1 / 2 = 0 ，即可得到排序完成的数组</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排序完成"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118252772.png" alt="排序完成"></p>
 <p>现在，可能对希尔排序有了一定得了解了，用JS实现如下：</p>
 <pre><code>//希尔排序
 
@@ -595,7 +595,7 @@ console.log( &apos;希尔排序:&apos; + mergeSort( dataStore) );
 <p>快速排序是处理大数据最快的排序算法之一，它也是一种分而治之的算法，通过递归方式将数据依次分解为包含较小元素和较大元素的不同子序列，会不断重复这个步骤，直到所有的序列全部为有序的，最后将这些子序列一次拼接起来，就可得到排序好的数据。</p>
 <p>该算法首先要从数列中选出一个元素作为基数（pivot）。接着所有的数据都将围绕这个基数进行，将小于改基数的元素放在它的左边，大于或等于它的数全部放在它的右边，对左右两个小数列重复上述步骤，直至各区间只有1个数。</p>
 <p>整个排序过程如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ba8b8cc60e3df1a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="快速排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182742804.png" alt="快速排序"></p>
 <p>具体实现如下：</p>
 <pre><code>//快速排序
 

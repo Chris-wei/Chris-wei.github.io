@@ -103,22 +103,22 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="微信小程序插件前言继上次手把手教你实现微信小程序中的自定义组件已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序「插件」功能，以及开发者工具新增「代码片段」功能，即在小程序基础库 1.9.6 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-96e87ee925688cbc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-6a285d51fa176f72.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-772d6c10f689b4e3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-588f37b9f67ee63a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-0c78a4e0d6225f64.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-f16e9a44947d7224.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-0ef7cefc81ee4700.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-bdfe050d391b3071.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-de558c20dd5d0603.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-d0003503d6151910.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-04-16T10:26:21.676Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611185941881.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190009934.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190044609.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061119012566.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190158167.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190226167.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190251164.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190319726.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190347437.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190414489.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061119044355.png">
+<meta property="og:updated_time" content="2020-06-11T11:04:51.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手把手教你开发微信小程序中的插件">
 <meta name="twitter:description" content="微信小程序插件前言继上次手把手教你实现微信小程序中的自定义组件已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序「插件」功能，以及开发者工具新增「代码片段」功能，即在小程序基础库 1.9.6 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611185941881.png">
 
 
 
@@ -380,13 +380,13 @@
       
         <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
 <h3 id="小程序插件接入"><a href="#小程序插件接入" class="headerlink" title="小程序插件接入"></a>小程序插件接入</h3><p>小程序插件不像自定义组件那样，很方便的就可以嵌在自己的代码中了，它是需要去官网开通小程序插件功能才能使用的，详细的接入流程和文档可以阅读官方的 <a href="https://developers.weixin.qq.com/miniprogram/introduction/plugin.html#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" target="_blank" rel="external">小程序插件接入指南</a>，当然这不是我们本篇文章的重点，本篇文章重点是教你如何开发一个微信小程序插件~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f167cb4c838f1c84.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185941881.png" alt=""></p>
 <h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>建立模板</strong></p>
 <p>要开发一个小程序插件，前期准备要充分，我们打开在开发者工具中，我们按照正常步骤新建一个小程序项目，并选择 <strong>「建立插件快速启动模板」</strong> ，没有 <code>AppID</code> 的小伙伴我建议去官网注册一个，因为缺乏 <code>AppID</code>，不仅部分功能受到限制，也不方面在真机上调试~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-96e87ee925688cbc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190009934.png" alt=""></p>
 <p><strong>项目结构</strong></p>
 <p>插件项目建立完成之后，开发者工具就会自动新建一个插件项目，官网给的示例项目的结构如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-6a285d51fa176f72.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190044609.png" alt=""></p>
 <p>我们先大概了解一下~</p>
 <p>项目中包含了两个目录：</p>
 <ul>
@@ -395,7 +395,7 @@
 </ul>
 <p>前者就跟普通小程序一样，我们可以正常开发，后来用来插件调试、预览和审核，不同的是 <code>app.json</code> 和 <code>project.config.json</code> 里多了一些关于插件的配置而已，这些也都是官方帮你完成了，一般也不用配置，当然我们也可以根据自己的实际项目需求做对应的调整~</p>
 <p><code>plugin</code> 插件文件夹下存放的插件的目录结构大概如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-772d6c10f689b4e3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061119012566.png" alt=""></p>
 <ul>
 <li><code>api</code> ： 接口插件文件夹，可以存放插件所需的接口</li>
 <li><code>components</code> ： 插件提供的自定义组件文件夹， 中自定义组件可以有多个</li>
@@ -406,10 +406,10 @@
 <p><strong>具体实现</strong></p>
 <p>有些人可能纳闷了？觉得官方不是现成的示例了，为啥我还要写这篇文章呢？在我看来，官网给的示例过于简单，不足以展示插件的用法，官方给的示例中很多东西都没有涉及到，只是单纯的数据列表渲染，没有交互，这在实际开发中几乎是不存在的，大部分情况下，我们都是要通过插件的回调来进行一系列操作，本篇文章就是专门针对微信官网示例的痛点，分享一下自己的实现过程和思路~</p>
 <p>ok，老规矩，首先先定一个小目标，我们要实现一个省市区选择器的插件，并在点击提交按钮的时候把数据提交过去，大整效果如下图所示~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-588f37b9f67ee63a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190158167.png" alt=""></p>
 <p><strong>Step1</strong></p>
 <p>首先，我们在 <code>components</code> 组件文件中创建一个 <code>regionPicker</code> 文件夹，用来开发我们的省市区选择器，我们右击选择创建 <code>component</code> 并命名完毕后，就会产生组件的组成部分，即 <code>.wxml</code>、<code>.wxss</code>、<code>.json</code>、<code>.js</code> 四个文件，我们为了方便，就直接采用微信自带的 <code>picker</code> 实现~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0c78a4e0d6225f64.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190226167.png" alt=""></p>
 <p>代码如下：</p>
 <p>结构 <code>regionPicker.wxml</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;view class=&apos;section&apos;&gt;</div><div class="line">    &lt;view class=&quot;section-title&quot;&gt;省市区选择器&lt;/view&gt;</div><div class="line">    &lt;picker mode=&quot;region&quot; bindchange=&quot;bindRegionChange&quot; value=&quot;&#123;&#123;region&#125;&#125;&quot; &gt;</div><div class="line">        &lt;view class=&quot;picker&quot;&gt;</div><div class="line">            当前选择：&#123;&#123;region[0]&#125;&#125;，&#123;&#123;region[1]&#125;&#125;，&#123;&#123;region[2]&#125;&#125;</div><div class="line">        &lt;/view&gt;</div><div class="line">    &lt;/picker&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
@@ -429,7 +429,7 @@
 <p><code>index.wxml</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!--引入插件  --&gt;</div><div class="line">&lt;regionPicker /&gt;</div><div class="line"></div><div class="line">&lt;button class=&apos;submit&apos;&gt;提交&lt;/button&gt;</div></pre></td></tr></table></figure>
 <p>现在你看到的效果基本也就是下图这样了~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f16e9a44947d7224.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190251164.png" alt=""></p>
 <p>嗯，看起来功能都正常，好像也没什么问题啊~</p>
 <p>不对，好像又有问题了，我切换后的数据怎么传过来，我点击提交按钮的时候怎么穿我选择区域呢，确实是，我们接着看~</p>
 <p><strong>Step3</strong></p>
@@ -440,7 +440,7 @@
 <p><code>index.js</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Page(&#123;</div><div class="line">    data: &#123;</div><div class="line">        region: [&apos;广东省&apos;, &apos;广州市&apos;, &apos;海珠区&apos;]</div><div class="line">    &#125;,</div><div class="line">    submit()&#123;</div><div class="line">        console.log(this.data.region)</div><div class="line">    &#125;,</div><div class="line">    changeEvent(e)&#123;</div><div class="line">        console.log(e)</div><div class="line">        this.setData(&#123;</div><div class="line">            region : e.detail.region</div><div class="line">        &#125;)</div><div class="line">    &#125;,</div><div class="line">    onLoad()&#123;</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
 <p>这样，每次选择区域后，通过回调触发，我们就可以通过 <code>e.detail</code> 拿到我们想要的数据了~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0ef7cefc81ee4700.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190319726.png" alt=""></p>
 <p>到这里，插件的数据交互传递基本没什么问题了~<br>想想，我们还有什么没有用到的呢，插件的 <code>api</code> 接口，ok，我们接下来就看看这个怎么使用~</p>
 <p><strong>Step4</strong></p>
 <p>我们知道了 <code>api</code> 的文件夹的作用是定义插件的一些接口，我们可以定义以下几个方法：</p>
@@ -454,14 +454,14 @@
 <p>我们引入插件后，如何调用插件的接口呢？</p>
 <p>其实也很简单，我们只需要在对应的 <code>js</code> 文件中（ 这里是<code>index.js</code> ）通过 <code>var plugin = requirePlugin(&quot;myPlugin&quot;)</code> 引入插件后就可获得对应的接口。</p>
 <p>现在在页面 <code>onLoad</code> 的时候我们打印一下 <code>plugin</code> ，控制台输出如下内容：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-bdfe050d391b3071.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190347437.png" alt=""></p>
 <p>看到 <code>plugin</code> 的内容刚好就是我们之前在 <code>index.js</code> 中通过 <code>exports</code> 暴露出去的接口，我们调用试试看~</p>
 <p>返回如下内容：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-de558c20dd5d0603.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611190414489.png" alt=""></p>
 <p>接口数据也能完美的获取，棒棒哒~</p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>怎么样，是不是对小程序插件开发有了新的认识！其实并没有想象中的那么复杂，倒是跟<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">自定义组件开发</a>有很多相似点，我相信现在你已经基本 get 了小程序插件开发的技巧了，还没有学会了小伙伴加油啊，搜搜学习，快快上手，多开发一些常用的插件，方便自己以后在小程序中引用~</p>
 <p>咳咳，至于我呢。。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-d0003503d6151910.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="13.jpg"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061119044355.png" alt="13.jpg"></p>
 <p>哦，对了，代码已托管在<a href="https://github.com/Chris-wei/wx-pungin" target="_blank" rel="external">github</a>上，有需要的小伙伴自行下载~</p>
 
       

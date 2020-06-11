@@ -103,14 +103,14 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="如何在Vue里实现一个Redux状态管理嗯，我们都知道 redux 通常是 react 项目中 中一种管理数据的手段，它跟我们 vue 项目里的 Vuex 状态管理类似，功能相同，但是使用方法却有不同~ 最近在学习 redux 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 redux 的内部原理，我们就来试试，手动实现一个简单的 redux 状态管理。 不同的是，我们是在 vue 项目中来实">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-cf9e01564ddd75a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-530e7887d488f59c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-3c0722d427f5d394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-05-09T13:25:17.164Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181722225.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181753966.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181827299.png">
+<meta property="og:updated_time" content="2020-06-11T10:20:38.254Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在Vue里实现一个Redux状态管理">
 <meta name="twitter:description" content="如何在Vue里实现一个Redux状态管理嗯，我们都知道 redux 通常是 react 项目中 中一种管理数据的手段，它跟我们 vue 项目里的 Vuex 状态管理类似，功能相同，但是使用方法却有不同~ 最近在学习 redux 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 redux 的内部原理，我们就来试试，手动实现一个简单的 redux 状态管理。 不同的是，我们是在 vue 项目中来实">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-cf9e01564ddd75a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611181722225.png">
 
 
 
@@ -374,7 +374,7 @@
 <p>最近在学习 <code>redux</code> 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 <code>redux</code> 的内部原理，我们就来试试，手动实现一个简单的 <code>redux</code> 状态管理。</p>
 <p>不同的是，我们是在 <code>vue</code> 项目中来实现的~</p>
 <h3 id="代码未动，目标先行"><a href="#代码未动，目标先行" class="headerlink" title="代码未动，目标先行"></a>代码未动，目标先行</h3><p>我们要实现 <code>redux</code> ，首先要给自己定个小目标，也就是一个业务场景，我们呀，也别想那么复杂，就以最简单的还是最经典的计数器开始，如图：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-cf9e01564ddd75a0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181722225.png" alt=""></p>
 <p>看图，大家就应该很清楚做什么，当我点击<strong>加号</strong>按钮，希望仓库里的数据能增 1，点击<strong>减号</strong>按钮，希望仓库里的数据能减 1 ，嗯，很明确的需求，我们就来看看怎么实现吧~</p>
 <h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><ul>
 <li><strong>redux创建</strong></li>
@@ -395,7 +395,7 @@
 <p>我们在入口文件 <code>main.js</code> 引入，并挂载即可：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import store from &apos;./store&apos;</div><div class="line"></div><div class="line">Vue.prototype.$store = store;</div></pre></td></tr></table></figure>
 <p>接着，如果在页面中打印 <code>this.$store</code>，出现如下结果，则证明呢已经挂载成功了~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-530e7887d488f59c.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181753966.png" alt=""></p>
 <p>但是此时，并没有什么实际的功能，因为我们并没有完善我们的 <code>createStore</code> 里方法~</p>
 <ul>
 <li><strong>完善createStore</strong></li>
@@ -413,7 +413,7 @@
 <p>顺着这个思路，我们先来看看 <code>dispatch</code> 方法，需要接受一个参数 <code>action</code> ，<code>action</code> 必须是一个对象，必须包含一个 <code>type</code> 值，表明需要 <code>action</code>的类型，然后我们可以通过传过来的 <code>recuder</code> 获取到新的状态，因此，<code>dispatch</code> 方法如下：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//分发action</div><div class="line">let dispatch = (action)=&gt;&#123;</div><div class="line">    //判断 action 的 type 值</div><div class="line">    if( typeof action !== &apos;object&apos;) throw Error(&apos;Expected the action to be a object.&apos;);</div><div class="line">    if( action.type === undefined ) throw Error(&apos;The action.type is not defined&apos;);</div><div class="line">    //获取新的 state</div><div class="line">    state = reducer(state, action);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>我们打印 <code>state</code> ， 通过点击 加号 和 减号 按钮，可以看到 <code>state</code> 确实有变换，跟我们预期的一样~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-3c0722d427f5d394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181827299.png" alt=""></p>
 <p><strong>getState</strong></p>
 <p>我们可以通过 <code>getState()</code> 方法获取当前 <code>state</code> ，因此该方法相对比较简单，如下~</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//获取store的状态</div><div class="line">let getState = () =&gt; state;</div></pre></td></tr></table></figure>

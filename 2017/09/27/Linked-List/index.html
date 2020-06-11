@@ -103,17 +103,17 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="链表(Linked-list)前面我们讨论了如何使用栈、队列进行存数数据，他们其实都是列表的一种，底层存储的数据的数据结构都是数组。 但是数组不总是最佳的数据结构，因为，在很多编程语言中，数组的长度都是固定的，如果数组已被数据填满，再要加入新的元素是非常困难的。而且，对于数组的删除和添加操作，通常需要将数组中的其他元素向前或者向后平移，这些操作也是十分繁琐的。 然而，JS中数组却不存在上述问题，主">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-caa2e934886c5ae1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-5c1f96efff0c90ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-a75cba57042a50f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-aa4650d34f9a0ca4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-5194e2f358ea4b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-7c1220c3cd9fd481.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-09-29T02:24:57.884Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173740735.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173817554.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173849510.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173925612.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611174020223.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2020061117405544.png">
+<meta property="og:updated_time" content="2020-06-11T09:41:06.518Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JS中的算法与数据结构——链表(Linked-list)">
 <meta name="twitter:description" content="链表(Linked-list)前面我们讨论了如何使用栈、队列进行存数数据，他们其实都是列表的一种，底层存储的数据的数据结构都是数组。 但是数组不总是最佳的数据结构，因为，在很多编程语言中，数组的长度都是固定的，如果数组已被数据填满，再要加入新的元素是非常困难的。而且，对于数组的删除和添加操作，通常需要将数组中的其他元素向前或者向后平移，这些操作也是十分繁琐的。 然而，JS中数组却不存在上述问题，主">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-caa2e934886c5ae1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611173740735.png">
 
 
 
@@ -380,14 +380,14 @@
 <p>链表其实有许多的种类：单向链表、双向链表、单向循环链表和双向循环链表，接下来，我们基于对象来实现一个单向链表，因为它的使用最为广泛。</p>
 <h2 id="链表的定义"><a href="#链表的定义" class="headerlink" title="链表的定义"></a>链表的定义</h2><p>首先，要实现链表，我们先搞懂一些链表的基本东西，因为这很重要！</p>
 <p>链表是一组节点组成的集合，每个节点都使用一个对象的引用来指向它的后一个节点。指向另一节点的引用讲做链。下面我画了一个简单的链接结构图，方便大家理解。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-caa2e934886c5ae1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="链表结构图"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173740735.png" alt="链表结构图"></p>
 <p>其中，data中保存着数据，next保存着下一个链表的引用。上图中，我们说 data2 跟在 data1 后面，而不是说 data2 是链表中的第二个元素。上图，值得注意的是，我们将链表的尾元素指向了 null 节点，表示链接结束的位置。</p>
 <p>由于链表的起始点的确定比较麻烦，因此很多链表的实现都会在链表的最前面添加一个特殊的节点，称为 <strong>头节点</strong>，表示链表的头部。进过改造，链表就成了如下的样子：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5c1f96efff0c90ee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="有头节点的链表"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173817554.png" alt="有头节点的链表"></p>
 <p>向链表中<strong>插入一个节点</strong>的效率很高，需要修改它前面的节点(前驱)，使其指向新加入的节点，而将新节点指向原来前驱节点指向的节点即可。下面我将用图片演示如何在 data2 节点 后面插入 data4 节点。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a75cba57042a50f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="插入节点"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173849510.png" alt="插入节点"></p>
 <p>同样，从链表中删除一个节点，也很简单。只需将待删节点的前驱节点指向待删节点的，同时将待删节点指向null，那么节点就删除成功了。下面我们用图片演示如何从链表中删除 data4 节点。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-aa4650d34f9a0ca4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="删除节点"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173925612.png" alt="删除节点"></p>
 <h2 id="链表的设计"><a href="#链表的设计" class="headerlink" title="链表的设计"></a>链表的设计</h2><p>我们设计链表包含两个类，一个是 Node 类用来表示节点，另一个事 LinkedList 类提供插入节点、删除节点等一些操作。</p>
 <p><strong>Node类</strong></p>
 <p>Node类包含连个属性： element 用来保存节点上的数据，next 用来保存指向下一个节点的链接，具体实现如下：</p>
@@ -492,7 +492,7 @@ console.log(fruits.display());      // Apple
                                     // Grape
 </code></pre><p>Great！成功了，现在你已经可以实现一个基本的单向链表了。</p>
 <h2 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h2><p>尽管从链表的头节点遍历链表很简单，但是反过来，从后向前遍历却不容易。我们可以通过给Node类增加一个previous属性，让其指向前驱节点的链接，这样就形成了双向链表，如下图：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-5194e2f358ea4b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="双向链表"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611174020223.png" alt="双向链表"></p>
 <p>此时，向链表插入一个节点就要更改节点的前驱和后继了，但是删除节点的效率提高了，不再需要寻找待删除节点的前驱节点了。</p>
 <h2 id="双向链表的实现"><a href="#双向链表的实现" class="headerlink" title="双向链表的实现"></a>双向链表的实现</h2><p>要实现双向链表，首先需要给 Node 类增加一个 previous 属性：</p>
 <pre><code>//节点类
@@ -626,7 +626,7 @@ console.log( fruits.dispReverse() );    // Grape
 </code></pre><h2 id="循环链表"><a href="#循环链表" class="headerlink" title="循环链表"></a>循环链表</h2><p>   循环链表和单链表相似，节点类型都是一样，唯一的区别是，在创建循环链表的时候，让其头节点的 next 属性执行它本身，即</p>
 <pre><code>head.next = head;
 </code></pre><p>这种行为会导致链表中每个节点的 next 属性都指向链表的头节点，换句话说，也就是链表的尾节点指向了头节点，形成了一个循环链表，如下图所示：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-7c1220c3cd9fd481.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="循环链表"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061117405544.png" alt="循环链表"></p>
 <p>原理相信你已经懂了，循环链表这里就不贴代码了，相信你自己能独立完成！</p>
 <p>至此，我们对链表有了比较深刻的认识，如果想让我们的链表更加健全，我们还可发挥自己的思维，给链表添加比如向前移动几个节点，向后移动几个节点，显示当前节点等方法，大家一起加油！</p>
 

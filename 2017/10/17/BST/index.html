@@ -103,16 +103,16 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="二叉查找树（Binary Sort Tree）我们之前所学到的列表，栈等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（Tree），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。 在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的根结点，简称树的根（r">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d146521142eed203.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-8a6483d23d6fb05a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-cd6922046694dd42.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-6df2ba6abbb901c0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-10-17T10:46:51.799Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611172809881.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611172854860.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611172949404.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173031249.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173142214.png">
+<meta property="og:updated_time" content="2020-06-11T09:32:04.734Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JS中的算法与数据结构——二叉查找树（Binary Sort Tree）">
 <meta name="twitter:description" content="二叉查找树（Binary Sort Tree）我们之前所学到的列表，栈等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（Tree），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。 在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的根结点，简称树的根（r">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611172809881.png">
 
 
 
@@ -375,15 +375,15 @@
         <h2 id="二叉查找树（Binary-Sort-Tree）"><a href="#二叉查找树（Binary-Sort-Tree）" class="headerlink" title="二叉查找树（Binary Sort Tree）"></a>二叉查找树（Binary Sort Tree）</h2><p>我们之前所学到的<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（<strong>Tree</strong>），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。</p>
 <p>在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的<strong>根结点</strong>，简称树的<strong>根</strong>（root）。每一个结点可以有多个后件，称为该结点的子结点。没有后件的结点称为叶子结点。一个结点所拥有的子结点的个数称为该结点的度，所有结点中最大的度称为树的度。树的最大层次称为树的深度。</p>
 <h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>二叉树是一种特殊的树，它的子节点个数不超过两个，且分别称为该结点的左子树（left subtree）与右子树（right subtree），二叉树常被用作二叉查找树和二叉堆或是二叉排序树（BST）。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="二叉树"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172809881.png" alt="二叉树"></p>
 <p>按一定的规则和顺序走遍二叉树的所有结点，使每一个结点都被访问一次，而且只被访问一次，这个操作被称为树的遍历，是对树的一种最基本的运算。由于二叉树是非线性结构，因此，树的遍历实质上是将二叉树的各个结点转换成为一个线性序列来表示。</p>
 <p>按照根节点访问的顺序不同，树的遍历分为以下三种：前序遍历，中序遍历，后序遍历；</p>
 <p>前序遍历：根节点-&gt;左子树-&gt;右子树</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d146521142eed203.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="先序遍历"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172854860.png" alt="先序遍历"></p>
 <p>中序遍历：左子树-&gt;根节点-&gt;右子树</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-8a6483d23d6fb05a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="中序遍历"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172949404.png" alt="中序遍历"></p>
 <p>后序遍历：左子树-&gt;右子树-&gt;根节点</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-cd6922046694dd42.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="后序遍历"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173031249.png" alt="后序遍历"></p>
 <p>因此我们可以得之上面二叉树的遍历结果如下：<br>前序遍历：ABDEFGC<br>中序遍历：DEBGFAC<br>后序遍历：EDGFBCA</p>
 <h2 id="二叉查找树（BST）"><a href="#二叉查找树（BST）" class="headerlink" title="二叉查找树（BST）"></a>二叉查找树（BST）</h2><p>实际应用中，树的每个节点都会有一个与之相关的值对应，有时候会被称为<strong>键</strong>。因此，我们在构建二叉查找树的时候，确定子节点非常的重要，通常将相对较小的值保存在左节点中，较大的值保存在右节点中，这就使得查找的效率非常高，因此被广泛使用。</p>
 <h2 id="二叉查找树的实现"><a href="#二叉查找树的实现" class="headerlink" title="二叉查找树的实现"></a>二叉查找树的实现</h2><p>根据上面的知识，我们了解到二叉树实际上是由多个节点组成，因此我们首先就要定义一个Node类，用于存放树的节点，其构造与前面的<a href="http://www.jianshu.com/p/f254ec665e57" target="_blank" rel="external">链表</a>类似。Node类的定义如下：</p>
@@ -479,7 +479,7 @@ nums.insert(3);
 nums.insert(99);
 nums.insert(22);
 </code></pre><p>上述插入数据后，会形成如下的二叉树</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6df2ba6abbb901c0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="BST"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173142214.png" alt="BST"></p>
 <p>中序遍历结果如下：</p>
 <pre><code>//中序遍历
 console.log(&quot;Inorder traversal: &quot;);

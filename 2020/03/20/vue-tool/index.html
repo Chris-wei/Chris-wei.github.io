@@ -103,12 +103,12 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="动态导入本地图片假设我们有这么一个功能，后台返回图片的名称，前端需要自己拼接路径获取本地图片，假定这些资源是存在我们前端的 assets/images，如果你采取传统的字符串拼接的方式： 12//template&amp;lt;img :src=&amp;quot;&amp;apos;@/assets/images&amp;apos; + imgUrl&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt; 发现图片无法显示，打开">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-2ccad429e8f560b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2020-03-20T10:31:29.261Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611183734163.png">
+<meta property="og:updated_time" content="2020-06-11T10:37:50.424Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue开发中的实用技巧">
 <meta name="twitter:description" content="动态导入本地图片假设我们有这么一个功能，后台返回图片的名称，前端需要自己拼接路径获取本地图片，假定这些资源是存在我们前端的 assets/images，如果你采取传统的字符串拼接的方式： 12//template&amp;lt;img :src=&amp;quot;&amp;apos;@/assets/images&amp;apos; + imgUrl&amp;quot; alt=&amp;quot;&amp;quot;&amp;gt; 发现图片无法显示，打开">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-2ccad429e8f560b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611183734163.png">
 
 
 
@@ -450,7 +450,7 @@
 <p>如果我们通过 <code>render</code> 函数来创建的话（<code>.js</code>文件，不是 <code>.vue</code>文件）， 那么应该是这样：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">export default &#123;</div><div class="line">    functional: true,</div><div class="line">    props: &#123;</div><div class="line">    	todoList: &#123;</div><div class="line">            type: Array,</div><div class="line">            default: () =&gt; []</div><div class="line">    	&#125;</div><div class="line">    &#125;,</div><div class="line">    render: function (createElement, context) &#123;</div><div class="line">    	let oLi = context.props.todoList.map(item =&gt; &#123;</div><div class="line">            return createElement(&apos;li&apos;, &#123;</div><div class="line">            	domProps: &#123;</div><div class="line">                    innerHTML: item.title</div><div class="line">            	&#125;</div><div class="line">            &#125;)</div><div class="line">    	&#125;)</div><div class="line">    	return createElement(&apos;ul&apos;, &#123;&#125;, oLi)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>我们通过 <code>import</code> 在父组件导入一下，然后看看结果</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-2ccad429e8f560b0.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611183734163.png" alt=""></p>
 <p>效果一样，虽然 <code>template</code> 方式看起来简单的多，但是很多时候我还是比较倾向于 <code>render</code> 方式，因为它在修改或者条件判断的时候会比较方便，也省去了不少 <code>v-if</code>，<code>v-show</code> 这些指令，看起来更加优雅。</p>
 <h3 id="自动化导入component"><a href="#自动化导入component" class="headerlink" title="自动化导入component"></a><strong>自动化导入component</strong></h3><p>如果你定义了一系列的牛X的公共组件，然而你每次需要频繁的去 <code>import xxx from &#39;../xxx&#39;</code>，还要<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">components : &#123;</div><div class="line">    ComponentA</div><div class="line">    ComponentB</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p>下面有种一劳永逸的方法，让你解放双手~</p>

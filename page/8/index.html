@@ -716,7 +716,7 @@ fruits2.difference(fruits1).show();     // [&quot;Grape&quot;, &quot;Orange&quot
 <p>栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删除，遵循 先入后出(LIFO，last-in-first-out) 的原则，普遍运用于计算机的方方面面。</p>
 <p>对栈的操作主要有两种，一是将一个元素压入栈，push方法，另一个就是将栈顶元素出栈，pop方法。</p>
 <p>除此之外，栈还有其他的一些属性和方法：查看当前栈顶的元素值，我们使用 peek 方法，它仅仅返回栈顶元素值，并不删除它；clear 方法用于清空当前栈内的所有元素；top属性记录当前栈顶位置；length方法返回当前栈内元素总数等；接着我们定义栈的数据类型，并利用JS中的数组去实现它。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-a6af49d57c9d204a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="栈数据类型定义"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182839144.png" alt="栈数据类型定义"></p>
 <h2 id="栈的实现"><a href="#栈的实现" class="headerlink" title="栈的实现"></a>栈的实现</h2><pre><code>//定义栈
 
 function Stack () {
@@ -995,7 +995,7 @@ console.log( isPalindrome(&apos;word&apos;) )     // false
 <p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
 <h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
 <p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-85cbda4fe5fdd62c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据类型定义"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173603278.png" alt="数据类型定义"></p>
 <p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
 <pre><code>//字典类
 

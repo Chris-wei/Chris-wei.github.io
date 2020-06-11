@@ -384,18 +384,18 @@ $ npm install
 </code></pre><p>启动项目</p>
 <pre><code>$ npm run dev
 </code></pre><p>访问<code>localhost:3000</code>，如果你看到如下的界面，证明你已经安装成功了</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-be9eff1e4942f535.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="首页"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180533838.png" alt="首页"></p>
 <p>我们发现其实官方已经帮我们做了 demo ，我们只要对其进行改造即可。</p>
 <h2 id="微信授权设置"><a href="#微信授权设置" class="headerlink" title="微信授权设置"></a>微信授权设置</h2><p>要想进行微信授权，你需要有一个自己的服务器、域名（如果没有，只能对测试号调试，微信规定了正式号必须使用域名），微信授权的官方文档<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140842" target="_blank" rel="external">参考这里</a></p>
 <p><strong>申请微信公众平台测试号</strong></p>
 <p>1.我们进入<a href="https://mp.weixin.qq.com/" target="_blank" rel="external">微信公众平台</a> 申请一个测试号，使用测试号来开发是一个不错的选择，申请成功之后进入后台，<br>右下角侧边栏会有一个<strong>开发者工具</strong>选项，我们点击进入之后，选择 <strong>公众平台测试帐号</strong></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-4d811ac13919fd3c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="公众号测试配置"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180607785.png" alt="公众号测试配置"></p>
 <p>不出意外，你会拿到两个重要的数据 appID 和 appsercet，如下</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-69a598b5919bcadc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="测试号信息"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180645759.png" alt="测试号信息"></p>
 <p>2.我们需要将用户绑定到测试账号上来，扫描下方的<strong>测试号二维码</strong>，成功后你的信息会出现右侧的列表中，这一步很关键，之前没有做这一步导致获取不到用户信息！</p>
 <p>3.最后，我们还需要设置回调域名，即</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ef66fcb07e0da4dd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="回调域名"></p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6602dfc5bab584c2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="回调域名设置"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180717891.png" alt="回调域名"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180753395.png" alt="回调域名设置"></p>
 <p><strong>要注意的是：</strong><br>1、这里填写的是域名（是一个字符串），而不是URL，因此请勿加<a href="http://等协议头；" target="_blank" rel="external">http://等协议头；</a><br>2、授权回调域名配置规范为全域名，比如需要网页授权的域名为：<code>www.qq.com</code>，配置以后此域名下面的页面 <code>http://www.qq.com/music.html 、 http://www.qq.com/login.html</code> 都可以进行OAuth2.0鉴权。但<code>http://pay.qq.com 、 http://music.qq.com 、 http://qq.com</code>无法进行OAuth2.0鉴权。</p>
 <p>到此，微信授权的后台配置我们已基本完成，接下来就是我们编写服务端代码的</p>
 <h2 id="服务端代码"><a href="#服务端代码" class="headerlink" title="服务端代码"></a>服务端代码</h2><p>我们按照微信官方的授权步骤来看，主要分为一下几个4步：</p>
@@ -485,10 +485,10 @@ router.use(oauth)
 
 export default router
 </code></pre><p>嗯，现在如果你浏览器访问 <code>http://localhost:3000/api/oauth</code>，不出意外，你会看到下面的界面：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-33c68d379fb991f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="微信授权提示"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180837227.png" alt="微信授权提示"></p>
 <p>恭喜你，你已经成功了一半了！</p>
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>我们的项目是运行在 3000 端口，现在要放到服务器上，通过 80 端口去访问它，我们要用到 nginx 来做转发（对于nginx的安装这里不多做赘述，建议不懂得小伙伴去看看），需要对其进行配置，这里，我们找到nginx安装目录下的 nignx.conf 进行简单的配置即可，我这里给出一个参考：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-956371b779209a88.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Nginx配置"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180906773.png" alt="Nginx配置"></p>
 <p>接下来就是要部署我们的 Nuxt 项目，它的部署与vue稍微有点不同，我们需要在我们的项目中，先在本地运行</p>
 <pre><code>npm run build
 </code></pre><p>进行打包，之后本地创建一个 package.json 的文件（除去原本项目中dev的依赖），如下：</p>
@@ -515,15 +515,15 @@ export default router
   }
 }
 </code></pre><p>将打包好的 <strong>.nuxt 文件夹</strong> ， <strong>bulid 文件夹</strong> 和 <strong>package.json 文件</strong>一起放到 服务器的项目目录下（我这里使用的是vue-ssr）,<br>进入该文件夹，运行<code>npm install</code>安装依赖，完成后运行<code>npm start</code>，项目即可运行，接着我们访问 <code>api/oauth</code> 接口，会弹起微信授权，如图所示</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d09028c43b1dc935.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="微信授权"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611180935324.png" alt="微信授权"></p>
 <p>确认登录之后，授权成功，可以拉取到用户信息，如下图</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d038dff22f1c142b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="授权成功"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181008906.png" alt="授权成功"></p>
 <p>同时，我们还可以在服务器端看到日志打印的个人信息如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-37c8210a66063501.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="服务端打印"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181043273.png" alt="服务端打印"></p>
 <p>到此，我们整个授权微信完成了，接下来只要将用户信息存入数据库即可~</p>
 <p>嗯，补充一点，如果项目需要挂到服务器后台运行，这里我推荐使用 pm2 进行管理，有关 pm2 的用法网上教程也比较多，使用起来也很方便，这里我只是针对 Nuxt 项目而言，</p>
 <p>执行命令 <code>pm2 start npm -- start</code> ，项目会被挂载在后台，并输出如下界面</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-0a2123f080b8618f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="pm2"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181112370.png" alt="pm2"></p>
 <p>当然，你也可以采用 <code>pm2 list</code> 查看当前的所有运行的node应用，这个 id 为当前应用的 id；<br>如果你要退出该应用，请使用<code>pm2 delete _id</code>即可~</p>
 
           
@@ -773,32 +773,32 @@ console.log( &apos;插入排序:&apos; + insertionSort( dataStore) );
 // 原始数据:72,1,68,95,75,54,58,10,35,6,28,45,69,13,88,99,24,28,30,31,78,2,77,82,72
 // 插入排序:1,2,6,10,13,24,28,28,30,31,35,45,54,58,68,69,72,72,75,77,78,82,88,95,99
 </code></pre><p>我们已经学习了三种基本的排序算法，其中冒泡排序是最慢的，插入排序是最快的，我们可以在运行的过程中通过 console.time(‘sortName’) 和 console.timeEnd(‘sortName’) 两个输出来看他们的效率如何，我这里给出一组值作为参考，实际中需要大量的数据测试和反复实验，进行数理统计后才能被视为有效的统计；</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-14cc62576597097d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排序时间比较"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182055996.png" alt="排序时间比较"></p>
 <h2 id="高级排序算法"><a href="#高级排序算法" class="headerlink" title="高级排序算法"></a>高级排序算法</h2><p><strong>4.希尔排序（Shell Sort）</strong></p>
 <p>我们首先要学习的就是希尔排序，又称缩小增量排序，这个算法是在插入排序的基础上做了很大的改善，与插入排序不同的是，它首先会比较位置较远的元素，而非相邻的元素。这种方案可以使离正确位置很远的元素能够快速回到合适的位置，当算法进行遍历时，所有元素的间距会不断的减小，直到数据的末尾，此时比较的就是相邻元素了。</p>
 <p>该方法的基本思想是：先将整个待排元素序列分割成若干个子序列（由相隔某个“增量”的元素组成的）分别进行直接插入排序，然后依次缩减增量再进行排序，待整个序列中的元素基本有序（增量足够小）时，再对全体元素进行一次直接插入排序。因为直接插入排序在元素基本有序的情况下（接近最好情况），效率是很高的，因此希尔排序在时间效率上有较大提高。</p>
 <p>好吧，我还是用个案例来解释，这样会更清晰，我们以下面一组数据为例：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-94a6272f64e5718d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="数据集"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182125595.png" alt="数据集"></p>
 <ul>
 <li>第一次 gap(增量) = 10 / 2 = 5 , 会按照下面进行分组得到五组数据（49，13）、（38，27）、（65，49）、（97，55）、（26，4），这样进行组内排序之后（13，49）、（27，38）、（49，65）、（55，97）、（4，26）</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-43826cb5648b511e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次分组"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118215573.png" alt="第一次分组"></p>
 <p>此时，数据会排成如下结构</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-12d6be73db344ad3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182239674.png" alt="第一次排序"></p>
 <ul>
 <li>第二次 gap = 5 / 2 = 2 , 此时可以得到两个分组，如下</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6dc7281cb69ae834.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次分组"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182316692.png" alt="第二次分组"></p>
 <p>再通过组内排序之后，可以得到</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6b4cc5b3a8a51913.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182407658.png" alt="第二次排序"></p>
 <ul>
 <li>第三次 gap = 2 / 2 = 1 ， 即不用分组，进行排序后</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第三次排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182438567.png" alt="第三次排序"></p>
 <ul>
 <li>第四次 gap = 1 / 2 = 0 ，即可得到排序完成的数组</li>
 </ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d5315484afe93ebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="排序完成"></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118252772.png" alt="排序完成"></p>
 <p>现在，可能对希尔排序有了一定得了解了，用JS实现如下：</p>
 <pre><code>//希尔排序
 
@@ -879,7 +879,7 @@ console.log( &apos;希尔排序:&apos; + mergeSort( dataStore) );
 <p>快速排序是处理大数据最快的排序算法之一，它也是一种分而治之的算法，通过递归方式将数据依次分解为包含较小元素和较大元素的不同子序列，会不断重复这个步骤，直到所有的序列全部为有序的，最后将这些子序列一次拼接起来，就可得到排序好的数据。</p>
 <p>该算法首先要从数列中选出一个元素作为基数（pivot）。接着所有的数据都将围绕这个基数进行，将小于改基数的元素放在它的左边，大于或等于它的数全部放在它的右边，对左右两个小数列重复上述步骤，直至各区间只有1个数。</p>
 <p>整个排序过程如下：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-ba8b8cc60e3df1a3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="快速排序"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182742804.png" alt="快速排序"></p>
 <p>具体实现如下：</p>
 <pre><code>//快速排序
 
@@ -1050,15 +1050,15 @@ console.log( &apos;快速排序:&apos; + quickSort( dataStore) );
             <h2 id="二叉查找树（Binary-Sort-Tree）"><a href="#二叉查找树（Binary-Sort-Tree）" class="headerlink" title="二叉查找树（Binary Sort Tree）"></a>二叉查找树（Binary Sort Tree）</h2><p>我们之前所学到的<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（<strong>Tree</strong>），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。</p>
 <p>在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的<strong>根结点</strong>，简称树的<strong>根</strong>（root）。每一个结点可以有多个后件，称为该结点的子结点。没有后件的结点称为叶子结点。一个结点所拥有的子结点的个数称为该结点的度，所有结点中最大的度称为树的度。树的最大层次称为树的深度。</p>
 <h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>二叉树是一种特殊的树，它的子节点个数不超过两个，且分别称为该结点的左子树（left subtree）与右子树（right subtree），二叉树常被用作二叉查找树和二叉堆或是二叉排序树（BST）。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-feae3c2253fc904f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="二叉树"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172809881.png" alt="二叉树"></p>
 <p>按一定的规则和顺序走遍二叉树的所有结点，使每一个结点都被访问一次，而且只被访问一次，这个操作被称为树的遍历，是对树的一种最基本的运算。由于二叉树是非线性结构，因此，树的遍历实质上是将二叉树的各个结点转换成为一个线性序列来表示。</p>
 <p>按照根节点访问的顺序不同，树的遍历分为以下三种：前序遍历，中序遍历，后序遍历；</p>
 <p>前序遍历：根节点-&gt;左子树-&gt;右子树</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-d146521142eed203.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="先序遍历"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172854860.png" alt="先序遍历"></p>
 <p>中序遍历：左子树-&gt;根节点-&gt;右子树</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-8a6483d23d6fb05a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="中序遍历"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172949404.png" alt="中序遍历"></p>
 <p>后序遍历：左子树-&gt;右子树-&gt;根节点</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-cd6922046694dd42.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="后序遍历"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173031249.png" alt="后序遍历"></p>
 <p>因此我们可以得之上面二叉树的遍历结果如下：<br>前序遍历：ABDEFGC<br>中序遍历：DEBGFAC<br>后序遍历：EDGFBCA</p>
 <h2 id="二叉查找树（BST）"><a href="#二叉查找树（BST）" class="headerlink" title="二叉查找树（BST）"></a>二叉查找树（BST）</h2><p>实际应用中，树的每个节点都会有一个与之相关的值对应，有时候会被称为<strong>键</strong>。因此，我们在构建二叉查找树的时候，确定子节点非常的重要，通常将相对较小的值保存在左节点中，较大的值保存在右节点中，这就使得查找的效率非常高，因此被广泛使用。</p>
 <h2 id="二叉查找树的实现"><a href="#二叉查找树的实现" class="headerlink" title="二叉查找树的实现"></a>二叉查找树的实现</h2><p>根据上面的知识，我们了解到二叉树实际上是由多个节点组成，因此我们首先就要定义一个Node类，用于存放树的节点，其构造与前面的<a href="http://www.jianshu.com/p/f254ec665e57" target="_blank" rel="external">链表</a>类似。Node类的定义如下：</p>
@@ -1154,7 +1154,7 @@ nums.insert(3);
 nums.insert(99);
 nums.insert(22);
 </code></pre><p>上述插入数据后，会形成如下的二叉树</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-6df2ba6abbb901c0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="BST"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173142214.png" alt="BST"></p>
 <p>中序遍历结果如下：</p>
 <pre><code>//中序遍历
 console.log(&quot;Inorder traversal: &quot;);

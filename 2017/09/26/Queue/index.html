@@ -103,14 +103,14 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="队列(Queue)我们之前说到了栈，它是一种比较高效的数据结构，遵循 先入后出(LIFO，last-in-first-out) 的原则。而今天我们要讨论的队列，它也是一种特殊的列表，它与栈不同的是， 队列只能在队尾插入元素，在队首删除元素，就像我们平时排队买票一样~ 队列用于存储按顺序排列的数据，遵循 先进先出(FIFO，First-In-First-Out) 的原则，也是计算机常用的一种数据结构">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-f602bd5d69c30052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-d6ded31eef9d4349.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/6633377-5f6c62e8c84b52ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-09-26T03:02:12.610Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181551361.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181619439.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611181647349.png">
+<meta property="og:updated_time" content="2020-06-11T10:17:05.546Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JS中的算法与数据结构——队列(Queue)">
 <meta name="twitter:description" content="队列(Queue)我们之前说到了栈，它是一种比较高效的数据结构，遵循 先入后出(LIFO，last-in-first-out) 的原则。而今天我们要讨论的队列，它也是一种特殊的列表，它与栈不同的是， 队列只能在队尾插入元素，在队首删除元素，就像我们平时排队买票一样~ 队列用于存储按顺序排列的数据，遵循 先进先出(FIFO，First-In-First-Out) 的原则，也是计算机常用的一种数据结构">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/6633377-f602bd5d69c30052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611181551361.png">
 
 
 
@@ -374,7 +374,7 @@
 <p>队列用于存储按顺序排列的数据，遵循 先进先出(FIFO，First-In-First-Out) 的原则，也是计算机常用的一种数据结构，别用于很多地方，比如提交给操作系统的一系列进程，打印池任务等。</p>
 <p>同栈有点类似，队列的操作主要也是有两种：向队列中插入新元素和删除队列中的元素，即入队和出队操作，我们采用 enqueue 和 dequeue 两个方法。</p>
 <p>除此之外，队列还有一些其他的操作，比如读取队首的元素，该操作仅返回对头元素并不将它从队列中删除，类似栈的 peek 方法；back 方法读取队尾的元素；toString 方法可以打印当前队列中所有的元素；clear 方法清空当前队列等。</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/6633377-f602bd5d69c30052.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="队列数据定义"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181551361.png" alt="队列数据定义"></p>
 <p>我们定义好数据类型，可以通过JS中的数组去实现它。</p>
 <h2 id="队列的实现"><a href="#队列的实现" class="headerlink" title="队列的实现"></a>队列的实现</h2><pre><code>//定义队列
 
@@ -480,9 +480,9 @@ console.log( queue.empty() );    // true
 <p>先看一下基数排序的的实现步骤（以两位数为例），需要扫描两次，第一次按个位数字进行排序，第二次按十位数字排序，每个数字根据对应的数值分配到到不同的盒子里，最后将盒子的数字依次取出，组成新的列表即为排序好的数字。</p>
 <ol>
 <li>假设我们有一串数字，分别为 73, 22, 93, 43, 55, 14, 28, 65, 39, 81</li>
-<li>首先根据个位数字排序，放到不同的盒子里，如下图<br><img src="http://upload-images.jianshu.io/upload_images/6633377-d6ded31eef9d4349.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第一次排序"></li>
+<li>首先根据个位数字排序，放到不同的盒子里，如下图<br><img src="https://img-blog.csdnimg.cn/20200611181619439.png" alt="第一次排序"></li>
 <li>接下来将这些盒子中的数值重新串接起来，成为以下的数列：81, 22, 73, 93, 43, 14, 55, 65, 28, 39</li>
-<li>然后根据十位数字排序，再放到不同的盒子里，如下图<br><img src="http://upload-images.jianshu.io/upload_images/6633377-5f6c62e8c84b52ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="第二次排序"></li>
+<li>然后根据十位数字排序，再放到不同的盒子里，如下图<br><img src="https://img-blog.csdnimg.cn/20200611181647349.png" alt="第二次排序"></li>
 <li>接下来将这些盒子中的数值重新串接起来，整个数列已经排序完毕：14, 22, 28, 39, 43, 55, 65, 73, 81, 93</li>
 </ol>
 <p>我们已经了解了基数排序的算法思想，接着我们要结合队列去实现它，一起来看看吧。</p>

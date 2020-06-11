@@ -103,16 +103,16 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="前端 crypto-js aes 加解密背景前段时间公司做项目，该项目涉及到的敏感数据比较多，经过的一波讨论之后，决定前后端进行接口加密处理，采用的是 AES + BASE64 算法加密~ 网上关于 AES 对称加密的算法介绍挺多的，对这一块还不是特别理解的小伙伴可自行百度，这里我推荐一篇AES加密算法的详细介绍与实现，讲的还是蛮详细的~ 具体实现其实搞懂了是怎么一回事，做起来还是挺简单的，因为库">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-83da40c9171c17a8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-0afabfa57699d966.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-381239f35b58ed37.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-eb7249069436efac.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-f2929a9ed881a394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-04-13T03:34:50.774Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173222806.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173253631.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173333389.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173410113.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611173444656.png">
+<meta property="og:updated_time" content="2020-06-11T09:35:01.815Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端 crypto-js aes 加解密">
 <meta name="twitter:description" content="前端 crypto-js aes 加解密背景前段时间公司做项目，该项目涉及到的敏感数据比较多，经过的一波讨论之后，决定前后端进行接口加密处理，采用的是 AES + BASE64 算法加密~ 网上关于 AES 对称加密的算法介绍挺多的，对这一块还不是特别理解的小伙伴可自行百度，这里我推荐一篇AES加密算法的详细介绍与实现，讲的还是蛮详细的~ 具体实现其实搞懂了是怎么一回事，做起来还是挺简单的，因为库">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-83da40c9171c17a8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611173222806.png">
 
 
 
@@ -375,7 +375,7 @@
         <h2 id="前端-crypto-js-aes-加解密"><a href="#前端-crypto-js-aes-加解密" class="headerlink" title="前端 crypto-js aes 加解密"></a>前端 crypto-js aes 加解密</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前段时间公司做项目，该项目涉及到的敏感数据比较多，经过的一波讨论之后，决定前后端进行接口加密处理，采用的是 <code>AES</code> + <code>BASE64</code> 算法加密~</p>
 <p>网上关于 <code>AES</code> 对称加密的算法介绍挺多的，对这一块还不是特别理解的小伙伴可自行百度，这里我推荐一篇<a href="https://blog.csdn.net/qq_28205153/article/details/55798628" target="_blank" rel="external">AES加密算法的详细介绍与实现</a>，讲的还是蛮详细的~</p>
 <h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>其实搞懂了是怎么一回事，做起来还是挺简单的，因为库都是现成的，我们只需要会用就好啦，这里我在推荐一篇<a href="https://blog.csdn.net/vieri_32/article/details/48345023" target="_blank" rel="external">理解AES加密解密的使用方法</a>，加深大家对 <code>AES</code> 算法的理解~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-83da40c9171c17a8.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173222806.png" alt=""></p>
 <p>这里我以 <code>Vue</code> 作为例子，其他的也就大同小异了~</p>
 <ul>
 <li><p>要用 <code>AES</code> 算法加密，首先我们要引入 <code>crypto-js</code> ，<code>crypto-js</code> 是一个纯 <code>javascript</code> 写的加密算法类库 ，可以非常方便地在 <code>javascript</code> 进行 <code>MD5</code>、<code>SHA1</code>、<code>SHA2</code>、<code>SHA3</code>、<code>RIPEMD-160</code> 哈希散列，进行 <code>AES</code>、<code>DES</code>、<code>Rabbit</code>、<code>RC4</code>、<code>Triple DES</code> 加解密，我们可以采用 <code>npm install crypto-js --save</code> 进行下载安装，也可以直接去 <a href="https://github.com/brix/crypto-js" target="_blank" rel="external">GitHub</a>下载源码~</p>
@@ -388,15 +388,15 @@
 <p>值得注意的是密钥的长度，由于对称解密使用的算法是 <code>AES-128-CBC</code>算法，数据采用 <code>PKCS#7</code> 填充 ， 因此这里的 <code>key</code> 需要为16位！</p>
 <p>接着我们定义了 <strong>解密方法<code>Decrypt</code></strong> 和 <strong>加密方法 <code>Encrypt</code></strong> ，最后通过 <code>export default</code> 将其暴露出去，方便在需要的时候进行引入~</p>
 <p>ok，核心代码就这么多，是不是很简单啊，其实也么有你想的那么复杂哈，剩下的就是展示一下如何使用咯~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-0afabfa57699d966.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173253631.png" alt=""></p>
 <h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这里我定义了一个 <code>index.vue</code> 用来展示数据加解密的操作~</p>
 <p><strong>加密操作：</strong> 假设我们现在要给后端发送一段文字，暂且定义为 <code>This is a clear text</code> ， 在发送之前我们需要对其进行加密操作，这时候我们可以调用上面介绍的 <code>Encrypt</code> 方法，通过加密后我们可以得到密文为：<code>4ACEA01505ADAF9FB59A03B22FC1EF1B244AE28DDACFDFAEFA7E263655C44357</code></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-381239f35b58ed37.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173333389.png" alt=""></p>
 <p><strong>解密操作：</strong> 假设我们请求后端接口，后端返回了我们一堆如下的字符串 <code>BBFE62335C28821AD2F4043B715BB0C3E45734908254666526DCFD86A605F3AF</code> , 这让我很蒙蔽啊，这时候就要调用 <code>Decrypt</code> 方法，<br>通过解密我们可以拿到后端返回的信息其实是：<code>{&quot;name&quot;:&quot;Chris&quot;,&quot;sex&quot;:&quot;male&quot;}</code></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-eb7249069436efac.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173410113.png" alt=""></p>
 <h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>至此，你已经 <code>get</code> 了前端 <code>AES</code> 加解密的方法，是不是感觉很简单啊，用起来很简单，原理可不简单，况且这也只是其中的一种方案，关于加解密的方法还有很多，感兴趣的小伙伴们可以继续做一些深入的研究哈~</p>
 <p>至于我呢。。</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-f2929a9ed881a394.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173444656.png" alt=""></p>
 <p>对了，代码已上传到 <a href="https://github.com/Chris-wei/vue-crypto" target="_blank" rel="external">GitHub</a>，有需要的小伙伴自行下载~</p>
 
       
