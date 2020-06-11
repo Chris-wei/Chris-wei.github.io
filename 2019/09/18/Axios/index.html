@@ -103,13 +103,13 @@
 <meta property="og:site_name" content="Cryptic&#39;s Blog">
 <meta property="og:description" content="自己动手实现一个 axios前言作为一名前端er，对于数据请求的第三方工具axios，一定不会陌生，如果还是有没有用过，或者不了解的小伙伴，这里给你们准备了贴心的中文文档 ，聪明的你们一看就会~  唔，为了更好的了解和学习 axios 封装思想和实现原理，我们一起来动手来实现一个简版的 axios ~ 前期准备工欲善其事，必先利其器，我们在开始我们的项目之前，一定要做好其相关的准备工作，我们需要准">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-d6ffc5d4516d371b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/6633377-7c6a014cb8039589.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2019-09-18T11:35:49.649Z">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611172445450.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200611172526464.png">
+<meta property="og:updated_time" content="2020-06-11T09:25:54.292Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在Vue里实现一个Redux状态管理">
 <meta name="twitter:description" content="自己动手实现一个 axios前言作为一名前端er，对于数据请求的第三方工具axios，一定不会陌生，如果还是有没有用过，或者不了解的小伙伴，这里给你们准备了贴心的中文文档 ，聪明的你们一看就会~  唔，为了更好的了解和学习 axios 封装思想和实现原理，我们一起来动手来实现一个简版的 axios ~ 前期准备工欲善其事，必先利其器，我们在开始我们的项目之前，一定要做好其相关的准备工作，我们需要准">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/6633377-d6ffc5d4516d371b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200611172445450.png">
 
 
 
@@ -405,7 +405,7 @@
 <p>此时我们在 <code>main.js</code> 调用 <code>get</code> 方法 ,</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">axios.get(&apos;http://127.0.0.1:3000/user/info&apos;).then(res=&gt;&#123;</div><div class="line">    console.log(res);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
 <p>控制台输出如下：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-d6ffc5d4516d371b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172445450.png" alt=""></p>
 <p>对比官方的 <code>axios</code>，我们少了比如 <code>header</code> 之类的信息，因为官方对请求返回做了二次包装，这里我们只是简单的<code>json</code>处理，具体的要根据返回的数据类型做不同的处理~</p>
 <p><strong>默认配置</strong></p>
 <p>我们在使用官方 <code>axios</code> 的，会有很多配置项，包括全局配置，实例配置和请求配置，因此我们就来看看配置信息这一块。</p>
@@ -462,7 +462,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">//请求拦截器</div><div class="line">axios.interceptors.request.use(config=&gt;&#123;</div><div class="line">    console.log(&apos;请求配置信息：&apos;,config);</div><div class="line">    return config</div><div class="line">&#125;)</div><div class="line"></div><div class="line">axios.interceptors.request.use(config=&gt;&#123;</div><div class="line">    config.headers.token = &apos;x-token-654321&apos;;</div><div class="line">    return config</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//响应拦截器</div><div class="line">axios.interceptors.response.use(res=&gt;&#123;</div><div class="line">    console.log(&apos;请求响应信息&apos;,res)</div><div class="line">    return res;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">axios.interceptors.response.use(res=&gt;&#123;</div><div class="line">    res.msg = &apos;request is ok ~&apos;;</div><div class="line">    return res;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
 <p>请求拦截器分别打印了请求的配置并将请求的 <code>token</code> 值经行了修改，响应拦截器分别打印了响应信息并将响应添加了 <code>msg</code> 的属性~</p>
 <p>不出意外，你在控制台可以看到如下信息，在请求 <code>header</code> 里看到 <code>token</code> 已经被更改~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/6633377-7c6a014cb8039589.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611172526464.png" alt=""></p>
 <p>大功告成！</p>
 <p>总算是有点样子啦~</p>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，我们自己封装了一个非常简单的 <code>axios</code> 的请求库，由于篇幅有限，这里我只是用了最简单的 <code>get</code> 请求示例，<code>axios</code>源码中远不止这些，像一些异常处理、取消请求等的一系列的东西都还没有实现，这里主要是借鉴其一些思想和实现的思路，我这里只是牵个头，剩下的靠你们自己不断的去完善，动动手总是好的~</p>
