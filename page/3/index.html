@@ -278,6 +278,215 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/09/Redux/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/05/09/Redux/" itemprop="url">如何在Vue里实现一个Redux状态管理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-09T21:25:18+08:00">
+                2019-05-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="如何在Vue里实现一个Redux状态管理"><a href="#如何在Vue里实现一个Redux状态管理" class="headerlink" title="如何在Vue里实现一个Redux状态管理"></a>如何在Vue里实现一个Redux状态管理</h3><p>嗯，我们都知道 <a href="https://www.redux.org.cn/" target="_blank" rel="external"><code>redux</code></a> 通常是 <code>react</code> 项目中 中一种管理数据的手段，它跟我们 <code>vue</code> 项目里的 <code>Vuex</code> 状态管理类似，功能相同，但是使用方法却有不同~</p>
+<p>最近在学习 <code>redux</code> 这一块，为了更好的帮助跟我一样的萌新更加深入的了解 <code>redux</code> 的内部原理，我们就来试试，手动实现一个简单的 <code>redux</code> 状态管理。</p>
+<p>不同的是，我们是在 <code>vue</code> 项目中来实现的~</p>
+<h3 id="代码未动，目标先行"><a href="#代码未动，目标先行" class="headerlink" title="代码未动，目标先行"></a>代码未动，目标先行</h3><p>我们要实现 <code>redux</code> ，首先要给自己定个小目标，也就是一个业务场景，我们呀，也别想那么复杂，就以最简单的还是最经典的计数器开始，如图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181722225.png" alt=""></p>
+<p>看图，大家就应该很清楚做什么，当我点击<strong>加号</strong>按钮，希望仓库里的数据能增 1，点击<strong>减号</strong>按钮，希望仓库里的数据能减 1 ，嗯，很明确的需求，我们就来看看怎么实现吧~</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><ul>
+<li><strong>redux创建</strong></li>
+</ul>
+<p>首先我们需要在<code>src</code>目录下创建一个<code>redux</code>目录，用来放我们<code>redux</code>的核心代码，其中最核心的代码就是 <code>createStore</code> 方法了，因为我们在初始化 <code>store</code> 的时候就是通过这个方法进行创建的，<code>redux</code>源码里它会返回 <code>dispatch</code>、<code>subscribe</code>、<code>getState</code>、<code>replaceReducer</code> 四个方法，但是实际上我们通常用到的就是前三个了~</p>
+<p>ok，我们接下来慢慢的来实现~</p>
+<p>在<code>redux</code>目录下创建一个<code>index.js</code>，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">// index.js</div><div class="line"></div><div class="line">function createStore () &#123;</div><div class="line">    let state ;</div><div class="line">    </div><div class="line">    //分发action</div><div class="line">    let dispatch = ()=&gt;&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //订阅数据更新</div><div class="line">    let subscribe = ()=&gt; &#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    //获取store的状态</div><div class="line">    let getState = ()=&gt;&#123;</div><div class="line">    </div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    return&#123;</div><div class="line">    	dispatch ,</div><div class="line">    	subscribe ,</div><div class="line">    	getState</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">export &#123;</div><div class="line">    createStore</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样我们就有了一个 <code>redux</code> 雏形，接下来主要是完善里面的方法而已~</p>
+<ul>
+<li><strong>初始化store</strong></li>
+</ul>
+<p>我们先把这个 <code>store</code> 挂载到 <code>vue</code> 的原型上，方便后面的使用，我们在<code>src</code>创建一个<code>store</code>文件夹，并新建一个<code>index.js</code>，代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">import &#123; createStore &#125; from &quot;../redux&quot;</div><div class="line"></div><div class="line">const store = createStore();</div><div class="line"></div><div class="line">export default store;</div></pre></td></tr></table></figure>
+<ul>
+<li><strong>挂载store</strong></li>
+</ul>
+<p>我们在入口文件 <code>main.js</code> 引入，并挂载即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import store from &apos;./store&apos;</div><div class="line"></div><div class="line">Vue.prototype.$store = store;</div></pre></td></tr></table></figure>
+<p>接着，如果在页面中打印 <code>this.$store</code>，出现如下结果，则证明呢已经挂载成功了~</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181753966.png" alt=""></p>
+<p>但是此时，并没有什么实际的功能，因为我们并没有完善我们的 <code>createStore</code> 里方法~</p>
+<ul>
+<li><strong>完善createStore</strong></li>
+</ul>
+<p>使用过 <code>redux</code> 的同学都知道，我们在初始化 <code>store</code> , 也就是调用 <code>createStore</code> 的时候是需要传递一个<code>reducers</code> 参数的，用来写入更改状态的处理逻辑，我们这里以计数器为例，将计数器 的 <code>reducer</code> 作为入参~</p>
+<p>这里我将计数器相关<code>actions</code>、<code>constants</code>、<code>reducer</code> 直接贴代码了，就不在赘述了~</p>
+<p><code>constants counter.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">// 常量定义</div><div class="line">export const ADD = &apos;add&apos;;</div><div class="line">export const MINUS = &apos;minus&apos;</div></pre></td></tr></table></figure>
+<p><code>actions counter.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">import * as constants from &apos;../constants/counter&apos;</div><div class="line"></div><div class="line">//增加</div><div class="line">export const add = ()=&gt;(&#123;</div><div class="line">    type : constants.ADD</div><div class="line">&#125;)</div><div class="line"></div><div class="line">//减少</div><div class="line">export const minus = ()=&gt;(&#123;</div><div class="line">    type : constants.MINUS</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><code>reducers counter.js</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import * as constants from &apos;../constants/counter&apos;</div><div class="line"></div><div class="line">const defaultState = &#123;</div><div class="line">	count: 0</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default (state = defaultState, action) =&gt; &#123;</div><div class="line">    switch ( action.type ) &#123;</div><div class="line">    	case constants.ADD :</div><div class="line">            return &#123;</div><div class="line">            	...state ,</div><div class="line">            	count : state.count + 1</div><div class="line">            &#125;</div><div class="line">    	case constants.MINUS :</div><div class="line">            return &#123;</div><div class="line">                ...state ,</div><div class="line">                count : state.count - 1</div><div class="line">            &#125;</div><div class="line">    	default :</div><div class="line">            return  state;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>dispatch</strong></p>
+<p>我们期望，我们点击加号的时候，会派发一个<code>add</code>的<code>action</code>，然后对应的 <code>reducer</code> 接收到 <code>action</code> 做对应的处理，减号按钮同理~</p>
+<p>顺着这个思路，我们先来看看 <code>dispatch</code> 方法，需要接受一个参数 <code>action</code> ，<code>action</code> 必须是一个对象，必须包含一个 <code>type</code> 值，表明需要 <code>action</code>的类型，然后我们可以通过传过来的 <code>recuder</code> 获取到新的状态，因此，<code>dispatch</code> 方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//分发action</div><div class="line">let dispatch = (action)=&gt;&#123;</div><div class="line">    //判断 action 的 type 值</div><div class="line">    if( typeof action !== &apos;object&apos;) throw Error(&apos;Expected the action to be a object.&apos;);</div><div class="line">    if( action.type === undefined ) throw Error(&apos;The action.type is not defined&apos;);</div><div class="line">    //获取新的 state</div><div class="line">    state = reducer(state, action);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们打印 <code>state</code> ， 通过点击 加号 和 减号 按钮，可以看到 <code>state</code> 确实有变换，跟我们预期的一样~</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611181827299.png" alt=""></p>
+<p><strong>getState</strong></p>
+<p>我们可以通过 <code>getState()</code> 方法获取当前 <code>state</code> ，因此该方法相对比较简单，如下~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//获取store的状态</div><div class="line">let getState = () =&gt; state;</div></pre></td></tr></table></figure>
+<p>这样我们在每次派发 <code>action</code> 的后，通过 <code>getState</code> 方法确实能获取到对应的状态~</p>
+<p>但其实有个问题，我们初始获取 <code>state</code> 的时候会返回 <code>undefined</code> ，因为我们初始的时候只是定义了 <code>state</code> ， 却没有赋值~</p>
+<p>为了解决这个问题，我们可以在 初始化的时候 <code>dispatch</code> 一个 <code>init</code> 的 <code>action</code> ，这样会返回 <code>reducer</code> 中默认的 <code>state</code> ，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//初始化state</div><div class="line">dispatch(&#123; type : &apos;@@redux/INIT&apos;&#125;);</div><div class="line"></div><div class="line">//获取store的状态</div><div class="line">let getState = () =&gt; state;</div></pre></td></tr></table></figure>
+<p><strong>subscribe</strong></p>
+<p>虽然我们现在通过按钮，在控制台打印出每次 <code>count</code>的变化，但是并没有反馈到页面上，因为页面上我们的值并没有做更改~</p>
+<p>为了监控数据变化后做对应的处理，<code>redux</code> 提供了一个叫 <code>subscribe</code>，它的入参是一个函数，作用就是订阅数据变化，做对应的逻辑处理，返回一个函数，用来取消订阅，因此我们可以对 <code>subscribe</code> 函数做如下处理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">//订阅处理函数</div><div class="line">let listeners = [];</div><div class="line"></div><div class="line">//订阅数据更新</div><div class="line">let subscribe = (fn)=&gt; &#123;</div><div class="line">    listeners.push(fn);</div><div class="line">    return ()=&gt;&#123;</div><div class="line">        listeners = listeners.filter(listener =&gt; fn != listener );</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意，上面只是订阅，当我们数据变化的时候需要发布，即要循环 <code>listeners</code> 中的方法，依次执行，因此需要在 <code>dispatch</code> 方法的最后加上一句：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">listeners.forEach(listener =&gt; listener());</div></pre></td></tr></table></figure>
+<p><strong>效果</strong></p>
+<p>接着我们来试试~</p>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div></pre></td><td class="code"><pre><div class="line">&lt;template&gt;</div><div class="line">    &lt;div class=&apos;wrapper&apos;&gt;</div><div class="line">        &lt;div class=&quot;&quot;&gt;计数器：&#123;&#123; number &#125;&#125;&lt;/div&gt;</div><div class="line">        &lt;div class=&quot;btn-box&quot;&gt;</div><div class="line">            &lt;button class=&quot;btn&quot; @click=&quot;handleAddBtnClick&quot;&gt;+&lt;/button&gt;</div><div class="line">            &lt;button class=&quot;btn&quot; @click=&quot;handleMinusBtnClick&quot;&gt;-&lt;/button&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">        &lt;div class=&quot;btn-box&quot;&gt;</div><div class="line">            &lt;button class=&quot;btn&quot; @click=&quot;handleRemoveListenerBtnClick&quot;&gt;取消打印监听&lt;/button&gt;</div><div class="line">        &lt;/div&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/template&gt;</div><div class="line"></div><div class="line">&lt;script&gt;</div><div class="line">    import &#123; add , minus &#125; from &apos;../actions/counter&apos;</div><div class="line">    export default &#123;</div><div class="line">        data()&#123;</div><div class="line">            return&#123;</div><div class="line">            	number : this.$store.getState().count ,</div><div class="line">                consoleHandler : null</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        methods : &#123;</div><div class="line">            //计数器加一</div><div class="line">            handleAddBtnClick()&#123;</div><div class="line">                this.$store.dispatch(add())</div><div class="line">            &#125;,</div><div class="line">            //计数器减一</div><div class="line">            handleMinusBtnClick()&#123;</div><div class="line">            	this.$store.dispatch(minus())</div><div class="line">            &#125;,</div><div class="line">            //取消打印事件监听</div><div class="line">    		handleRemoveListenerBtnClick()&#123;</div><div class="line">                this.consoleHandler();</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        mounted () &#123;</div><div class="line">            //数据更新事件</div><div class="line">            this.$store.subscribe(()=&gt;&#123;</div><div class="line">            	this.number = this.$store.getState().count;</div><div class="line">            &#125;)</div><div class="line">            //打印事件</div><div class="line">            this.consoleHandler = this.$store.subscribe(()=&gt;&#123;</div><div class="line">            	console.log(&apos;我的值发生了更改~&apos;)</div><div class="line">            &#125;)</div><div class="line">    	&#125;</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div><div class="line"></div><div class="line">&lt;style scoped&gt;</div><div class="line">    .wrapper&#123;</div><div class="line">        padding: 30px 15px;</div><div class="line">        text-align: center;</div><div class="line">    &#125;</div><div class="line">    .btn-box&#123;</div><div class="line">        margin-top: 20px;</div><div class="line">    &#125;</div><div class="line">    .btn&#123;</div><div class="line">        display: inline-block;</div><div class="line">        font-size: 20px;</div><div class="line">        min-width: 50px;</div><div class="line">        text-align: center;</div><div class="line">        margin: 0 10px;</div><div class="line">    &#125;</div><div class="line">&lt;/style&gt;</div></pre></td></tr></table></figure>
+<p>我们在初始的时候 添加了两个 事件监听，一个用来更新 <code>number</code>的值，另一个用来打印，我们每次数据变更都会触发这两个方法，当我们点击取消打印监听按钮的时候，之后的数据变化不会在触发打印操作~</p>
+<p>自己动手试试~</p>
+<p><strong>combineReducers</strong></p>
+<p>到此，我们已经基本实现了一个 简单版 的 <code>redux</code> ，但是还不够完美，问题在于我们还差一个函数，叫 <code>combineReducers</code> ， 它是用来合并多个 <code>reducer</code> 返回一个新的 <code>reducer</code>，以此区分不同的状态~</p>
+<p>我们在刚才的 <code>redux</code> 文件夹下的 <code>index.js</code> 添加这个方法，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">// 合并reducer</div><div class="line">// key是新状态的命名空间 值是reducer，执行后会返回一个新的reducer</div><div class="line">function combineReducers (reducers) &#123;</div><div class="line">    // 第二次调用reducer ，内部会自动的把第一次的状态传递给reducer</div><div class="line">    return (state = &#123;&#125;, action) =&gt; &#123;</div><div class="line">    	// reducer默认要返回一个状态</div><div class="line">    	let newState = &#123;&#125;</div><div class="line">    	for (let key in reducers) &#123;</div><div class="line">            // 默认reducer俩参数 一个叫state，一个叫action</div><div class="line">            let s = reducers[key](state[key], action);</div><div class="line">            newState[key] = s;</div><div class="line">    	&#125;</div><div class="line">    	return newState;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着，将我们的<code>reducer</code>更换一下即可，这里就不在赘述了~</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>通过上面的学习，我们手动实现了一个<code>redux</code>，虽然比较简单，核心代码很少，但起码功能是完善的，主要是学习一种编码的思想吧，我们可以在学习一些框架或者库的同时可以多去关注，它的内部实现，然后我们开始可以自己一步一步模仿一个简单的版本，后面在不停的拓展，希望和大家一起继续加油~</p>
+<p>代码我也上传到<a href="https://github.com/Chris-wei/redux" target="_blank" rel="external">github</a>上了，有需要的小伙伴可以参考参考~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/01/Wx-Auth/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -658,215 +867,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/Observe/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/24/Observe/" itemprop="url">JavaScript设计模式之观察者模式</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-24T15:50:20+08:00">
-                2018-10-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript设计模式/" itemprop="url" rel="index">
-                    <span itemprop="name">JavaScript设计模式</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>嗯~~~</p>
-<p>开门见山，这次我也就不卖关子了，今天我们就来聊一聊 JavasSript 设计模式中的 <strong>观察者模式</strong> ，首先我们来认识一下，什么是观察者模式？</p>
-<h3 id="什么是观察者模式？"><a href="#什么是观察者模式？" class="headerlink" title="什么是观察者模式？"></a>什么是观察者模式？</h3><p><strong>观察者模式（Observer）</strong></p>
-<p>通常又被称为 <strong>发布-订阅者模式</strong> 或 <strong>消息机制</strong>，它定义了对象间的一种一对多的依赖关系，只要当一个对象的状态发生改变时，所有依赖于它的对象都得到通知并被自动更新，解决了主体对象与观察者之间功能的耦合，即一个对象状态改变给其他对象通知的问题。</p>
-<p>单纯的看定义，对于前端小伙伴们，可能这个概念还是比较模糊，对于观察者模式还是一知半解，ok，那我就来看个生活中比较贴切的例子，相信你立马就懂了~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611181204500.png" alt=""></p>
-<p><strong>生活中的观察者模式</strong></p>
-<p>每次小米出新款手机都是热销，我看中了小米3这款手机，想去小米之家购买，但是到店后售货员告诉我他们这款手机很热销，他们已经卖完了，现在没有货了，那我不可能每天都跑过来问问吧，这样很耽误时间的，于是我将我的手机号码留给销售小姐姐，如果他们店里有货，让她打电话通知我就好了，这样就不用担心不知道什么时候有货，也不需要天天跑去问了，如果你已经成功买到了手机呢，那么销售小姐姐之后也就不需要通知你了~</p>
-<p>这样是不是清晰了很多~诸如此类的案例还有很多，我也就不在赘述了。</p>
-<h3 id="观察者模式的使用"><a href="#观察者模式的使用" class="headerlink" title="观察者模式的使用"></a>观察者模式的使用</h3><p>不瞒你说，我敢保证，过来看的每个人都使用过观察者模式~</p>
-<p>什么，你不信？</p>
-<p>那么来看看下面这段代码~</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">document.querySelector(&apos;#btn&apos;).addEventListener(&apos;click&apos;,function () &#123;</div><div class="line">    alert(&apos;You click this btn&apos;);</div><div class="line">&#125;,false)</div></pre></td></tr></table></figure>
-<p>怎么样，是不是很眼熟！</p>
-<p>没错，我们平时对 <code>DOM</code> 的事件绑定就是一个非常典型的 <strong>发布-订阅者模式</strong> ，这里我们需要监听用户点击按钮这个动作，但是我们却无法知道用户什么时候去点击，所以我们订阅 按钮上的 <code>click</code> 事件，只要按钮被点击时，那么按钮就会向订阅者发布这个消息，我们就可以做对应的操作了。</p>
-<p>除了我们常见的 <code>DOM</code> 事件绑定外，观察者模式应用的范围还有很多~</p>
-<p>比如比较当下热门 <strong>vue</strong> 框架，里面不少地方都涉及到了观察者模式，比如：</p>
-<p><strong>数据的双向绑定</strong></p>
-<p><img src="https://img-blog.csdnimg.cn/20200611181234648.png" alt=""></p>
-<p>利用 <code>Object.defineProperty()</code> 对数据进行劫持，设置一个监听器 <code>Observer</code>，用来监听所有属性，如果属性上发上变化了，就需要告诉订阅者 <code>Watcher</code> 去更新数据，最后指令解析器 <code>Compile</code> 解析对应的指令，进而会执行对应的更新函数，从而更新视图，实现了双向绑定~</p>
-<p><strong>子组件与父组件通信</strong></p>
-<p><code>Vue</code> 中我们通过 <code>props</code> 完成父组件向子组件传递数据，子组件与父组件通信我们通过自定义事件即 <code>$on</code>,<code>$emit</code>来实现，其实也就是通过 <code>$emit</code> 来发布消息，并对订阅者 <code>$on</code> 做统一处理 ~</p>
-<p>ok，说了这么多，该我们自己露一手了，接下来我们来自己创建一个简单的观察者~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611181301770.png" alt=""></p>
-<h3 id="创建一个观察者"><a href="#创建一个观察者" class="headerlink" title="创建一个观察者"></a>创建一个观察者</h3><p>首先我们需要创建一个观察者对象，它包含一个消息容器和三个方法，分别是订阅消息方法 <code>on</code> , 取消订阅消息方法 <code>off</code> ，发送订阅消息 <code>subscribe</code> 。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">const Observe = (function () &#123;</div><div class="line">	//防止消息队列暴露而被篡改，将消息容器设置为私有变量</div><div class="line">	let __message = &#123;&#125;;</div><div class="line">	return &#123;</div><div class="line">    	//注册消息接口</div><div class="line">        on : function () &#123;&#125;,</div><div class="line">        //发布消息接口</div><div class="line">		subscribe : function () &#123;&#125;,</div><div class="line">        //移除消息接口</div><div class="line">        off : function () &#123;&#125;</div><div class="line">    &#125;</div><div class="line">&#125;)();</div></pre></td></tr></table></figure>
-<p>好的，我们的观察者雏形已经出来了，剩下的就是完善里面的三个方法~</p>
-<p><strong>注册消息方法</strong></p>
-<p>注册消息方法的作用是将订阅者注册的消息推入到消息队列中，因此需要传递两个参数：消息类型和对应的处理函数，要注意的是，如果推入到消息队列是如果此消息不存在，则要创建一个该消息类型并将该消息放入消息队列中，如果此消息已经存在则将对应的方法突入到执行方法队列中。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//注册消息接口</div><div class="line">on: function (type, fn) &#123;</div><div class="line">    //如果此消息不存在，创建一个该消息类型</div><div class="line">    if( typeof __message[type] === &apos;undefined&apos; )&#123;</div><div class="line">    	// 将执行方法推入该消息对应的执行队列中</div><div class="line">        __message[type] = [fn];</div><div class="line">    &#125;else&#123;</div><div class="line">    	//如果此消息存在，直接将执行方法推入该消息对应的执行队列中</div><div class="line">        __message[type].push(fn);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>发布消息方法</strong></p>
-<p>发布消息，其功能就是当观察者发布一个消息是将所有订阅者订阅的消息依次执行，也需要传两个参数，分别是消息类型和对应执行函数时所需要的参数，其中消息类型是必须的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">//发布消息接口</div><div class="line">subscribe: function (type, args) &#123;</div><div class="line">	//如果该消息没有注册，直接返回</div><div class="line">	if ( !__message[type] )  return;</div><div class="line">	//定义消息信息</div><div class="line">	let events = &#123;</div><div class="line">    	type: type,           //消息类型</div><div class="line">    	args: args || &#123;&#125;       //参数</div><div class="line">    &#125;,</div><div class="line">    i = 0,                         // 循环变量</div><div class="line">    len = __message[type].length;   // 执行队列长度</div><div class="line">	//遍历执行函数</div><div class="line">	for ( ; i &lt; len; i++ ) &#123;</div><div class="line">		//依次执行注册消息对应的方法</div><div class="line">        __message[type][i].call(this,events)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><strong>移除消息方法</strong></p>
-<p>移除消息方法，其功能就是讲订阅者注销的消息从消息队列中清除，也需要传递消息类型和执行队列中的某一函数两个参数。这里为了避免删除是，消息不存在的情况，所以要对其消息存在性制作校验。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">//移除消息接口</div><div class="line">off: function (type, fn) &#123;</div><div class="line">	//如果消息执行队列存在</div><div class="line">	if ( __message[type] instanceof Array ) &#123;</div><div class="line">		// 从最后一条依次遍历</div><div class="line">		let i = __message[type].length - 1;</div><div class="line">		for ( ; i &gt;= 0; i-- ) &#123;</div><div class="line">			//如果存在改执行函数则移除相应的动作</div><div class="line">			__message[type][i] === fn &amp;&amp; __message[type].splice(i, 1);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>ok，到此，我们已经实现了一个基本的观察者模型，接着就是我们大显身手的时候了~<br>赶紧拿出来测试测试啊~</p>
-<h3 id="大显身手"><a href="#大显身手" class="headerlink" title="大显身手"></a>大显身手</h3><p>首先我们先来一个简单的测试，看看我们自己创建的观察者模式执行效果如何？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//订阅消息</div><div class="line"> Observe.on(&apos;say&apos;, function (data) &#123;</div><div class="line"> 	console.log(data.args.text);</div><div class="line"> &#125;)</div><div class="line"> Observe.on(&apos;success&apos;,function () &#123;</div><div class="line">     console.log(&apos;success&apos;)</div><div class="line"> &#125;);</div><div class="line"></div><div class="line"> //发布消息</div><div class="line"> Observe.subscribe(&apos;say&apos;, &#123; text : &apos;hello world&apos; &#125; )</div><div class="line"> Observe.subscribe(&apos;success&apos;);</div></pre></td></tr></table></figure>
-<p>我们在消息类型为 <code>say</code> 的消息中注册了两个方法，其中有一个接受参数，另一个不需要参数，然后通过 <code>subscribe</code> 发布 <code>say</code> 和 <code>success</code> 消息，结果跟我们预期的一样，控制台输出了 <code>hello world</code> 以及 <code>success</code> ~</p>
-<p>看！我们已经成功的实现了我们的观察者~ 为自己点个赞吧！</p>
-<p><strong>自定义数据的双向绑定</strong></p>
-<p>上面说到，<code>vue</code> 双向绑定是数据劫持和发布订阅做实现的，现在我们借助这种思想，自己来实现一个简单的数据的双向绑定~</p>
-<p>首先当然是要有页面结构了，这里不讲究什么，我就随手一码了~</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;div id=&quot;app&quot;&gt;</div><div class="line">    &lt;h3&gt;数据的双向绑定&lt;/h3&gt;</div><div class="line">    &lt;div class=&quot;cell&quot;&gt;</div><div class="line">        &lt;div class=&quot;text&quot; v-text=&quot;myText&quot;&gt;&lt;/div&gt;</div><div class="line">        &lt;input class=&quot;input&quot; type=&quot;text&quot; v-model=&quot;myText&quot; &gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
-<p>相信你已经知道了，我们要做到就是 <code>input</code> 标签的输入，通过 <code>v-text</code> 绑定到类名为 <code>text</code> 的 <code>div</code> 标签上~</p>
-<p>首先我们需要创建一个类，这里就叫做 <code>myVue</code> 吧。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">class myVue&#123;</div><div class="line">    constructor (options)&#123;</div><div class="line">        // 传入的配置参数</div><div class="line">        this.options = options;</div><div class="line">        // 根元素</div><div class="line">        this.$el = document.querySelector(options.el);</div><div class="line">        // 数据域</div><div class="line">        this.$data = options.data;</div><div class="line"></div><div class="line">        // 保存数据model与view相关的指令，当model改变时，我们会触发其中的指令类更新，保证view也能实时更新</div><div class="line">        this._directives = &#123;&#125;;</div><div class="line">        // 数据劫持，重新定义数据的 set 和 get 方法</div><div class="line">        this._obverse(this.$data);</div><div class="line">        // 解析器，解析模板指令，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图</div><div class="line">        this._compile(this.$el);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里我们定义了 <code>myVue</code> 构造函数，并在构造方法中进行了一些初始化操作，上面做了注释，这里我就不在赘述，主要来看里面关键的两个方法 <code>_obverse</code> 和 <code>_compile</code>。</p>
-<p>首先是 <code>_observe</code> 方法，他的作用就是处理传入的 <code>data</code> ，并重新定义 <code>data</code> 的 <code>set</code> 和 <code>get</code> 方法，保证我们在 <code>data</code> 发生变化的时候能跟踪到，并发布通知，主要用到了 <code>Object.defineProperty()</code> 这个方法，对这个方法还不太熟悉的小伙伴们，请<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty" target="_blank" rel="external">猛戳这里</a>~</p>
-<p><strong>_observe</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">//_obverse 函数，对data进行处理，重写data的set和get函数</div><div class="line">_obverse(data)&#123;</div><div class="line">	let val ;</div><div class="line">	//遍历数据</div><div class="line">    for( let key in data )&#123;</div><div class="line">        // 判断是不是属于自己本身的属性</div><div class="line">        if( data.hasOwnProperty(key) )&#123;</div><div class="line">        	this._directives[key] = [];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        val = data[key];</div><div class="line">        //递归遍历</div><div class="line">        if ( typeof val === &apos;object&apos; ) &#123;</div><div class="line">        	//递归遍历</div><div class="line">        	this._obverse(val);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        // 初始当前数据的执行队列</div><div class="line">        let _dir = this._directives[key];</div><div class="line"></div><div class="line">        //重新定义数据的 get 和 set 方法</div><div class="line">        Object.defineProperty(this.$data,key,&#123;</div><div class="line">        	enumerable: true,</div><div class="line">        	configurable: true,</div><div class="line">        	get: function () &#123;</div><div class="line">        		return val;</div><div class="line">        	&#125;,</div><div class="line">        	set: function (newVal) &#123;</div><div class="line">        		if ( val !== newVal ) &#123;</div><div class="line">        			val = newVal;</div><div class="line">        			// 当 myText 改变时，触发 _directives 中的绑定的Watcher类的更新</div><div class="line">        			_dir.forEach(function (item) &#123;</div><div class="line">        			    //调用自身指令的更新操作</div><div class="line">        				item._update();</div><div class="line">        			&#125;)</div><div class="line">        		&#125;</div><div class="line">        	&#125;</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的代码也很简单，注释也都很清楚，不过有个问题就是，我在递归遍历数据的时候，偷了个小懒 –，这里我只涉及到了一些简单的数据结构，复杂的例如循环引用的这种我没有考虑进入，大家可以自行补充一下哈~</p>
-<p>接着我们来看看 <code>_compile</code> 这个方法，它实际上是一个解析器，其功能就是解析模板指令，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，就收到通知，然后去更新视图变化，具体实现如下：</p>
-<p><strong>_compile</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">_compile(el)&#123;</div><div class="line">    //子元素</div><div class="line">    let nodes = el.children;</div><div class="line">    for( let i = 0 ;  i &lt; nodes.length ; i++ )&#123;</div><div class="line">    	let node = nodes[i];</div><div class="line">    	// 递归对所有元素进行遍历，并进行处理</div><div class="line">    	if( node.children.length )&#123;</div><div class="line">    		this._compile(node);</div><div class="line">    	&#125;</div><div class="line"></div><div class="line">        //如果有 v-text 指令 , 监控 node的值 并及时更新</div><div class="line">        if( node.hasAttribute(&apos;v-text&apos;))&#123;</div><div class="line">            let attrValue = node.getAttribute(&apos;v-text&apos;);</div><div class="line">            //将指令对应的执行方法放入指令集</div><div class="line">            this._directives[attrValue].push(new Watcher(&apos;text&apos;,node,this,attrValue,&apos;innerHTML&apos;))</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    	//如果有 v-model属性，并且元素是INPUT或者TEXTAREA，我们监听它的input事件</div><div class="line">        if( node.hasAttribute(&apos;v-model&apos;) &amp;&amp; ( node.tagName === &apos;INPUT&apos; || node.tagName === &apos;TEXTAREA&apos;))&#123;</div><div class="line">            let _this = this;</div><div class="line">            //添加input时间</div><div class="line">            node.addEventListener(&apos;input&apos;,(function()&#123;</div><div class="line">            	let attrValue = node.getAttribute(&apos;v-model&apos;);</div><div class="line">            	//初始化赋值</div><div class="line">            	_this._directives[attrValue].push(new Watcher(&apos;input&apos;,node,_this,attrValue,&apos;value&apos;));</div><div class="line">                return function () &#123;</div><div class="line">                    //后面每次都会更新</div><div class="line">                    _this.$data[attrValue] = node.value;</div><div class="line">            	&#125;</div><div class="line">            &#125;)())</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的代码也很清晰，我们从根元素 <code>#app</code> 开始递归遍历每个节点，并判断每个节点是否有对应的指令，这里我们只针对 <code>v-text</code> 和 <code>v-model</code>，我们对 <code>v-text</code> 进行了一次 <code>new Watcher()</code>，并把它放到了 <code>myText</code> 的指令集里面，对 <code>v-model</code> 也进行了解析，对其所在的 <code>input</code> 绑定了 <code>input</code> 事件，并将其通过 <code>new Watcher()</code> 与 <code>myText</code> 关联起来，那么我们就应该来看看这个 <code>Watcher</code> 到底是什么？</p>
-<p><code>Watcher</code> 其实就是订阅者，是 <code>_observer</code> 和 <code>_compile</code> 之间通信的桥梁用来绑定更新函数，实现对 <code>DOM</code> 元素的更新</p>
-<p><strong>Warcher</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Watcher&#123;</div><div class="line">    /*</div><div class="line">    * name  指令名称，例如文本节点，该值设为&quot;text&quot;</div><div class="line">    * el    指令对应的DOM元素</div><div class="line">    * vm    指令所属myVue实例</div><div class="line">    * exp   指令对应的值，本例如&quot;myText&quot;</div><div class="line">    * attr  绑定的属性值，本例为&quot;innerHTML&quot;</div><div class="line">    * */</div><div class="line">    constructor (name, el, vm, exp, attr)&#123;</div><div class="line">        this.name = name;</div><div class="line">        this.el = el;</div><div class="line">        this.vm = vm;</div><div class="line">        this.exp = exp;</div><div class="line">        this.attr = attr;</div><div class="line"></div><div class="line">        //更新操作</div><div class="line">        this._update();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    _update()&#123;</div><div class="line">    	this.el[this.attr] = this.vm.$data[this.exp];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>每次创建 <code>Watcher</code> 的实例，都会传入相应的参数，也会进行一次 <code>_update</code> 操作，上述的 <code>_compile</code> 中，我们创建了两个 <code>Watcher</code> 实例，不过这两个对应的 <code>_update</code> 操作不同而已，对于 <code>div.text</code> 的操作其实相当于 <code>div.innerHTML=h3.innerHTML = this.data.myText</code> ， 对于 <code>input</code> 相当于 <code>input.value=this.data.myText</code> , 这样每次数据 <code>set</code> 的时候，我们会触发两个 <code>_update</code> 操作，分别更新 <code>div</code> 和 <code>input</code> 中的内容~</p>
-<p>废话不多说，赶紧测试一下吧~</p>
-<p>先初始化一下~</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">//创建vue实例</div><div class="line">const app = new myVue(&#123;</div><div class="line">    el : &apos;#app&apos; ,</div><div class="line">    data : &#123;</div><div class="line">        myText : &apos;hello world&apos;</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>接着，上图~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611181331795.png" alt=""></p>
-<p>我们顺利的实现了一个简单的双向绑定，棒棒哒 ~</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>现在，是不是已经对观察者模式有比较深刻的理解了呢？其实，我这里说了这么多，只是起到了一个抛砖引玉的作用，重要的是设计思想，要学会将这种设计思想合理的应用到我们实际的开发过程中，可能过程会比较艰难，但是纸上得来终觉浅，绝知此事要躬行啊，大家加油~</p>
-<p>哦，对了，今天 1024 啊 ， 大家节日快乐哈~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611181401726.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -920,7 +920,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -931,7 +931,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -942,7 +942,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

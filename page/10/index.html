@@ -278,6 +278,359 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/23/List/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/23/List/" itemprop="url">JS中的算法与数据结构——列表(List)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-23T16:47:38+08:00">
+                2017-09-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>   前端很少有机会接触到算法，大多都交互性的操作，所以不少前端工程师会抱着这么一种想法：我是做前端的，为什么要学数据结构与算法？没有数据结构与算法，我一样很好的完成工作。<br>   实际上，算法是一个宽泛的概念，我们平时写的任何代码都可以成为算法，它是对一个问题的解决方案的准确而完整的描述，是解决一系列问题的清晰指令，它代表着用系统的方法描述解决问题的策略机制。<br>   随着现在互联网的飞速发展，前端工程师已不是靠几个选择器操作加链接加事件就能应付的，越来越复杂的产品和基础库，需要坚实的数据结构与算法才能驾驭，所以我认为前端工程师也是应该要重视算法和数据结构，这对于自己的职业发展是有很大帮助的。<br>   当然，算法的学习也不是一朝一夕的事情，这是一个过程，得自己去摸索，去实践，去总结，我这里只是将一些常见的算法和数据结构用 JavaScript 去实现，起到一个抛砖引玉的作用。</p>
+<hr>
+<h2 id="列表-List"><a href="#列表-List" class="headerlink" title="列表(List)"></a>列表(List)</h2><p>  列表是计算机中一种常见的数据结构，日常生活中的购物清单，待办事项等都可以成为列表，它是一组有序的数据，每个列表中的数据项称为<strong>元素</strong>。在javascript中，列表中的元素可以是任意数据类型。列表中可以保存多少元素并没有限定（在实际使用时会受到程序内存的限制）。<br>  列表中会有一些常见属性或方法，比如列表中的元素个数，列表当前的位置，向列表末尾增加一个元素，从列表中删除一个元素，清空列表等一系列操作。<br>  接下来，我们抽象出一个列表的数据类型定义，并用JS中的数组去实现它。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611174504364.png" alt="列表的数据类型定义"></p>
+<h2 id="列表类"><a href="#列表类" class="headerlink" title="列表类"></a>列表类</h2><pre><code>/*定义List类*/
+ function List () {
+    this.listSize = 0;   //初始化元素个数为0
+    this.pos = 0;        //初始化位置为0
+    this.dataStore = []; //初始化空数组来保存列表元素
+    this.clear = clear;
+    this.find = find;    //寻找元素
+    this.toString = toString; //显示列表中的元素
+    this.insert = insert;
+    this.append = append;
+    this.remove = remove;
+    this.front = front;
+    this.end = end;
+    this.prev = prev;
+    this.next = next;
+    this.length = length;  //列表中的元素总数
+    this.currPos = currPos;
+    this.moveTo = moveTo;
+    this.getElement = getElement;
+    this.contains = contains; //判断给定值是否在列表中
+}
+</code></pre><p>接着我们来实现这些方法。</p>
+<p>首先得可以添加元素，所以我们先来编写 append 方法</p>
+<p> <strong>append：向列表中添加一个元素</strong></p>
+<pre><code>//该方法给列表的最后一个位置添加一个新的元素，待插入成功后，更新列表中的元素个数
+
+function append ( element ) {
+    this.dataStore[this.listSize++] = element;
+}
+</code></pre><p>这样我们就可以往列表里面添加元素了，接着我们来看查找 find 方法</p>
+<p> <strong>find：查找列表中的某一个元素</strong></p>
+<pre><code>//该方法通过循环查找给定元素是否在列表中，如果存在返回元素的位置，否则返回 -1
+
+function find(element){
+    for( var i = 0 ; i &lt; this.dataStore.length ; i ++ ){
+            if( this.dataStore[i] == element ){
+                return i;
+            }
+        }
+    return -1;
+}
+</code></pre><p>可以插入元素，那总得可以删除了，我们利用 remove 方法删除一个元素</p>
+<p><strong>remove：删除列表中的某一元素</strong></p>
+<pre><code>//该方法通过使用find()方法返回元素的位置对 dataStore 数组进行截取，如果删除成功，返回 true , 并将 listSize 的值减1，更新列表长度，否则返回 false
+
+function remove ( element ) {
+    var foundAt = this.find(element);
+    if( foundAt &gt; -1 ){
+        this.dataStore.splice( foundAt , 1 );
+        --this.listSize;
+        return true;
+    }
+    return false;
+}
+</code></pre><p>我想知道我的列表还有多少个元素的时候，就得构建 length 方法，</p>
+<p><strong>length：返回列表中总的元素个数</strong></p>
+<pre><code>//该方法直接将 listSize 返回即可
+
+function length(){
+    return this.listSize;
+}
+</code></pre><p>如果能显示我的列表元素就好了，这个可以有，我们来看看 toString 方法，</p>
+<p><strong>toString：显示列表的元素</strong></p>
+<pre><code>//该方法直接返回了列表数组，显示出当前列表内容
+
+function toString(){
+    return this.dataStore;
+}
+</code></pre><p>现在我们的列表已经有了基本的一些功能，不妨下试试</p>
+<pre><code>//构造列表对象
+var fruits = new List();
+//添加三个元素
+fruits.append(&apos;Apple&apos;);
+fruits.append(&apos;Grape&apos;);
+fruits.append(&apos;Banana&apos;);
+
+//打印列表
+console.log( fruits.toString() )      // [&quot;Apple&quot;, &quot;Grape&quot;, &quot;Banana&quot;]
+//查看列表长度
+console.log( fruits.length() )        // 3
+//查找 Banana 的位置
+console.log( fruits.find(&apos;Banana&apos;) )  // 2
+//删除 Grape 
+fruits.remove(&apos;Grape&apos;);
+console.log( fruits.toString() )      // [&quot;Apple&quot;, &quot;Banana&quot;]
+</code></pre><p>如果我们删除了 Grape 元素 ， 我们还想将它放回到原来的位置 ，这时候我们就需要调用 insert 方法</p>
+<p><strong>insert：向列表某个位置添加一个元素</strong></p>
+<pre><code>//该方法需要传入两个参数，第一个参数表示待插入的元素，第二个参数表示待插入元素的前一个元素，用于确定插入元素的位置，并调用 splice 方法更改列表数组，插入成功后更新 listSize 并返回 true ， 否则返回 false；
+function insert( element , after ){
+    var insertPos = this.find( after );
+    if( insertPos &gt; -1 ){
+        this.dataStore.splice( insertPos + 1 , 0 , element );
+        this.listSize ++;
+        return true;
+    }
+    return false;
+}
+</code></pre><p>现在，我们把 Grape 放到原来的位置上去;</p>
+<pre><code>fruits.insert( &apos;Grape&apos; , &apos;Apple&apos; );
+console.log( fruits.toString() )        // [&quot;Apple&quot;, &quot;Grape&quot;, &quot;Banana&quot;]
+</code></pre><p>ok，现在已经能够把 Grape 插入到原来的位置了。</p>
+<p>如果我吃完了所有水果，我现在想要清空列表，我们就需要一个 clear 方法；</p>
+<p><strong>clear：清空列表</strong></p>
+<pre><code>//该方法使用 delete 操作符删除 dataStore 数组 ， 接着创建新的数组，并将其 listSize 和 pos 初始化设为 1 。
+
+function clear(){
+    delete this.dataStore;
+    this.dataStore = [];
+    this.listSize = this.pos = 0;
+}
+</code></pre><p>我们不妨试一试。</p>
+<pre><code>fruits.clear();
+console.log( fruits.toString() );      // []
+</code></pre><p>成功了！</p>
+<p>上面我们看到了列表中有个 pos 属性，表示当前列表所在的位置，我们接下来就围绕它做点事情，让用户可以自由操作列表</p>
+<p><strong>front：将列表的位置移到第一个位置上</strong></p>
+<pre><code>//该方法只要将 pos 置为 0 即可
+
+function front(){
+    this.pos = 0 ;
+}
+</code></pre><p><strong>end：将列表的位置移到最后一个位置上</strong></p>
+<pre><code>//同上，该方法只要将 pos 置为列表长度减 1 即可，因为数组下标从 0 开始嘛
+
+function end(){
+    this.pos = this.listSize - 1;
+}
+</code></pre><p><strong>prev：将当前位置前移一位</strong></p>
+<pre><code>//只要将 pos 的位置减 1 即可，但要主要不能越界
+
+function prev(){
+    if( this.pos &gt; 0 ){
+        this.pos --;
+    }else{
+        console.log(&apos;您当前已在首位&apos;);
+    }
+}
+</code></pre><p><strong>next：将当前位置后移一位</strong></p>
+<pre><code>//同理，只要将 pos 的位置加 1 即可，但要主要不能越界
+
+function next(){
+    if( this.pos &lt; this.listSize - 1 ){
+        ++this.pos;
+    }else{
+        console.log(&apos;您当前已在末尾&apos;);
+    }
+}
+</code></pre><p><strong>moveTo：将当前位置移动到指定位置</strong></p>
+<pre><code>//直接改变 pos 的值即可，注意输入的合法性
+
+function moveTo( position ){
+    if( position &lt; 0 || position &gt; (this.listSize - 1) ){
+        console.log(&apos;请输入正确的位置&apos;);
+    }else{
+        this.pos = position;
+    }
+}
+</code></pre><p>我既然可以随意改变我的列表位置，那我总得知道我当前位置在哪里啊，因此我们需要 currPos 和 getElement 两个方法分别返回当前的位置和元素;</p>
+<p><strong>currPos：返回列表的当前位置</strong></p>
+<pre><code>//只需将 pos 直接返回即可
+
+function currPos(){
+    return this.pos;
+}
+</code></pre><p><strong>getElement：返回当前位置的元素</strong></p>
+<pre><code>//直接取对应的元素就好
+
+function getElement(){
+    return this.dataStore[this.pos];
+}
+</code></pre><p>接着，我们测试一下，首先将列表恢复到清空前的样子，然后我们在多添加几个元素进去。</p>
+<pre><code>//再添加几个
+fruits.append(&apos;Pear&apos;);
+fruits.append(&apos;Orange&apos;);
+fruits.append(&apos;Strawberry&apos;);
+console.log( fruits.toString() );    // [&quot;Apple&quot;, &quot;Grape&quot;, &quot;Banana&quot;, &quot;Pear&quot;, &quot;Orange&quot;, &quot;Strawberry&quot;]
+
+//我们先看当前的位置和元素
+console.log( fruits.currPos() );     // 0
+console.log( fruits.getElement() );  // Apple
+
+//我们尝试改变一下
+fruits.moveTo( 2 );
+fruits.next();
+console.log( fruits.currPos() );     // 3
+console.log( fruits.getElement() );  // Pear
+fruits.end();
+fruits.prev();
+console.log( fruits.currPos() );     // 4
+console.log( fruits.getElement() );  // Orange
+</code></pre><p>至此，我们已经基本完成了列表的所有功能，还差最后一个，判断给定元素是否在列表内，我们这里采用 contains 方法</p>
+<p><strong>contains：判断给定值是否在列表中</strong></p>
+<pre><code>//我们直接利用利用 indexOf() 或者采用跟为高级的 ES6 中的 includes 方法来判断
+
+//ES5
+function contains( element ){
+    if( this.dataStore.indexOf( element ) &gt; -1 ) return true;
+    else return false;
+}
+
+//ES6
+
+function contains( element ){
+    return this.dataStore.includes( element );
+}
+</code></pre><p>( ps：对 ES6 不太熟悉的同学，也可以参考我的另一系列博客 <a href="http://www.jianshu.com/c/4c4cf5f2c626" target="_blank" rel="external">ES6那些事儿</a> )</p>
+<p>写完测试一下，</p>
+<pre><code>console.log(fruits.contains(&apos;Banana&apos;));         // true
+console.log(fruits.contains(&apos;Watermelon&apos;));     // false
+</code></pre><p>大功告成！<br>我们自己用 javascript 实现了一个列表，至于后面如何拓展，自己可以发散思维，多动手实践实践，一起加油！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/05/vue-clip/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -565,319 +918,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/27/ES6-09/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/27/ES6-09/" itemprop="url">ES6必知必会 （九）—— Module</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-27T10:40:38+08:00">
-                2017-07-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
-                    <span itemprop="name">ECMAScript6</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><strong>Module</strong></p>
-<p>1.ES6在语言标准的层面上，实现了模块功能，成为浏览器和服务器通用的模块解决方案，完全可以取代 CommonJS 和 AMD 规范，基本特点如下：</p>
-<ul>
-<li>每一个模块只加载一次， 每一个JS只执行一次， 如果下次再去加载同目录下同文件，直接从内存中读取；</li>
-<li>每一个模块内声明的变量都是局部变量， 不会污染全局作用域；</li>
-<li>模块内部的变量或者函数可以通过export导出；</li>
-<li>一个模块可以导入别的模块</li>
-</ul>
-<p>2.模块功能主要由两个命令构成：export和import。export命令用于规定模块的对外接口，import命令用于输入其他模块提供的功能；</p>
-<p>3.一个模块就是一个独立的文件，该文件内部的所有变量，外部无法获取。如果你希望外部能够读取模块内部的某个变量，就必须使用export关键字输出该变量；</p>
-<pre><code>// profile.js
-export var firstName = &apos;Michael&apos;;
-export var lastName = &apos;Jackson&apos;;
-export var year = 1958;
-
-//或者
-// profile.js
-var firstName = &apos;Michael&apos;;
-var lastName = &apos;Jackson&apos;;
-var year = 1958;
-
-export {firstName, lastName, year};
-</code></pre><p>4.export命令除了输出变量，还可以输出函数或类（class）</p>
-<pre><code>export function multiply(x, y) {
-  return x * y;
-};
-</code></pre><p>一般来说，export 输出的变量就是本来的名字，但是可以使用 as 关键字重命名</p>
-<pre><code>function Module1() { ... }
-function Module2() { ... }
-
-export {
-  Module1 as Func1,
-  Module2 as Func2
-};
-</code></pre><p>5.export语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值;</p>
-<pre><code>export var str = &apos;hello&apos;;
-setTimeout(() =&gt; str = &apos;world&apos;, 1000);
-console.log(str)
-</code></pre><p>上面代码输出变量str，值为hello，1秒之后变成world。</p>
-<p>6.export命令可以出现在模块的任何位置，只要处于模块顶层就可以。如果处于块级作用域内，就会报错；</p>
-<pre><code>function foo() {
-  export default &apos;bar&apos; // SyntaxError
-}
-foo()
-</code></pre><p>7.使用export命令定义了模块的对外接口以后，其他 JS 文件就可以通过import命令加载这个模块，import命令接受一对大括号，里面指定要从其他模块导入的变量名，大括号里面的变量名，必须与被导入模块（profile.js）对外接口的名称相同；</p>
-<pre><code>// main.js
-import {firstName, lastName, year} from &apos;./profile&apos;;
-
-function say() {
-  console.log(&apos;Hello , &apos; + firstName + &apos; &apos; + lastName);
-}
-</code></pre><p>上面代码的 import 用于加载 profile.js 文件，并从中输入变量。</p>
-<p>8.如果想为输入的变量重新取一个名字，也可以使用 as 关键字，将输入的变量重命名。</p>
-<pre><code>import { lastName as secondName } from &apos;./profile&apos;;
-</code></pre><p>9.import 后面的 from 指定模块文件的位置，可以是相对路径，也可以是绝对路径，.js后缀可以省略。如果只是模块名，不带有路径，那么必须有配置文件，告诉 JavaScript 引擎该模块的位置；</p>
-<pre><code>import { methods } from &apos;util&apos;;
-</code></pre><p>10.import命令具有提升效果，会提升到整个模块的头部，首先执行</p>
-<pre><code>func();
-
-import { func } from &apos;methods&apos;;
-</code></pre><p>上面的代码不会报错，因为 import 的执行早于 func 的调用。因为 import 命令是编译阶段执行的；</p>
-<p>11.由于import是静态执行，所以不能使用表达式和变量</p>
-<pre><code>// 报错
-import { &apos;f&apos; + &apos;oo&apos; } from &apos;methods&apos;;
-
-// 报错
-let module = &apos;methods&apos;;
-import { foo } from module;
-
-// 报错
-if (x === 1) {
-  import { foo } from &apos;module1&apos;;
-} else {
-  import { foo } from &apos;module2&apos;;
-}
-</code></pre><p>上面三种写法都会报错，因为它们用到了表达式、变量和 if 结构。在静态分析阶段，这些语法都是没法得到值的；</p>
-<p>12.import 除了指定加载某个输出值，还可以使用整体加载，即用星号（*）指定一个对象，所有输出值都加载在这个对象上面</p>
-<pre><code>// tools
-
-export function circleArea(r){
-    return Math.PI * r * r ;
-}
-
-export function rectArea( w , h ){
-    return w * h ;
-}
-
-// main.js
-//逐一加载
-import { circleArea , rectArea } from &apos;./tools&apos;;
-
-console.log( &apos;圆的面积是:&apos; + circleArea( 5 ) );
-console.log( &apos;矩形的面积是:&apos; + rectArea( 5 , 6 ) ）;
-
-//整体加载
-import * as area from &apos;./tools&apos;;
-
-console.log( &apos;圆的面积是:&apos; + area.circleArea( 5 ) );
-console.log( &apos;矩形的面积是:&apos; + area.rectArea( 5 , 6 ) ）;
-</code></pre><p>不要尝试去在运行时去改变模块整体加载所在的对象（即上例中的area）的值，是不允许的；</p>
-<p>13.export default命令，为模块指定默认输出，这样就可以在使用 import 命令的时候，不必知道所要加载的变量名或函数名；</p>
-<pre><code>// export-default.js
-export default function () {
-  console.log(&apos;foo&apos;);
-}
-
-// import-default.js
-import customName from &apos;./export-default&apos;;
-customName(); 
-// &apos;foo&apos;
-</code></pre><p>上面代码是一个模块文件 export-default.js，它的默认输出是一个函数，在其他模块加载该模块时，import 命令可以为该匿名函数指定任意名字，这时import命令后面，不使用大括号；</p>
-<p>14.export default命令用在非匿名函数前，也是可以的。</p>
-<pre><code>// export-default.js
-export default function foo() {
-  console.log(&apos;hello world&apos;);
-}
-
-// 或者写成
-
-function foo() {
-  console.log(&apos;hello world&apos;);
-}
-
-export default foo;
-</code></pre><p>要注意的是，一个模块只能有一个默认输出，因此 export default 命令只能使用一次。所以，import 命令后面才不用加大括号，因为只可能对应一个方法；实际本质上，export default 就是输出一个叫做 default 的变量或方法，系统允许你为它取任意名字；</p>
-<pre><code>// modules.js
-function add(x, y) {
-  return x + y;
-}
-export { add as default };
-// 等同于
-// export default add;
-
-// app.js
-import { default as xxx } from &apos;modules&apos;;
-// 等同于
-// import xxx from &apos;modules&apos;;
-</code></pre><p>15.由于 export default 命令其实只是输出一个叫做default的变量，所以它后面不能跟变量声明语句；</p>
-<pre><code>// 正确
-export var a = 1;
-
-// 正确
-var a = 1;
-export default a;  //等同于将变量 a 的值赋给变量 default
-
-// 错误
-export default var a = 1;
-</code></pre><p>16.export default也可以用来输出类。</p>
-<pre><code>// MyClass.js
-export default class { ... }
-
-// main.js
-import MyClass from &apos;MyClass&apos;;
-let o = new MyClass();
-</code></pre><p>17.如果在一个模块之中，先输入后输出同一个模块，import语句可以与export语句写在一起;</p>
-<pre><code>export { foo, bar } from &apos;module&apos;;
-
-// 等同于
-import { foo, bar } from &apos;module&apos;;
-export { foo, bar };
-</code></pre><p>18.const声明的常量只在当前代码块有效。如果想设置跨模块的常量（即跨多个文件），或者说一个值要被多个模块共享，可以采用下面的写法:</p>
-<pre><code>// constants.js 模块
-export const A = 1;
-export const B = 2;
-
-// test1.js 模块
-import * as constants from &apos;./constants&apos;;
-console.log(constants.A); // 1
-console.log(constants.B); // 2
-
-// test2.js 模块
-import {A, B} from &apos;./constants&apos;;
-console.log(A); // 1
-console.log(B); // 2
-</code></pre>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -931,7 +971,7 @@ console.log(B); // 2
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-count">39</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -942,7 +982,7 @@ console.log(B); // 2
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -953,7 +993,7 @@ console.log(B); // 2
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
