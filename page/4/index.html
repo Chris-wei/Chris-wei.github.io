@@ -278,6 +278,210 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/05/Proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/12/05/Proxy/" itemprop="url">初探 Vue3.0 中的一大亮点——Proxy !</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-05T16:52:23+08:00">
+                2018-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ECMAScript6/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript6</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><img src="https://img-blog.csdnimg.cn/20200611181517513.png" alt=""></p>
+<p>不久前，也就是11月14日-16日于多伦多举办的 <code>VueConf TO 2018</code> 大会上，尤雨溪发表了名为 <code>Vue3.0 Updates</code> 的主题演讲，对 <code>Vue3.0</code> 的更新计划、方向进行了详细阐述（感兴趣的小伙伴可以看看完整的 <strong><a href="https://docs.google.com/presentation/d/1yhPGyhQrJcpJI2ZFvBme3pGKaGNiLi709c37svivv0o/edit#slide=id.p" target="_blank" rel="external">PPT</a></strong>），表示已经放弃使用了 <code>Object.defineProperty</code>，而选择了使用更快的原生 <strong><code>Proxy</code></strong> !!</p>
+<p>这将会消除了之前 <code>Vue2.x</code> 中基于 <code>Object.defineProperty</code> 的实现所存在的很多限制：无法监听 <strong>属性的添加和删除</strong>、<strong>数组索引和长度的变更</strong>，并可以支持 <code>Map</code>、<code>Set</code>、<code>WeakMap</code> 和 <code>WeakSet</code>！</p>
+<p>做为一个 “前端工程师” ，有必要安利一波 <code>Proxy</code> !!</p>
+<h2 id="什么是-Proxy？"><a href="#什么是-Proxy？" class="headerlink" title="什么是 Proxy？"></a>什么是 Proxy？</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Proxy" target="_blank" rel="external">MDN</a> 上是这么描述的——<code>Proxy</code>对象用于定义基本操作的自定义行为（如属性查找，赋值，枚举，函数调用等）。</p>
+<p>官方的描述总是言简意赅，以至于不明觉厉…</p>
+<p>其实就是在对目标对象的操作之前提供了拦截，可以对外界的操作进行过滤和改写，修改某些操作的默认行为，这样我们可以不直接操作对象本身，而是通过操作对象的<strong>代理对象</strong>来间接来操作对象，达到预期的目的~</p>
+<p>什么？还没表述清楚？下面我们看个例子，就一目了然了~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">let obj = &#123;</div><div class="line">	a : 1</div><div class="line">&#125;</div><div class="line">let proxyObj = new Proxy(obj,&#123;</div><div class="line">    get : function (target,prop) &#123;</div><div class="line">        return prop in target ? target[prop] : 0</div><div class="line">    &#125;,</div><div class="line">    set : function (target,prop,value) &#123;</div><div class="line">        target[prop] = 888;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">console.log(proxyObj.a);        // 1</div><div class="line">console.log(proxyObj.b);        // 0</div><div class="line"></div><div class="line">proxyObj.a = 666;</div><div class="line">console.log(proxyObj.a)         // 888</div></pre></td></tr></table></figure>
+<p>上述例子中，我们事先定义了一个对象 <code>obj</code> , 通过 <code>Proxy</code> 构造器生成了一个 <code>proxyObj</code> 对象，并对其的 <code>set</code>(写入) 和 <code>get</code> (读取) 行为重新做了修改。</p>
+<p>当我们访问对象内原本存在的属性时，会返回原有属性内对应的值，如果试图访问一个不存在的属性时，会返回<code>0</code> ，即我们访问 <code>proxyObj.a</code> 时，原本对象中有 <code>a</code> 属性，因此会返回 <code>1</code> ，当我们试图访问对象中不存在的 <code>b</code> 属性时，不会再返回 <code>undefined</code> ，而是返回了 <code>0</code> ，当我们试图去设置新的属性值的时候，总是会返回 <code>888</code> ，因此，即便我们对 <code>proxyObj.a</code> 赋值为 <code>666</code> ，但是并不会生效，依旧会返回 <code>888</code>!</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p><code>ES6</code> 原生提供的 <code>Proxy</code> 语法很简单，用法如下：</p>
+<p><code>let proxy = new Proxy(target, handler);</code></p>
+<p>参数 <code>target</code> 是用 <code>Proxy</code> 包装的目标对象（可以是任何类型的对象，包括原生数组，函数，甚至另一个代理）, 参数 <code>handler</code> 也是一个对象，其属性是当执行一个操作时定义代理的行为的函数，也就是自定义的行为。</p>
+<p><code>Proxy</code> 的基本用法就如同上面这样，不同的是 <code>handler</code> 对象的不同，<code>handler</code> 可以是空对象 <code>{}</code> ，则表示对 <code>proxy</code> 操作就是对目标对象 <code>target</code> 操作，即：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">let obj = &#123;&#125;</div><div class="line"></div><div class="line">let proxyObj = new Proxy(obj,&#123;&#125;)</div><div class="line"></div><div class="line">proxyObj.a = 1;</div><div class="line">proxyObj.fn = function () &#123;</div><div class="line">    console.log(&apos;it is a function&apos;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">console.log(proxyObj.a); // 1</div><div class="line">console.log(obj.a);      // 1</div><div class="line">console.log(obj.fn())    // it is a function</div></pre></td></tr></table></figure>
+<p>但是要注意的是，<code>handler</code> <strong>不能</strong> 设置为 <code>null</code> ，会抛出一个错误——<code>Cannot create proxy with a non-object as target or handler</code>！</p>
+<p>要想 <code>Proxy</code> 起作用，我们就不能去操作原来对象的对象，也就是目标对象 <code>target</code> （上例是 <code>obj</code> 对象 ），必须针对的是 <code>Proxy</code> 实例（上例是 <code>proxyObj</code> 对象）进行操作，否则达不到预期的效果，以刚开始的例子来看，我们设置 <code>get</code> 方法后，试图继续从原对象 <code>obj</code> 中读取一个不存在的属性 <code>b</code> ， 结果依旧返回 <code>undefined</code> ：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">console.log(proxyObj.b);     // 0</div><div class="line">console.log(obj.b);         // undefined</div></pre></td></tr></table></figure>
+<p>对于可以设置、但没有设置拦截的操作，则对 <code>proxy</code> 对象的处理结果也同样会作用于原来的目标对象 <code>target</code> 上，怎么理解呢？还是以刚开始的例子来看，我们重新定义了 <code>set</code> 方法，所有的属性设置都返回了 <code>888</code> , 并没有对某个特殊的属性（这里指的是 <code>obj</code> 的 <code>a</code> 属性 ）做特殊的拦截或处理，那么通过 <code>proxyObj.a = 666</code> 操作后的结果同样也会作用于原来目标对象（<code>obj</code> 对象）上，因此 <code>obj</code> 对象的 <code>a</code> 的值也将会变为 <code>888</code> !</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">proxyObj.a = 666;</div><div class="line">console.log( proxyObj.a);   // 888</div><div class="line">console.log( obj.a);        // 888</div></pre></td></tr></table></figure>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><p><code>ES6</code> 中 <code>Proxy</code> 目前提供了 13 种可代理操作，下面我对几个比较常用的 <code>api</code> 做一些归纳和整理，想要了解其他方法的同学可自行去官网查阅 ：</p>
+<p><strong>–handler.get(target,property,receiver)</strong></p>
+<p>用于拦截对象的读取属性操作，<code>target</code> 是指目标对象，<code>property</code> 是被获取的属性名 ， <code>receiver</code> 是 <code>Proxy</code> 或者继承 <code>Proxy</code> 的对象，一般情况下就是 <code>Proxy</code> 实例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">let proxy = new Proxy(&#123;&#125;,&#123;</div><div class="line">    get : function (target,prop) &#123;</div><div class="line">        console.log(`get $&#123;prop&#125;`);</div><div class="line">        return 10;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">console.log(proxy.a)    // get a</div><div class="line">                        // 10</div></pre></td></tr></table></figure>
+<p>我们拦截了一个空对象的 读取<code>get</code>操作， 当获取其内部的属性是，会输出 <code>get ${prop}</code> ， 并返回 10 ；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">let proxy = new Proxy(&#123;&#125;,&#123;</div><div class="line">    get : function (target,prop,receiver) &#123;</div><div class="line">            return receiver;</div><div class="line">        &#125;</div><div class="line">    &#125;)</div><div class="line"></div><div class="line">console.log(proxy.a)    // Proxy&#123;&#125;</div><div class="line">console.log(proxy.a === proxy)  //true</div></pre></td></tr></table></figure>
+<p>上述 <code>proxy</code> 对象的 <code>a</code> 属性是由 <code>proxy</code> 对象提供的，所以 <code>receiver</code> 指向 <code>proxy</code> 对象，因此 <code>proxy.a === proxy</code> 返回的是 <code>true</code>。</p>
+<p>要注意，如果要访问的目标属性是不可写以及不可配置的，则返回的值必须与该目标属性的值相同，也就是不能对其进行修改，否则会抛出异常~</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">let obj = &#123;&#125;;</div><div class="line">Object.defineProperty(obj, &quot;a&quot;, &#123;</div><div class="line">	configurable: false,</div><div class="line">	enumerable: false,</div><div class="line">	value: 10,</div><div class="line">	writable: false</div><div class="line">&#125;);</div><div class="line"></div><div class="line">let proxy = new Proxy(obj,&#123;</div><div class="line">    get : function (target,prop) &#123;</div><div class="line">        return 20;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">console.log(proxy.a)    // Uncaught TypeError</div></pre></td></tr></table></figure>
+<p>上述 <code>obj</code> 对象中的 <code>a</code> 属性不可写，不可配置，我们通过 <code>Proxy</code> 创建了一个 <code>proxy</code> 的实例，并拦截了它的 <code>get</code> 操作，当我们输出 <code>proxy.a</code> 时会抛出异常，此时，如果我们将 <code>get</code> 方法的返回值修改跟目标属性的值相同时，也就是 10 ，<br>就可以消除异常~</p>
+<p><strong>–handler.set(target, property, value, receiver)</strong></p>
+<p>用于拦截设置属性值的操作，参数于 <code>get</code> 方法相比，多了一个 <code>value</code> ，即要设置的属性值~</p>
+<p>在<strong>严格模式</strong>下，<code>set</code>方法需要返回一个布尔值，返回 <code>true</code> 代表此次设置属性成功了，如果返回<code>false</code>且设置属性操作失败，并且会抛出一个<code>TypeError</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">let proxy = new Proxy(&#123;&#125;,&#123;</div><div class="line">    set : function (target,prop,value) &#123;</div><div class="line">        if( prop === &apos;count&apos; )&#123;</div><div class="line">            if( typeof value === &apos;number&apos;)&#123;</div><div class="line">                console.log(&apos;success&apos;)</div><div class="line">            	target[prop] = value;</div><div class="line">            &#125;else&#123;</div><div class="line">            	throw new Error(&apos;The variable is not an integer&apos;)</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"> proxy.count = &apos;10&apos;;    // The variable is not an integer</div><div class="line"></div><div class="line"> proxy.count = 10;      // success</div></pre></td></tr></table></figure>
+<p>上述我们通过修改 <code>set</code>方法，对 目标对象中的 <code>count</code> 属性赋值做了限制，我们要求 <code>count</code> 属性赋值必须是一个 <code>number</code> 类型的数据，如果不是，就返回一个错误 <code>The variable is not an integer</code>，我们第一次为 <code>count</code> 赋值字符串 <code>&#39;10&#39;</code> ， 抛出异常，第二次赋值为数字 <code>10</code> ， 打印成功，因此，我们可以用 <code>set</code> 方法来做一些数据校验！</p>
+<p>同样，如果目标属性是不可写及不可配置的，则不能改变它的值，即赋值无效，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">let obj = &#123;&#125;;</div><div class="line">Object.defineProperty(obj, &quot;count&quot;, &#123;</div><div class="line">    configurable: false,</div><div class="line">    enumerable: false,</div><div class="line">    value: 10,</div><div class="line">    writable: false</div><div class="line">&#125;);</div><div class="line"></div><div class="line">let proxy = new Proxy(obj,&#123;</div><div class="line">    set : function (target,prop,value) &#123;</div><div class="line">        target[prop] = 20;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line">proxy.count = 20 ;</div><div class="line">console.log(proxy.count)   // 10</div></pre></td></tr></table></figure>
+<p>上述 <code>obj</code> 对象中的 <code>count</code> 属性，我们设置它不可被修改，并且默认值，我们给定为 <code>10</code> ，那么即使给其赋值为 <code>20</code> ，结果仍旧没有变化！</p>
+<p><strong>–handler.apply(target, thisArg, argumentsList)</strong></p>
+<p>用于拦截函数的调用，共有三个参数，分别是目标对象（函数）<code>target</code>，被调用时的上下文对象 <code>thisArg</code> 以及被调用时的参数数组 <code>argumentsList</code>，该方法可以返回任何值。</p>
+<p><code>target</code> 必须是是一个函数对象，否则将抛出一个<code>TypeError</code>；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">function sum(a, b) &#123;</div><div class="line">	return a + b;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const handler = &#123;</div><div class="line">    apply: function(target, thisArg, argumentsList) &#123;</div><div class="line">    	console.log(`Calculate sum: $&#123;argumentsList&#125;`);</div><div class="line">    	return target(argumentsList[0], argumentsList[1]) * 2;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">let proxy = new Proxy(sum, handler);</div><div class="line"></div><div class="line">console.log(sum(1, 2));     // 3</div><div class="line">console.log(proxy(1, 2));   // Calculate sum：1,2</div><div class="line">                            // 6</div></pre></td></tr></table></figure>
+<p>实际上，<code>apply</code> 还会拦截目标对象的 <code>Function.prototype.apply()</code> 和 <code>Function.prototype.call()</code>，以及 <code>Reflect.apply()</code> 操作，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">console.log(proxy.call(null, 3, 4));    // Calculate sum：3,4</div><div class="line">                                        // 14</div><div class="line"></div><div class="line">console.log(Reflect.apply(proxy, null, [5, 6]));    // Calculate sum: 5,6</div><div class="line">                                                    // 22</div></pre></td></tr></table></figure>
+<p><strong>–handler.construct(target, argumentsList, newTarget)</strong></p>
+<p><code>construct</code> 用于拦截 <code>new</code> 操作符，为了使 <code>new</code> 操作符在生成的 <code>Proxy</code>对象上生效，用于初始化代理的目标对象自身必须具有<code>[[Construct]]</code>内部方法；它接收三个参数，目标对象 <code>target</code> ，构造函数参数列表 <code>argumentsList</code> 以及最初实例对象时，<code>new</code> 命令作用的构造函数，即下面例子中的 <code>p</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">let p = new Proxy(function() &#123;&#125;, &#123;</div><div class="line">    construct: function(target, argumentsList, newTarget) &#123;</div><div class="line">    	console.log(newTarget === p );                          // true</div><div class="line">    	console.log(&apos;called: &apos; + argumentsList.join(&apos;, &apos;));     // called：1,2</div><div class="line">    	return &#123; value: ( argumentsList[0] + argumentsList[1] )* 10 &#125;;</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(new p(1,2).value);      // 30</div></pre></td></tr></table></figure>
+<p>另外，该方法必须返回一个对象，否则会抛出异常！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">var p = new Proxy(function() &#123;&#125;, &#123;</div><div class="line">    construct: function(target, argumentsList, newTarget) &#123;</div><div class="line">    	return 2</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(new p(1,2));    // Uncaught TypeError</div></pre></td></tr></table></figure>
+<p><strong>–handler.has(target,prop)</strong></p>
+<p><code>has</code>方法可以看作是针对 <code>in</code> 操作的钩子，当我们判断对象是否具有某个属性时，这个方法会生效，典型的操作就是 <code>in</code> ,改方法接收两个参数 目标对象 <code>target</code> 和 要检查的属性 <code>prop</code>，并返回一个 <code>boolean</code> 值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">let p = new Proxy(&#123;&#125;, &#123;</div><div class="line">    has: function(target, prop) &#123;</div><div class="line">    	if( prop[0] === &apos;_&apos; ) &#123;</div><div class="line">    		console.log(&apos;it is a private property&apos;)</div><div class="line">    		return false;</div><div class="line">    	&#125;</div><div class="line">    	return true;</div><div class="line">    &#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(&apos;a&apos; in p);      // true</div><div class="line">console.log(&apos;_a&apos; in p )     // it is a private property</div><div class="line">                            // false</div></pre></td></tr></table></figure>
+<p>上述例子中，我们用 <code>has</code> 方法隐藏了属性以下划线<code>_</code>开头的私有属性，这样在判断时候就会返回 <code>false</code>，从而不会被 <code>in</code> 运算符发现~</p>
+<p>要注意，如果目标对象的某一属性本身不可被配置，则该属性不能够被代理隐藏，如果目标对象为不可扩展对象，则该对象的属性不能够被代理隐藏，否则将会抛出 <code>TypeError</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">let obj = &#123; a : 1 &#125;;</div><div class="line"></div><div class="line">Object.preventExtensions(obj); // 让一个对象变的不可扩展，也就是永远不能再添加新的属性</div><div class="line"></div><div class="line">let p = new Proxy(obj, &#123;</div><div class="line">	has: function(target, prop) &#123;</div><div class="line">		return false;</div><div class="line">	&#125;</div><div class="line">&#125;);</div><div class="line"></div><div class="line">console.log(&apos;a&apos; in p); // TypeError is thrown</div></pre></td></tr></table></figure>
+<h2 id="数据绑定"><a href="#数据绑定" class="headerlink" title="数据绑定"></a>数据绑定</h2><p>上面介绍了这么多，也算是对 <code>Proxy</code> 又来一个初步的了解，那么我们就可以利用 <code>Proxy</code> 手动实现一个极其简单数据的双向绑定（<code>Object.defineProperty()</code> 的实现方式可以参考我<a href="https://juejin.im/post/5bce9a35f265da0abd355715" target="_blank" rel="external">上篇文章</a>的末尾有涉及到）~</p>
+<p>主要看功能的实现，所以布局方面我就随手一挥了~</p>
+<p>页面结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;!--html--&gt;</div><div class="line">&lt;div id=&quot;app&quot;&gt;</div><div class="line">    &lt;h3 id=&quot;paragraph&quot;&gt;&lt;/h3&gt;</div><div class="line">    &lt;input type=&quot;text&quot; id=&quot;input&quot;/&gt;</div><div class="line">&lt;/div&gt;</div></pre></td></tr></table></figure>
+<p>主要还是得看逻辑部分：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">//获取段落的节点</div><div class="line">const paragraph = document.getElementById(&apos;paragraph&apos;);</div><div class="line">//获取输入框节点</div><div class="line">const input = document.getElementById(&apos;input&apos;);</div><div class="line"></div><div class="line">//需要代理的数据对象</div><div class="line">const data = &#123;</div><div class="line">	text: &apos;hello world&apos;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const handler = &#123;</div><div class="line">	//监控 data 中的 text 属性变化</div><div class="line">	set: function (target, prop, value) &#123;</div><div class="line">    	if ( prop === &apos;text&apos; ) &#123;</div><div class="line">                //更新值</div><div class="line">                target[prop] = value;</div><div class="line">                //更新视图</div><div class="line">                paragraph.innerHTML = value;</div><div class="line">                input.value = value;</div><div class="line">                return true;</div><div class="line">    	&#125; else &#123;</div><div class="line">    		return false;</div><div class="line">    	&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//添加input监听事件</div><div class="line">input.addEventListener(&apos;input&apos;, function (e) &#123;</div><div class="line">    myText.text = e.target.value;   //更新 myText 的值</div><div class="line">&#125;, false)</div><div class="line"></div><div class="line">//构造 proxy 对象</div><div class="line">const myText = new Proxy(data,handler);</div><div class="line"></div><div class="line">//初始化值</div><div class="line">myText.text = data.text;</div></pre></td></tr></table></figure></p>
+<p>上述我们通过<code>Proxy</code> 创建了 <code>myText</code> 实例，通过拦截 <code>myText</code> 中 <code>text</code> 属性 <code>set</code> 方法，来更新视图变化，实现了一个极为简单的 双向数据绑定~</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>说了这么多 ， <code>Proxy</code> 总算是入门了，虽然它的语法很简单，但是要想实际发挥出它的价值，可不是件容易的事，再加上其本身的 <code>Proxy</code> 的兼容性方面的问题，所以我们实际应用开发中使用的场景的并不是很多，但不代表它不实用，在我看来，可以利用它进行数据的二次处理、可以进行数据合法性的校验，甚至还可以进行函数的代理，更多有用的价值等着你去开发呢~</p>
+<p>况且，<code>Vue3.0</code> 都已经准备发布了，你还不打算让学习一下？</p>
+<p>加油！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/24/Observe/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -865,223 +1069,11 @@ console.log(add(8,9));  // 17
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/Wx-iconfont/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/10/Wx-iconfont/" itemprop="url">小程序中 icon 颜色自定义解决方案</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-10T11:40:20+08:00">
-                2018-07-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/小程序/" itemprop="url" rel="index">
-                    <span itemprop="name">小程序</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>随着公司业务的发展，现在的产品真的是越来越 体(sang)贴(xin)用(bing)户(kuang) 了，刚好前阵子准备做一个后台可以让用用户 DIY 自己的小程序，不小心看到了 某网 提供了一套图标库，用户可以自主选择，并且可以进行颜色配置的时候，我就感觉事情不妙~</p>
-<p>当时脑子一热，桌子一拍，我们也需要提供这样的功能，而且要做的比他们还强大…</p>
-<p>作为开发的我默默的留下了这张图~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185308750.png" alt=""></p>
-<p>我们知道小程序里面是不支持类似 <code>ttf</code> <code>woff</code> 这类字体的，直接引入编译都过不去~</p>
-<p>这个就是要告诉我们，我们不能像 H5 那样直接把字体下载下来然后引入到样式中，这条道路是行不通了，只能重新找找方案了~</p>
-<p>嗯，我也不 藏着掖着了 ， 接下来给大家 安利 2 中解决方案~</p>
-<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p><strong>方案一</strong></p>
-<p>利用小程序中不支持 <code>ttf</code> 字体，却支持 <code>base64</code> 的特点，我们可以通过将 <code>ttf</code> 字体转码成 <code>base64</code> ，再通过 <code>iconfont</code> 的特点，通过设置字体大小和颜色来达到目的。</p>
-<p>其具体实现如下：</p>
-<ul>
-<li>1.我们可以先去阿里提供的图标库 <a href="http://iconfont.cn/" target="_blank" rel="external">官网</a> 下载我们需要的图标，一般来说都够用了，这里我随便好了 3 个作为测试用 ， 点击 <strong>下载代码</strong> 将代码下载到本地~</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185336876.png" alt=""></p>
-<ul>
-<li>2.解压我们刚才下载的包，会有以下这些文件，但对于我们来说，会用到的只有 <code>iconfont.css</code> 和 <code>iconfont.ttf</code> 这两个文件，</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185403934.png" alt=""></p>
-<ul>
-<li>3.我们要对 <code>iconfont.ttf</code> 这个文件进行转码，将它转成 <code>base64</code> 格式，刚好 <a href="https://transfonter.org/" target="_blank" rel="external">这个网站</a> 就提供了这个功能（pass：这个网站可能会有点慢，可以的话代理加个速），按照下图的步骤，分别上传 <code>ttf</code> 文件，选择配置，点击转换。</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185441967.png" alt=""></p>
-<ul>
-<li>4.转换完成如下图所示，废话不多说，直接下载下来解压，我们需要的是里面 <code>stylesheet.css</code> 这个文件</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185512354.png" alt=""></p>
-<ul>
-<li>5.我们在小程序里的静态资源文件夹里新建一个叫 <code>iconfont.wxss</code> 样式文件，将 上面解压出来的 <code>stylesheet.css</code> 里面的内容全部拷贝到 <code>iconfont.wxss</code> 中，另外，还记得我们上面说的 <code>iconfont.css</code> 吗？这时候就要派上用场了，我们打开 <code>iconfont.css</code> 这个样式文件，将下面的样式，也就是我用<strong>红框标注</strong>的内容复制到 <code>iconfont.wxss</code> 文件里，注意上面的不需要复制！！</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185542666.png" alt=""></p>
-<p>到此为止，准备工作算是已经完成了，这时候你的 <code>iconfont.wxss</code> 应该类似下面这样</p>
-<p><code>iconfont.wxss</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">@font-face &#123;</div><div class="line">    font-family: &apos;iconfont&apos;;</div><div class="line">    src: url(data:font/truetype;charset=utf-8;base64,AAEAAAANAIAAAwBQRkZUTYR2fJ0AAAm4AAAAHEdERUYAKQANAAAJmAAAAB5PUy8yVuZIqQAAAVgAAABWY21hcLOyB+EAAAHMAAABWmdhc3D//wADAAAJkAAAAAhnbHlmRcqmoQAAAzgAAAOQaGVhZBHwmZAAAADcAAAANmhoZWEH3AOIAAABFAAAACRobXR4EYQAuAAAAbAAAAAabG9jYQHOArIAAAMoAAAAEG1heHABFgBdAAABOAAAACBuYW1lKeYRVQAABsgAAAKIcG9zdHMZwLsAAAlQAAAAQAABAAAAAQAAcD2OKF8PPPUACwQAAAAAANdpKsoAAAAA12kqygAB/4ED/gN+AAAACAACAAAAAAAAAAEAAAOA/4AAXAQBAAAAAAP+AAEAAAAAAAAAAAAAAAAAAAAGAAEAAAAHAFEABQAAAAAAAgAAAAoACgAAAP8AAAAAAAAAAQP6AZAABQAAAokCzAAAAI8CiQLMAAAB6wAyAQgAAAIABQMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUGZFZABAAHjmvQOA/4AAXAOAAIAAAAABAAAAAAAABAAAAAAAAAABVQAAA+kALAQAAIsEAQABAEUAAAAAAAMAAAADAAAAHAABAAAAAABUAAMAAQAAABwABAA4AAAACgAIAAIAAgB45qLms+a9//8AAAB45qLms+a9////ixliGVIZSQABAAAAAAAAAAAAAAAAAQYAAAEAAAAAAAAAAQIAAAACAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHYA6gFYAcgABQAs/+EDvAMYABMAKAAxAEQAUAAAAQYrASIOAh0BISc0LgIrARUhBRUXFA4DJyMnIQcjIi4DPQEXIgYUFjI2NCYXBgcGDwEOAR4BMyEyNicuAicBNTQ+AjsBMhYdAQEZGxpTEiUcEgOQAQoYJx6F/koCogEVHyMcDz4t/kksPxQyIBMIdwwSEhkSEowIBgUFCAICBA8OAW0XFgkFCQoG/qQFDxoVvB8pAh8BDBknGkxZDSAbEmGING4dJRcJAQGAgAETGyAOpz8RGhERGhF8GhYTEhkHEA0IGBoNIyQUAXfkCxgTDB0m4wAAAAAFAIv/hgN4A3oAFwAqACwAOABEAAAFIicBJicmNT4BNzIXHgEXFhUUBwYHAQYJAjY3NjU0JicuAScOAQcUFxYFMQUuASc+ATceARcOAQMOAQceARc+ATcuAQICDQj+0hUNEgTUn0hHQWkeHxINFP7RCP7bARkBGRELEDQvMnU7i7gDEAsCWf7RS2MCAmNLSmQCAmRKNkcCAkc2NkcBAUd6CgG0JCc5O5/UBCMgbUJEQTs4KCP+SwoB2P5rAZYeIjA0N3IyMzcBBLiKNDAiKxMCY0tKZAEBZEpLYwEsAUc2NkcCAkc2NkcAAwAB/4ED/gN+ABgAMQBDAAAFIicuAScmNDc+ATc2MhceARcWFAcOAQcGAyIHDgEHBhQXHgEXFjI3PgE3NjQnLgEnJgMiLwEmND4BHwEBNjIWFAcBBgIAaF9bjicoKCeOW1/PX1yNJygoJ41cX2deVVOAIyUlI4BTVbtWU4AjJCQjgFNWmQoItQgOFQijASIIFBAI/s0Ifygnjltfz19bjicoKCeOW1/PX1uOJygDzCQkgFJWu1ZSgCQkJCSAUla7VlKAJCT9gQenCBQQAQeXASIHDxQI/s0IAAAAAAQARf+nA7oDTgAaADIAPwBMAAAFLgEnPgE3ND0BNjciMiIzNh8CNjMeARcOAQMiBzEGJi8BFRcWByMOAQceARc+ATcuAQMiJj0BNDYyFh0BFAYzIiY9ATQ2MhYdARQGAgC8+gUBQDoBEwEGAQMHCI4DP0a7+gUF+rtEPAgTCGwBAQIBOEEBBd6npt8EBN+OCw4OFg8PsQsPDxYODlkE8rhWmDsCA7EUBQEEWAMUBPO3uPIDJxYEAQVAdg8IBzaNUqPWBATWo6LX/pAOC00LDg4LTQsODgtNCw4OC00LDgAAAAASAN4AAQAAAAAAAAAVACwAAQAAAAAAAQAIAFQAAQAAAAAAAgAHAG0AAQAAAAAAAwAIAIcAAQAAAAAABAAIAKIAAQAAAAAABQALAMMAAQAAAAAABgAIAOEAAQAAAAAACgArAUIAAQAAAAAACwATAZYAAwABBAkAAAAqAAAAAwABBAkAAQAQAEIAAwABBAkAAgAOAF0AAwABBAkAAwAQAHUAAwABBAkABAAQAJAAAwABBAkABQAWAKsAAwABBAkABgAQAM8AAwABBAkACgBWAOoAAwABBAkACwAmAW4ACgBDAHIAZQBhAHQAZQBkACAAYgB5ACAAaQBjAG8AbgBmAG8AbgB0AAoAAApDcmVhdGVkIGJ5IGljb25mb250CgAAaQBjAG8AbgBmAG8AbgB0AABpY29uZm9udAAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAAaQBjAG8AbgBmAG8AbgB0AABpY29uZm9udAAAaQBjAG8AbgBmAG8AbgB0AABpY29uZm9udAAAVgBlAHIAcwBpAG8AbgAgADEALgAwAABWZXJzaW9uIDEuMAAAaQBjAG8AbgBmAG8AbgB0AABpY29uZm9udAAARwBlAG4AZQByAGEAdABlAGQAIABiAHkAIABzAHYAZwAyAHQAdABmACAAZgByAG8AbQAgAEYAbwBuAHQAZQBsAGwAbwAgAHAAcgBvAGoAZQBjAHQALgAAR2VuZXJhdGVkIGJ5IHN2ZzJ0dGYgZnJvbSBGb250ZWxsbyBwcm9qZWN0LgAAaAB0AHQAcAA6AC8ALwBmAG8AbgB0AGUAbABsAG8ALgBjAG8AbQAAaHR0cDovL2ZvbnRlbGxvLmNvbQAAAgAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHAAAAAQACAFsBAgEDAQQDbWFwB3N1Y2Nlc3MDYXRtAAAAAf//AAIAAQAAAAwAAAAWAAAAAgABAAMABgABAAQAAAACAAAAAAAAAAEAAAAA1aQnCAAAAADXaSrKAAAAANdpKso=) format(&apos;truetype&apos;);</div><div class="line">    font-weight: normal;</div><div class="line">    font-style: normal;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.iconfont &#123;</div><div class="line">  font-family:&quot;iconfont&quot; !important;</div><div class="line">  font-size:16px;</div><div class="line">  font-style:normal;</div><div class="line">  -webkit-font-smoothing: antialiased;</div><div class="line">  -moz-osx-font-smoothing: grayscale;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.icon-map:before &#123; content: &quot;\e6a2&quot;; &#125;</div><div class="line"></div><div class="line">.icon-success:before &#123; content: &quot;\e6b3&quot;; &#125;</div><div class="line"></div><div class="line">.icon-atm:before &#123; content: &quot;\e6bd&quot;; &#125;</div></pre></td></tr></table></figure>
-<ul>
-<li><p>6.接着，将我们的字体文件引入到 <code>app.wxss</code> 全局 , 这样你就可以在任何你想用到的地方进行调用了，只需要将 <code>class</code> 写对就没什么问题了，</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;!--index.wxml--&gt;</div><div class="line">&lt;view class=&quot;container&quot;&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-map&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;地图&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-success&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;成功&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-atm&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;atm&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
-<p>怎么样，成功了吧！</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185615195.png" alt=""></p>
-</li>
-</ul>
-<p>  什么？ 你要换颜色，难不倒我的，只要改变对应的 <code>color</code> 就可以了~</p>
-<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;!--index.wxml--&gt;</div><div class="line">&lt;view class=&quot;container&quot;&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-map&apos; style=&apos;color : red&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;地图&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-success&apos; style=&apos;color : green&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;成功&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-atm&apos; style=&apos;color : blue&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;atm&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
-</code></pre><p><img src="https://img-blog.csdnimg.cn/20200611185647428.png" alt=""></p>
-<p> 嗯，是不是可以插会儿腰了~</p>
-<p> <img src="https://img-blog.csdnimg.cn/20200611185712751.png" alt=""></p>
-<p>且慢，刚不是说两种方案么，怎么到这里就叉起腰来了，还没完呢，等会嘚瑟哈！！</p>
-<p><strong>方案二</strong></p>
-<p>刚介绍了方案一，确实是一种选择，我们只需约定好样式，类名，后端将颜色什么的返回给我们就好了~</p>
-<p>但是这种方案存在弊端，不够灵活，如果我们要更新我们的图标库，那么我们上面的流程又得走一遍，如果后面图标库的类型变多，那么我们转码后的文件会随之变大，这对于小程序来说是致命的，因为做小程序都知道，我们都在时刻想着如何用最少的代码发挥最大的价值！</p>
-<p>所以，这种方案有一定的局限性，因此才出了第二套方案~</p>
-<p>第二套方案的思路是借助 <code>svg</code> 矢量图具有不失真和可以自主填充颜色的特点，通过 <code>fill</code> 属性，用户可以自定义填充颜色，但是小程序里面不支持 <code>svg</code> 标签的，我们通过颜色选择器将用户选择好的颜色填充到 <code>svg</code> 里，在通过转码将换过颜色的 <code>svg</code> 转成 <code>base64</code> 编码发给小程序，小程序可以直接用在 <code>image</code> 标签中的 <code>src</code> 属性上~</p>
-<p>我们一起来试试~</p>
-<ul>
-<li>1.我们还是先去阿里提供的图标库 <a href="http://iconfont.cn/" target="_blank" rel="external">官网</a> 下载我们需要的图标，这次跟第一次有些不一样，这次我们要选择下载素材，选择 <code>svg</code>~</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/2020061118574353.png" alt=""></p>
-<ul>
-<li>2.将下载好的 <code>svg</code> 源代码直接放在我们的图标库里面，选择某个图标之后，通过颜色选择器我们可以通过 <code>js</code> 设置对应的 <code>svg</code> 图标的 <code>fill</code> 属性，动态的给图标填充不同的颜色，差不多就跟下面的效果有点相似~</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185811357.png" alt=""></p>
-<ul>
-<li>3.接下来可以将换过颜色的 <code>svg</code> 通过 <code>svg</code> 转 <code>base64</code> 的插件将其转换成 <code>base64</code> 编码，这里为了方便，我直接偷懒，<a href="https://www.sojson.com/image2base64.html" target="_blank" rel="external">在线转换</a>了，对应的 <code>base64</code> 编码如下：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;!--map--&gt;</div><div class="line">data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzIuMDBweCIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9InJlZCIgZD0iTTUxMy41Nzc4MDcgMTAxOC40ODg0MjVhMjQuNTcyMjI0IDI0LjU3MjIyNCAwIDAgMS0yMC4xOTMwNjYtMTAuNTY4NTQ0TDE5Mi4wMDIwNDggNTczLjM1NDI4YTI0LjY4MDc1NiAyNC42ODA3NTYgMCAwIDEtMC45Mzc4NzktMS40NTgwMTIgMzczLjg4MTk2NSAzNzMuODgxOTY1IDAgMCAxLTM0LjA3Njk1Mi03NS4zNjYxNTFjLTEyLjA3Nzc1MS0zNy4zMTE0MDUtMTguMTk4NTM4LTc2LjE5NjUyMi0xOC4xOTg1MzctMTE1LjU4OTQ4NiAwLTIwNi42NjQwODYgMTY4LjEzMzIzMy0zNzQuNzk4MzQzIDM3NC43OTgzNDItMzc0Ljc5ODM0MyA0Ny45NDM0MyAwIDk2LjAzODM5NiAxMS41NzkxMTkgMTQyLjk0NzcwMiAzNC40MTU4NTcgNDIuNzAzMTg1IDIwLjc4ODk2OCA4My43NjYxMDYgNTEuMDQyNzMxIDExOC43NTEyNDQgODcuNDg4OTU0IDM0LjA4NzE5IDM1LjUxMTQxNSA2Mi40MzE0MDggNzYuODYyMDQ3IDgxLjk2NzE0IDExOS41ODI2MzggMjAuMzYyMDA3IDQ0LjUyNDY3NyAzMS4xMjIwMTggOTAuNjEyODI3IDMxLjEyMDk5NCAxMzMuMjgwMTc3IDAgMzkuNDAyMTc5LTYuMTIxODEgNzguMjg2MjcyLTE4LjE5NDQ0MiAxMTUuNTczMTA0LTguMzM3NDk4IDI1LjcyODE5LTE5Ljg1OTI4IDUxLjM4NDcwOS0zMy4zMjQzOTYgNzQuMjAwOTY5LTAuMzA0MDk0IDAuNTE2MDM4LTAuNjI3NjQyIDEuMDIwODE0LTAuOTY4NTk1IDEuNTE0MzI3TDUzMy43NzA4NzQgMTAwNy45MTc4MzNhMjQuNTc2MzE5IDI0LjU3NjMxOSAwIDAgMS0yMC4xOTMwNjcgMTAuNTcwNTkyek0yMzIuODkwOTA4IDU0Ni4wNzI4NTZsMjgwLjY4MzgyOCA0MDQuNzE4MzE5TDc5NC45NzgzNTQgNTQ0Ljk0OTY1NGMxMS40Njk1NjMtMTkuNTcwNTQ0IDIxLjI5ODg2My00MS41NDYxOTUgMjguNDQ3NjMtNjMuNjA3ODUyIDEwLjQ4NDU4Ni0zMi4zODM0NDUgMTUuODAyNjQ2LTY2LjE3NTc1NiAxNS44MDI2NDYtMTAwLjQzMDg2NCAwLjAwNDA5Ni03Mi4xODE4NjgtMzcuMTUzNzI3LTE1My45ODcyMzMtOTkuMzk2NzM5LTIxOC44Mjg4NjdDNjc0LjY4NjE2MyA5NC4yMTM4MzIgNTkyLjIyMzQ2MyA1NS4yODk4MDggNTEzLjU4ODA0NiA1NS4yODk4MDhjLTE3OS41NjQ5MTMgMC0zMjUuNjUxODQ3IDE0Ni4wODY5MzQtMzI1LjY1MTg0NyAzMjUuNjUxODQ3IDAgMzQuMjQ1ODkyIDUuMzE3MDM2IDY4LjAzOTIyOCAxNS44MDQ2OTQgMTAwLjQzOTA1NGEzMjQuNTgxODg3IDMyNC41ODE4ODcgMCAwIDAgMjkuMTUwMDE1IDY0LjY5MjE0N3ogbTU4Mi44MDI2OTQgMTIuMTI0ODVoMC4wMTAyMzktMC4wMTAyMzl6IG0tMzAyLjc2MDg0MiAxOC42NDI5MDRjLTk2Ljg2MTYgMC0xNzUuNjYzOTEtNzguODAzMzM0LTE3NS42NjM5MS0xNzUuNjY0OTM0czc4LjgwMjMxLTE3NS42NjM5MSAxNzUuNjYzOTEtMTc1LjY2MzkwOWM5Ni44NjI2MjMgMCAxNzUuNjYzOTEgNzguODAyMzEgMTc1LjY2MzkwOSAxNzUuNjYzOTA5cy03OC44MDEyODYgMTc1LjY2NDkzNC0xNzUuNjYzOTA5IDE3NS42NjQ5MzR6IG0wLTMwMi4xODIzNDhjLTY5Ljc2MjQyNyAwLTEyNi41MTc0MTQgNTYuNzU2MDExLTEyNi41MTc0MTUgMTI2LjUxNzQxNFM0NDMuMTcxMzU3IDUyNy42OTQxMTQgNTEyLjkzMjc2IDUyNy42OTQxMTQgNjM5LjQ1MDE3NCA0NzAuOTM4MTAzIDYzOS40NTAxNzQgNDAxLjE3NTY3NnMtNTYuNzU0OTg3LTEyNi41MTc0MTQtMTI2LjUxNzQxNC0xMjYuNTE3NDE0eiIgIC8+PC9zdmc+</div><div class="line"></div><div class="line">&lt;!--success--&gt;</div><div class="line">data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzEuOTdweCIgdmlld0JveD0iMCAwIDEwMjUgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9ImdyZWVuIiBkPSJNNTExLjY3OTUyNCAxMDIzLjE1OTM5Yy02OC42NTg2NzggMC0xMzUuMzk5NjE5LTEzLjU2NDQzMy0xOTguMzY5NTkxLTQwLjMxNjUwOS02MC43NTIyMzYtMjUuODA5MDc3LTExNS4zNzM0NDYtNjIuNzEyOTc2LTE2Mi4zNDYyMzMtMTA5LjY4NTc2My00Ni45NzE3NjMtNDYuOTcxNzYzLTgzLjg3NTY2Mi0xMDEuNTkyOTc0LTEwOS42ODU3NjMtMTYyLjM0NjIzMy0yNi43NTEwNTItNjIuOTY5OTcxLTQwLjMxNTQ4NS0xMjkuNzEwOTEyLTQwLjMxNTQ4NS0xOTguMzY4NTY3czEzLjU2NDQzMy0xMzUuMzk5NjE5IDQwLjMxNTQ4NS0xOTguMzY5NTkxYzI1LjgxMDEwMS02MC43NTIyMzYgNjIuNzE0LTExNS4zNzM0NDYgMTA5LjY4NTc2My0xNjIuMzQ2MjMzIDQ2Ljk3Mjc4Ny00Ni45NzE3NjMgMTAxLjU5Mzk5Ny04My44NzU2NjIgMTYyLjM0NjIzMy0xMDkuNjg1NzYzQzM3Ni4yNzk5MDUgMTUuMjg5NjggNDQzLjAyMDg0NiAxLjcyNTI0NyA1MTEuNjc5NTI0IDEuNzI1MjQ3UzY0Ny4wNzgxMTkgMTUuMjg5NjggNzEwLjA0ODA5MSA0Mi4wNDA3MzFjNjAuNzUyMjM2IDI1LjgxMDEwMSAxMTUuMzc0NDcgNjIuNzE0IDE2Mi4zNDYyMzMgMTA5LjY4NTc2MyA0Ni45NzI3ODcgNDYuOTcyNzg3IDgzLjg3NjY4NiAxMDEuNTkzOTk3IDEwOS42ODY3ODcgMTYyLjM0NjIzMyAyNi43NTIwNzYgNjIuOTY5OTcxIDQwLjMxNjUwOSAxMjkuNzEwOTEyIDQwLjMxNjUwOSAxOTguMzY5NTkxcy0xMy41NjQ0MzMgMTM1LjM5ODU5NS00MC4zMTY1MDkgMTk4LjM2ODU2N2MtMjUuODEwMTAxIDYwLjc1MzI2LTYyLjcxMjk3NiAxMTUuMzc0NDctMTA5LjY4NTc2MyAxNjIuMzQ2MjMzLTQ2Ljk3MTc2MyA0Ni45NzI3ODctMTAxLjU5Mzk5NyA4My44NzY2ODYtMTYyLjM0NjIzMyAxMDkuNjg1NzYzQzY0Ny4wNzkxNDMgMTAwOS41OTQ5NTcgNTgwLjMzNzE3OCAxMDIzLjE1OTM5IDUxMS42Nzk1MjQgMTAyMy4xNTkzOXpNNTExLjY3OTUyNCA1MC44NzE3NDJjLTYyLjAxODc4MiAwLTEyMi4yOTM4ODcgMTIuMjQ3NzE2LTE3OS4xNTIyODcgMzYuNDAzMjE5LTU0LjkyMzI1NyAyMy4zMzMzMjMtMTA0LjMxNzUzMiA1Ni43MDk5MzYtMTQ2LjgxMDgyMSA5OS4yMDQyNDlzLTc1Ljg3MDkyNiA5MS44ODg1ODgtOTkuMjA0MjQ5IDE0Ni44MTA4MjFjLTI0LjE1NTUwMyA1Ni44NTg0LTM2LjQwMzIxOSAxMTcuMTMzNTA1LTM2LjQwMzIxOSAxNzkuMTUyMjg3IDAgNjIuMDE3NzU4IDEyLjI0NzcxNiAxMjIuMjkyODYzIDM2LjQwMzIxOSAxNzkuMTUyMjg3IDIzLjMzMzMyMyA1NC45MjMyNTcgNTYuNzA5OTM2IDEwNC4zMTc1MzIgOTkuMjA0MjQ5IDE0Ni44MTE4NDUgNDIuNDkzMjg5IDQyLjQ5MzI4OSA5MS44ODg1ODggNzUuODcwOTI2IDE0Ni44MTA4MjEgOTkuMjA0MjQ5IDU2Ljg1ODQgMjQuMTU1NTAzIDExNy4xMzM1MDUgMzYuNDAzMjE5IDE3OS4xNTIyODcgMzYuNDAzMjE5IDYyLjAxNzc1OCAwIDEyMi4yOTM4ODctMTIuMjQ3NzE2IDE3OS4xNTMzMTEtMzYuNDAzMjE5IDU0LjkyMzI1Ny0yMy4zMzMzMjMgMTA0LjMxNzUzMi01Ni43MTA5NiAxNDYuODEwODIxLTk5LjIwNDI0OSA0Mi40OTQzMTMtNDIuNDk0MzEzIDc1Ljg3MTk1LTkxLjg4ODU4OCA5OS4yMDUyNzMtMTQ2LjgxMTg0NSAyNC4xNTU1MDMtNTYuODU4NCAzNi40MDMyMTktMTE3LjEzMzUwNSAzNi40MDMyMTktMTc5LjE1MjI4N3MtMTIuMjQ3NzE2LTEyMi4yOTM4ODctMzYuNDA0MjQzLTE3OS4xNTIyODdjLTIzLjMzMzMyMy01NC45MjMyNTctNTYuNzEwOTYtMTA0LjMxNzUzMi05OS4yMDQyNDktMTQ2LjgxMDgyMS00Mi40OTQzMTMtNDIuNDkzMjg5LTkxLjg4ODU4OC03NS44NzA5MjYtMTQ2LjgxMTg0NS05OS4yMDQyNDlDNjMzLjk3MjM4NyA2My4xMTk0NTkgNTczLjY5NzI4MiA1MC44NzE3NDIgNTExLjY3OTUyNCA1MC44NzE3NDJ6TTQ1MS43ODAxODUgNjg5Ljg0ODg4MWMtNi4yMjMxNzUgMC0xMi40NTI0OTMtMi4yNTU2MTktMTcuMzY1MDk1LTYuNzk0NTAzTDI1My4xOTU1NzggNTE1LjY1ODM0MmMtMTAuMzg0MjQ1LTkuNTkyNzgyLTExLjAyNzI0NS0yNS43ODc1NzYtMS40MzQ0NjMtMzYuMTcxODIxIDkuNTkyNzgyLTEwLjM4NjI5MyAyNS43ODY1NTItMTEuMDI2MjIxIDM2LjE3MTgyMS0xLjQzNDQ2M2wxNjMuMTQ2OTEyIDE1MC43MDM2MzMgMjg5Ljc1MzQwNC0yODkuNzU0NDI4YzkuOTk3MjE2LTkuOTk2MTkyIDI2LjIwMzI3My05Ljk5NjE5MiAzNi4xOTk0NjYgMCA5Ljk5NjE5MiA5Ljk5NjE5MiA5Ljk5NjE5MiAyNi4yMDMyNzMgMCAzNi4xOTk0NjZMNDY5Ljg4MzUwMSA2ODIuMzUxOTkzQzQ2NC44OTYxNTYgNjg3LjMzOTMzOCA0NTguMzQyMjY2IDY4OS44NDg4ODEgNDUxLjc4MDE4NSA2ODkuODQ4ODgxeiIgLz48L3N2Zz4=</div><div class="line"></div><div class="line">&lt;!--atm--&gt;</div><div class="line">data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzEuOTdweCIgdmlld0JveD0iMCAwIDEwMjUgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9ImJsdWUiIGQ9Ik01MTEuNzA4MTkzIDk4NS40NTk5MzJjLTI0My40MzQ4NzkgMC00NDIuNjA4MjItMTkxLjc5NzI3MS00NDIuNjA4MjItNDMwLjMxNDQyOSAwLTExNC4zNTQ2OCA0NS43NDIwNzctMjE5LjA3OTcxOSAxMjIuOTMzODE1LTI5Ny40OTkwOTYgMC4zNzA2NDYtMC4zNzY3OSAwLjAzOTkzMi0yLjgyMjg1Mi0wLjAyODY2OS00LjYzNTEyOS0wLjA4Mzk1OS0yLjE5ODI4MiAwLjA0MTk3OS0zLjg4NDYyMSAwLjA0MTk3OS01LjIzMzA3OEwxOTIuMDQ3MDk5IDc1LjY1Mzg2M2MwLTEyLjI5NDgxNSA3LjM3NzA5NC0yMi4xMzAyNTcgMTkuNjcxOTA5LTI0LjU4OTYzIDAgMCAwIDAgMi40NTkzNzMgMCAyLjQ1OTM3MyAwIDIuNDU5MzczIDAgMi40NTkzNzMgMHMwIDAgMi40NTkzNzMgMGM0LjkxNzcyMSAwIDkuODM1NDQyIDAgMTQuNzUzMTY0IDIuNDU5MzczbDE0Mi42MTgwMTEgODguNTIyMDU0IDIuNDU5MzczIDIuNDU5MzczYzQxLjgwMjE2Ni0xMi4yOTQ4MTUgODYuMDYyNjgxLTE5LjY3MTkwOSAxMzIuNzgyNTY4LTE5LjY3MTkwOSAyNDMuNDM0ODc5IDAgNDQyLjYwODIyIDE5MS43OTcyNzEgNDQyLjYwODIyIDQzMC4zMTQ0MjlTNzU1LjE0MzA3MiA5ODUuNDU5OTMyIDUxMS43MDgxOTMgOTg1LjQ1OTkzMnpNNTExLjcwODE5MyAxNzQuMDExMzU5Yy00NC4yNjA1MTUgMC04OC41MjIwNTQgNy4zNzcwOTQtMTI3Ljg2NDg0NyAyMi4xMzAyNTdsMCAwYy0xMC4zNzcwNzggNS40MTAyMS0yNC41ODk2MyA0LjkxNzcyMS0zNC40MjUwNzItMi40NTkzNzNMMjQxLjIyNTMzNSAxMjkuNzQ5ODJsMCAxMTguMDI5NDA1YzAgOS43MDIzMzcgMy4wNDA5MzkgMjEuMDI1NDg1LTAuNjA0MDkyIDI5LjczMjYwNi0wLjA1MDE3IDAuMTE5Nzk1LTAuMzEzMzA5IDAuNDkyNDg5LTAuNTEwOTE5IDAuNjk5MzE0LTAuMDUxMTk0IDAuMDUzMjQyLTAuMTE0Njc1IDAuMTA4NTMyLTAuMTg0Mjk5IDAuMTc2MTA4LTc0LjIyNDUxOSA3MC44NTQ5MTItMTIxLjY0Njc5MiAxNjcuOTM2NjQ3LTEyMS42NDY3OTIgMjc2Ljc1OTI3NSAwIDIxMS40NjgxNTYgMTc3LjA0MzA4MyAzODEuMTM1MTY5IDM5My40Mjk5ODQgMzgxLjEzNTE2OVM5MDUuMTM4MTc3IDc2Ni42MTQ2ODMgOTA1LjEzODE3NyA1NTUuMTQ2NTI4QzkwNS4xMzgxNzcgMzQzLjY3NzM0OCA3MjguMDk1MDkzIDE3NC4wMTEzNTkgNTExLjcwODE5MyAxNzQuMDExMzU5ek01MzYuMjk4ODQ3IDU0Ni4zMDAxNThjLTE0LjEzNzgwOSAwLTI1LjU5NzEzMy0xMS40NTkzMjUtMjUuNTk3MTMzLTI1LjU5NzEzM2wwLTc2LjczNzEzM2MwLTE0LjEzNjc4NSAxMS40NTkzMjUtMjUuNTk3MTMzIDI1LjU5NzEzMy0yNS41OTcxMzNzMjUuNTk3MTMzIDExLjQ2MDM0OCAyNS41OTcxMzMgMjUuNTk3MTMzbDAgNzYuNzM3MTMzQzU2MS44OTU5OCA1MzQuODQwODM0IDU1MC40MzU2MzEgNTQ2LjMwMDE1OCA1MzYuMjk4ODQ3IDU0Ni4zMDAxNTh6TTcyMy42Njk4NjEgNTQ2LjMwMDE1OGMtMTQuMTM3ODA5IDAtMjUuNTk3MTMzLTExLjQ1OTMyNS0yNS41OTcxMzMtMjUuNTk3MTMzbDAtNzYuNzM3MTMzYzAtMTQuMTM2Nzg1IDExLjQ1OTMyNS0yNS41OTcxMzMgMjUuNTk3MTMzLTI1LjU5NzEzM3MyNS41OTcxMzMgMTEuNDYwMzQ4IDI1LjU5NzEzMyAyNS41OTcxMzNsMCA3Ni43MzcxMzNDNzQ5LjI2Njk5NCA1MzQuODQwODM0IDczNy44MDY2NDYgNTQ2LjMwMDE1OCA3MjMuNjY5ODYxIDU0Ni4zMDAxNTh6IiAvPjwvc3ZnPg==</div></pre></td></tr></table></figure>
-<ul>
-<li>4.接着我们只需要把对应的 <code>base64</code> 编码发给小程序端，小程序直接放在 <code>image</code> 组件中的 <code>src</code> 属性即可，对于样式来说，可以直接修改 <code>image</code> 的样式来控制 <code>icon</code> 样式，效果如下：</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/20200611185836926.png" alt=""></p>
-<p>ok~ 还算是比较圆满的完成了任务~</p>
-<p>这下产品总不会刁难我了吧~</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p> 到此，我们已经 <code>get</code> 到了两种小程序中实现 <code>icon</code> 自定义颜色的解决方案，对比发现，第一种方案的特点是实现起来比较简单，步骤什么的也都还ok，就是拓展性不强，每次改动都需要重新再来一遍，而且对于比较多的图标来说小程序空间占用较大，有一定的局限性，而第二种方案相比于第一种来说虽然在实现过程中稍微繁琐了一些，但是带来的效果是显而易见的，解决了第一种方案的弊端，拓展性什么的都很好，是我比较推荐的，也是我们正在采用的一种方案~</p>
-<p> 当然，这不过是我的一种实现思路，如果你有关于这方面更好的解决方案记得及时艾特我，我已经迫不及待的等待学习了~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185905115.png" alt=""></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1130,7 +1122,7 @@ console.log(add(8,9));  // 17
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1141,7 +1133,7 @@ console.log(add(8,9));  // 17
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1152,7 +1144,7 @@ console.log(add(8,9));  // 17
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="React," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="引言我们日常中使用 react 开发项目，那么一定会跟 react-rouer 打交道，但是由于 react 路由的设计和用法，使得很多刚使用 react 的同学在接触到react-router的时候就会很蛋疼，不知道其匹配的机制和原理。 追本溯源一直是我们学习和提升过程中一个很重要的过程，本文就以 HashRouter 为例，结合最新的 react-hooks 语法， 一步步的实现一个属于自己的">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="手动实现一个 react-router-dom">
+<meta property="og:url" content="http://yoursite.com/2020/08/25/react-router-dom/index.html">
+<meta property="og:site_name" content="Cryptic&#39;s Blog">
+<meta property="og:description" content="引言我们日常中使用 react 开发项目，那么一定会跟 react-rouer 打交道，但是由于 react 路由的设计和用法，使得很多刚使用 react 的同学在接触到react-router的时候就会很蛋疼，不知道其匹配的机制和原理。 追本溯源一直是我们学习和提升过程中一个很重要的过程，本文就以 HashRouter 为例，结合最新的 react-hooks 语法， 一步步的实现一个属于自己的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-08-25T10:45:56.454Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="手动实现一个 react-router-dom">
+<meta name="twitter:description" content="引言我们日常中使用 react 开发项目，那么一定会跟 react-rouer 打交道，但是由于 react 路由的设计和用法，使得很多刚使用 react 的同学在接触到react-router的时候就会很蛋疼，不知道其匹配的机制和原理。 追本溯源一直是我们学习和提升过程中一个很重要的过程，本文就以 HashRouter 为例，结合最新的 react-hooks 语法， 一步步的实现一个属于自己的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2020/08/25/react-router-dom/"/>
+
+
+
+
+
+  <title>手动实现一个 react-router-dom | Cryptic's Blog</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b8caac68f7b00d37aea3c9ee8ce00dd7";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Cryptic's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/25/react-router-dom/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">手动实现一个 react-router-dom</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T18:45:18+08:00">
+                2020-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index">
+                    <span itemprop="name">React</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>我们日常中使用 <code>react</code> 开发项目，那么一定会跟 <a href="https://reactrouter.com/" target="_blank" rel="external"><code>react-rouer</code></a> 打交道，但是由于 <code>react</code> 路由的设计和用法，使得很多刚使用 <code>react</code> 的同学在接触到<code>react-router</code>的时候就会很蛋疼，不知道其匹配的机制和原理。</p>
+<p>追本溯源一直是我们学习和提升过程中一个很重要的过程，本文就以 <code>HashRouter</code> 为例，结合最新的 <code>react-hooks</code> 语法， 一步步的实现一个属于自己的 <code>react-router</code>，看一看 <code>react-router</code> 到底应该怎么实现！</p>
+<h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><p>我们需要做一些前期的准备工作，初始化项目这一步是必须的，我们通过</p>
+<p><code>npx create-react-app my-react-router</code> </p>
+<p>脚手架工具初始化一个项目，为了方便测试，将里面没用的文件删除掉，保留一个比较干净的 <code>workspace</code>。</p>
+<p>新建 <code>react-router-dom</code> 的文件夹，存放我们自定义的 <code>router</code> 组件。</p>
+<p>新建 <code>views</code> 文件夹，先自定义三个组件并将其导入到 <code>App.js</code> 中，用于后期测试我们的页面跳转，这里我已 <code>Home</code>，<code>Category</code>，<code>Profile</code>三个组件为例。</p>
+<h3 id="Context-api"><a href="#Context-api" class="headerlink" title="Context api"></a>Context api</h3><p><a href="https://reactrouter.com/web/api/Route" target="_blank" rel="external"><code>react-router</code></a> 最基本的用法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;Router&gt;</div><div class="line">    &lt;div&gt;</div><div class="line">      &lt;Route path=&quot;/&quot;&gt;</div><div class="line">        &lt;Home /&gt;</div><div class="line">      &lt;/Route&gt;</div><div class="line">      &lt;Route path=&quot;/news&quot;&gt;</div><div class="line">        &lt;News /&gt;</div><div class="line">      &lt;/Route&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">  &lt;/Router&gt;</div></pre></td></tr></table></figure>
+<p>我们在使用 <code>Router</code> 的时候，只要是被 <code>Route</code> 包裹的组件，我们都可以通过 <code>props</code> 属性获取到改组件的路由信息，而这些信息都是往往都是通过父组件 <code>Router</code> 传递过去的，这也是为什么要用 <code>Router</code> 包裹 <code>Route</code> 的原因。</p>
+<p>当 <code>Route</code> 嵌套过深，路由信息更为复杂的时候，为了解决嵌套路由之间的数据共享，以及状态更新的问题，需要引入新的 <code>api</code>，即 <code>createContext</code> 和 <code>useContext</code>，它可以实现跨组件的数据传递。</p>
+<p>因此，我们在 <code>react-router-dom</code> 文件夹下创建一个 <code>Context</code> 文件，用于管理路由信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;</div><div class="line"></div><div class="line">// 创建路由共享 context</div><div class="line">const RouterContext = React.createContext(&#123;&#125;);</div><div class="line"></div><div class="line">export default RouterContext;</div></pre></td></tr></table></figure>
+<p>关于 <code>createContext</code> 和 <code>useContext</code> 的用法，这里不在赘述，不了解的小伙伴，这里给你们准备了一篇文章，<a href="http://www.ptbird.cn/react-createContex-useContext.html" target="_blank" rel="external">供你参考</a>。</p>
+<h3 id="Router-组件"><a href="#Router-组件" class="headerlink" title="Router 组件"></a>Router 组件</h3><p>上面我们大概了解了 <code>react-router</code> 的基本用法，即 <code>Router</code> 和 <code>Route</code> 组件。</p>
+<p>我们不妨也仿照着先来构建这两组件。</p>
+<p>我们在 <code>react-router-dom</code> 文件夹下新建，<code>index.js</code> 入口文件 ，以及 <code>HashRouter.js</code> 和 <code>Route.js</code> 两个组件文件，并在入口文件导出，<code>App.js</code> 引入即可。</p>
+<p><code>App.js</code> 组件基本内容如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">import &#123; HashRouter as Router , Route &#125; from &apos;./react-router-dom&apos;</div><div class="line">function App () &#123;</div><div class="line">	return (</div><div class="line">    	&lt;Router&gt;</div><div class="line">			&lt;div className=&quot;App&quot;&gt;</div><div class="line">                &lt;div className=&quot;&quot;&gt;</div><div class="line">                    &lt;Route path=&#123;&apos;/home&apos;&#125; component=&#123;Home&#125; /&gt;</div><div class="line">                    &lt;Route path=&#123;&apos;/category&apos;&#125; component=&#123;Category&#125; /&gt;</div><div class="line">                    &lt;Route path=&#123;&apos;/profile&apos;&#125; component=&#123;Profile&#125; /&gt;</div><div class="line">                &lt;/div&gt;</div><div class="line">          	&lt;/div&gt;</div><div class="line">      	&lt;/Router&gt;</div><div class="line">	);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Router.js</code> 组件，主要是给子组件提供路由信息，因为其基础结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;;</div><div class="line">import RouterContext from &apos;./Context&apos;;</div><div class="line"></div><div class="line">const HashRouter = (props) =&gt; &#123;</div><div class="line">	return &lt;RouterContext.Provider value=&#123;&#123;a : 1&#125;&#125;&gt;</div><div class="line">		&#123; props.children &#125;</div><div class="line">	&lt;/RouterContext.Provider&gt;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default HashRouter;</div></pre></td></tr></table></figure>
+<p>其中 <code>props.children</code> 就是 <code>Router.js</code> 组件所包裹的子组件的内容。</p>
+<ul>
+<li>初始化路由</li>
+</ul>
+<p>如果初始化没有 <code>hash</code> 值，在初始化路由的时候默认会被自动到导向到 <code>#/</code> 根路由上去，我们需要在 <code>useEffect</code> 中做处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">useEffect(()=&gt;&#123;</div><div class="line">    // 初始化路由信息</div><div class="line">    window.location.hash = window.location.hash || &apos;/&apos;;</div><div class="line">&#125;,[])</div></pre></td></tr></table></figure>
+<ul>
+<li>构建 <code>location</code> 信息</li>
+</ul>
+<p>路由信息里有一个非常重要的属性 <code>location</code>，里面包含了 <code>pathname</code> ， <code>hash</code> 等参数，因此我们需要通过 <code>useState</code> 构建这么一个状态；</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// location 状态</div><div class="line">const [location, setLocation] = useState(&#123;</div><div class="line">    pathname: window.location.hash.slice(1) || &apos;/&apos;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<ul>
+<li>监控 <code>hash</code> 变化</li>
+</ul>
+<p>有了 <code>location</code> 的状态，我们需要在 <code>hashchange</code> 的时候去更改它，需要在 <code>useEffect</code> 添加 <code>onHashChange</code> 事件，监控 <code>hash</code> 变化，并更新 <code>location</code> 的值。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// hash 变化处理函数</div><div class="line">const onHashChange = () =&gt; &#123;</div><div class="line">    setLocation((location) =&gt; (&#123;</div><div class="line">        ...location,</div><div class="line">        pathname: window.location.hash.slice(1) || &apos;/&apos;</div><div class="line">    &#125;))</div><div class="line">&#125;</div><div class="line"></div><div class="line">useEffect(() =&gt; &#123;</div><div class="line">    // 初始化路由信息</div><div class="line">    window.location.hash = window.location.hash || &apos;/&apos;;</div><div class="line">    // 监控 hash 变化</div><div class="line">    window.addEventListener(&apos;hashchange&apos;, onHashChange, false);</div><div class="line">&#125;, [])</div></pre></td></tr></table></figure>
+<ul>
+<li>传递 <code>location</code> 属性</li>
+</ul>
+<p>父组件已经可以根据 <code>hash</code> 状态更新 <code>location</code> 的值，那么 <code>Route</code> 子组件需要根据 <code>pathname</code> 的状态去匹配对应的 <code>Component</code>，所以父组件需要通过  <code>context</code> 的值将 <code>location</code> 信息传递下去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 传递给子组件</div><div class="line">const value = &#123;</div><div class="line">    location</div><div class="line">&#125;</div><div class="line">return &lt;RouterContext.Provider value=&#123;value&#125;&gt;</div><div class="line">    &#123;props.children&#125;</div><div class="line">&lt;/RouterContext.Provider&gt;</div></pre></td></tr></table></figure>
+<h3 id="Route-组件"><a href="#Route-组件" class="headerlink" title="Route 组件"></a>Route 组件</h3><p>上面父组件已经通过 <code>context</code> 将路径传递给了 <code>Route</code> 子组件，<code>Route</code> 子组件就可以通过<code>useContext</code> 去消费父组件提供的 <code>location</code>，进而进行路径匹配，决定组件的渲染。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 获取 pathname 路径</div><div class="line">const &#123; location: &#123; pathname &#125; &#125; = useContext(RouterContext);</div><div class="line">// 获取 path 和 Component 属性</div><div class="line">const &#123; path, component: Component &#125; = props;</div><div class="line">// 判断路径是否匹配，匹配返回对应的组件</div><div class="line">if ( pathname === path ) return &lt;Component/&gt;;</div><div class="line">// 不匹配返回 null</div><div class="line">return null;</div></pre></td></tr></table></figure>
+<p>现在一个，基本的匹配就完成了，你可以手动在地址栏上输入对应的 <code>hash</code> 值，就可以看到匹配的组件了。</p>
+<p>这么匹配显然是有问题吧，因为它只能精确匹配，不能包含匹配，即路径为 <code>home/1</code> 的时候匹配不到 <code>Home</code> ，这是有问题的，我们需要将匹配规则进行修改，改成正则匹配。</p>
+<p>这里我们利用一个第三方的库 <code>Path-to-RegExp</code> 来实现，它的介绍和详细用法请戳 <a href="https://github.com/pillarjs/path-to-regexp#readme" target="_blank" rel="external">这里</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// path 转正则进行匹配</div><div class="line">let reg = pathToRegexp(path, [], &#123; end: false &#125;);</div><div class="line">// 判断路径是否匹配，匹配返回对应的组件</div><div class="line">let result = pathname.match(reg);</div><div class="line">if ( result ) return &lt;Component/&gt;;</div></pre></td></tr></table></figure>
+<p>其中 <code>end:false</code> 表示不精确匹配。</p>
+<p>ok，这样一来就比较靠谱了~</p>
+<p>虽然解决了上面的问题，但我们访问 <code>home/1</code> 的时候，会同时匹配 <code>home</code> 和 <code>home/1</code> 两个路径所对应的组件，而我们就想只匹配一个的时候，我们需要加上 <code>exact</code> 参数。</p>
+<p>我们上述代码只需要简单的修改即可，<code>end</code> 参数的值通过结构 <code>props</code> 的 <code>exact</code> 参数来获取，默认为 <code>false</code> 即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 获取 path 和 Component 属性</div><div class="line">const &#123; path, component: Component, exact = false &#125; = props;</div><div class="line">// path 转正则进行匹配</div><div class="line">let reg = pathToRegexp(path, [], &#123; end: exact &#125;);</div></pre></td></tr></table></figure>
+<h3 id="Link-组件"><a href="#Link-组件" class="headerlink" title="Link 组件"></a>Link 组件</h3><p>我们目前实现的结果是可以通过手动输入 <code>hash</code> 的值，可以跳转到对应的组件，这样显然很不方便，我们希望的是可以通过点击来完成这一功能，需要提供一个 <code>Link</code> 组件。</p>
+<p>先在 <code>react-router-dom</code> 目录下新建 <code>Link</code> 组件，并在 <code>index.js</code> 中导出。</p>
+<p>我们需要点击跳转，那么就需要有一个跳转的方法 <code>push</code> ， 该方法应该是由 父组件 <code>Router</code> 提供的，因此我们在 <code>Router</code> 组件新增一个 <code>history</code> 属性，里面有一个 <code>push</code> 方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// Rouer.js</div><div class="line"></div><div class="line">// 传递给子组件</div><div class="line">const value = &#123;</div><div class="line">    location,</div><div class="line">    history : &#123;</div><div class="line">        push(to)&#123;</div><div class="line">            window.location.hash = to;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后在 <code>Link</code> 组件接收使用即可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">const Link = (props) =&gt; &#123;</div><div class="line">	// 获取 push 方法</div><div class="line">	const &#123; history: &#123; push &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 获取跳转路径</div><div class="line">	const &#123; to &#125; = props;</div><div class="line">	// 跳转</div><div class="line">	return &lt;a onClick=&#123;() =&gt; push(to)&#125;&gt;&#123;props.children&#125;&lt;/a&gt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="Redirect-组件"><a href="#Redirect-组件" class="headerlink" title="Redirect 组件"></a>Redirect 组件</h3><p>有时候我们希望用户访问到某一路由时重定向到其他路由，例如我们如果输入不合法的路由，匹配不成功的时候我们希望重定向到我们的首页 <code>/home</code> 上去，就需要用到 <code>Redirect</code> 组件。</p>
+<p><code>App.js</code> 组件稍做修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;Route path=&#123;&apos;/home&apos;&#125; exact=&#123;true&#125; component=&#123;Home&#125;/&gt;</div><div class="line">&lt;Route path=&#123;&apos;/category&apos;&#125; component=&#123;Category&#125;/&gt;</div><div class="line">&lt;Route path=&#123;&apos;/profile&apos;&#125; component=&#123;Profile&#125;/&gt;</div><div class="line">&lt;Redirect to=&#123;&apos;/home&apos;&#125; /&gt;</div></pre></td></tr></table></figure>
+<p>在我们的 <code>react-router-dom</code> 文件夹下新建 <code>Redirect.js</code> 文件并在 <code>index.js</code> 导出。</p>
+<p><code>Redirect</code> 组件与 <code>Link</code> 类似，只不过它不做热河渲染，加载完毕就直接跳转。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">const Redirect = (props) =&gt; &#123;</div><div class="line">	// 获取 push 方法</div><div class="line">	const &#123; history: &#123; push &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 获取跳转路径</div><div class="line">	const &#123; to &#125; = props;</div><div class="line">	// 重定向跳转</div><div class="line">	useEffect(() =&gt; &#123;</div><div class="line">		push(to);</div><div class="line">	&#125;, [push, to]);</div><div class="line">	// 不渲染</div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这会，你随便敲一个不存在路径，就会帮你重定向到 <code>home</code> 页面~</p>
+<p>但是，你再点击 <code>category</code>、<code>profile</code> 路由的时候也会闪一下后重定向到 <code>home</code> 页面。</p>
+<p>这是因为，我们并没有做处理，虽然匹配到了 <code>category</code> 和 <code>profile</code> 路由，但是也并不妨碍继续往下执行，就又到了 <code>Redirect</code> 组件，应该说是我们无论如何匹配都会重定向到 <code>home</code> 页面，这显然是不合理的，需要通过 <code>Swtich</code> 组件进行包裹。</p>
+<h3 id="Swtich-组件"><a href="#Swtich-组件" class="headerlink" title="Swtich 组件"></a>Swtich 组件</h3><p><code>Swtich</code> 组件要实现的功能就是当我们匹配到了路径之后，就不需要继续匹配，解决上述重定向的问题。</p>
+<p>我们在 <code>react-router-dom</code> 文件夹下新建 <code>Swtich.js</code> 文件并在 <code>index.js</code> 导出。</p>
+<p>实现思路就是，循环遍历 <code>Switch</code> 的子组件，判断当前路径是否与子组件的路由匹配，匹配成功后返回即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">const Switch = (props) =&gt; &#123;</div><div class="line">	// 获取 pathname 路径</div><div class="line">	const &#123; location: &#123; pathname &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 子组件</div><div class="line">	const children = props.children;</div><div class="line">	// 循环遍历进行匹配</div><div class="line">	for ( let i = 0; i &lt; children.length; i++ ) &#123;</div><div class="line">		// 子组件</div><div class="line">		let child = children[i];</div><div class="line">		// 子组件的路径（redirect 没有 path 属性）</div><div class="line">		let path = child.props.path || &apos;&apos;;</div><div class="line">		// 路由正则</div><div class="line">		let reg = pathToRegexp(path, [], &#123; end: false &#125;);</div><div class="line">		// 如果匹配成功</div><div class="line">		if( reg.test(pathname )) return child;</div><div class="line">	&#125;</div><div class="line">	// 匹配不成功</div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>现在只要在我们的 <code>Route</code> 上用 <code>Switch</code> 包裹一下，就可以解决上述问题了！</p>
+<p>现在，我们的基本路由已经实现了一大半了，赞！</p>
+<h3 id="组件Props"><a href="#组件Props" class="headerlink" title="组件Props"></a>组件Props</h3><p>目前我们的跳转只能靠 <code>Link</code> 或者 <code>Redirect</code> 组件来实现，实际上我们并不希望这样，我们希望每个组件都可以获取 <code>Router</code> 组件的 <code>history</code> 以及 <code>location</code> 等属性，方便子组件的使用。</p>
+<p>实现方式也非常简单，只需要将我们的 <code>Route</code> 稍作修改即可，在渲染 <code>Component</code> 的时候以 <code>props</code> 的方式传递给子组件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 传递给子组件的数据</div><div class="line">const &#123; location, history &#125; = useContext(RouterContext);</div><div class="line">const componentProps = &#123;</div><div class="line">    location,</div><div class="line">    history,</div><div class="line">    match: &#123;&#125;</div><div class="line">&#125;</div><div class="line">if ( result ) return &lt;Component &#123;...componentProps&#125;/&gt;;</div></pre></td></tr></table></figure>
+<p>这样，子组件就可以获取 <code>history</code> ，<code>location</code> 等参数，即可以在组件中通过 <code>props.history.push</code> 方法进行跳转了。</p>
+<h3 id="参数路由"><a href="#参数路由" class="headerlink" title="参数路由"></a>参数路由</h3><p>类似 <code>/detail/:id</code> 这种带参数的路由实际生产是非常常见的，我们要动态获取 <code>id</code> 的值，好在 <code>path-to-regexp</code> 这个包给我们提供了解析路由的参数的方法，只需要照搬即可。</p>
+<p>将 <code>Route.js</code> 组件修改一下，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">const Route = (props) =&gt; &#123;</div><div class="line">	// 获取 pathname 路径</div><div class="line">	const &#123; location: &#123; pathname &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 获取 path 和 Component 属性</div><div class="line">	const &#123; path, component: Component, exact = false &#125; = props;</div><div class="line">	// path 转正则进行匹配</div><div class="line">	let keys = [];</div><div class="line">	let reg = pathToRegexp(path, keys, &#123; end: exact &#125;);</div><div class="line">	// 判断路径是否匹配，匹配返回对应的组件</div><div class="line">	let result = pathname.match(reg);</div><div class="line">	let [url, ...values] = result || [];</div><div class="line">	// 传递给子组件的数据</div><div class="line">	const &#123; location, history &#125; = useContext(RouterContext);</div><div class="line">	const componentProps = &#123;</div><div class="line">		location,</div><div class="line">		history,</div><div class="line">		match: &#123;</div><div class="line">			path: pathname,</div><div class="line">			params: keys.reduce((obj, current, idx) =&gt; &#123;</div><div class="line">				obj[current[&apos;name&apos;]] = values[idx]</div><div class="line">				return obj;</div><div class="line">			&#125;, &#123;&#125;),</div><div class="line">			url</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	if ( result ) return &lt;Component &#123;...componentProps&#125;/&gt;;</div><div class="line">	// 不匹配返回 null</div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>通过 <code>keys</code> 查询匹配的 <code>name</code> 属性值，通过 <code>values</code> 查询匹配的 <code>name</code> 属性值对应的<code>value</code> 值，之后将其放到 <code>match</code> 对象中，一并传递给子组件，子组件就可以在 <code>props</code> 的 <code>match</code> 中查询到该值。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>至此，我们已经实现了一个简易版的 <code>react-router</code> ， 有没有感到一丝欣慰？</p>
+<p>相信你能阅读到这里，对 <code>react-router</code> 有了一个较深的理解，当你深入了解之后发现 <code>react-router</code> 的实现非常巧妙，并不是特别复杂，当然，这些基础功能也只是冰山一角，还有更多更强大功能等着你去实现。</p>
+<p>代码已上传<a href="https://github.com/Chris-wei/react-router-dom" target="_blank" rel="external">github</a>，需要的小伙伴自行查阅！</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/22/OAuth2/" rel="next" title="OAuth 的全方位渗透及node实现">
+                <i class="fa fa-chevron-left"></i> OAuth 的全方位渗透及node实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="/images/headImg.jpg"
+              alt="Chris wei" />
+          
+            <p class="site-author-name" itemprop="name">Chris wei</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Chris-wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-globe"></i>简书</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/DreamerChenwei" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>Twitter</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.facebook.com/profile.php?id=100010732998898" target="_blank" title="FB Page">
+                  
+                    <i class="fa fa-fw fa-facebook"></i>FB Page</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化项目"><span class="nav-number">2.</span> <span class="nav-text">初始化项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Context-api"><span class="nav-number">3.</span> <span class="nav-text">Context api</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Router-组件"><span class="nav-number">4.</span> <span class="nav-text">Router 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Route-组件"><span class="nav-number">5.</span> <span class="nav-text">Route 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Link-组件"><span class="nav-number">6.</span> <span class="nav-text">Link 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redirect-组件"><span class="nav-number">7.</span> <span class="nav-text">Redirect 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Swtich-组件"><span class="nav-number">8.</span> <span class="nav-text">Swtich 组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件Props"><span class="nav-number">9.</span> <span class="nav-text">组件Props</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数路由"><span class="nav-number">10.</span> <span class="nav-text">参数路由</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结语"><span class="nav-number">11.</span> <span class="nav-text">结语</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chris wei</span>
+
+  
+</div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -278,6 +278,551 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/29/Stack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/29/Stack/" itemprop="url">JS中的算法与数据结构——栈(Stack)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-29T10:17:18+08:00">
+                2017-09-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="栈-Stack"><a href="#栈-Stack" class="headerlink" title="栈(Stack)"></a>栈(Stack)</h2><p>上一篇我们说到了<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，它是一种最自然的数据组织方式，如果对数据的存储顺序要求不重要，那么列表就是一种非常适合的数据结构，但对于计算机其他的一些应用（比如后缀表达式），那么列表就显得有些无能为力， 所以，我们需要一种和列表功能相似但更复杂的数据结构。</p>
+<p>栈，又叫堆栈，是和列表类似的一种数据结构，但是却更高效，因为栈内的元素只能通过列表的一端访问，称为栈顶，数据只能在栈顶添加或删除，遵循 先入后出(LIFO，last-in-first-out) 的原则，普遍运用于计算机的方方面面。</p>
+<p>对栈的操作主要有两种，一是将一个元素压入栈，push方法，另一个就是将栈顶元素出栈，pop方法。</p>
+<p>除此之外，栈还有其他的一些属性和方法：查看当前栈顶的元素值，我们使用 peek 方法，它仅仅返回栈顶元素值，并不删除它；clear 方法用于清空当前栈内的所有元素；top属性记录当前栈顶位置；length方法返回当前栈内元素总数等；接着我们定义栈的数据类型，并利用JS中的数组去实现它。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611182839144.png" alt="栈数据类型定义"></p>
+<h2 id="栈的实现"><a href="#栈的实现" class="headerlink" title="栈的实现"></a>栈的实现</h2><pre><code>//定义栈
+
+function Stack () {
+    this.dataStore = [];    //初始化为空
+    this.top = 0;           //记录栈顶位置
+    this.pop = pop;         //出栈
+    this.push = push;       //入栈
+    this.peek = peek;       //查看栈顶元素
+    this.length = length;   //查看栈内元素总数
+    this.clear = clear;     //清空栈
+}
+</code></pre><p>我们利用 dataStore 来保存栈内元素，初始化为空数组，top 属性用于记录当前栈顶位置，初始化的时候为0，<br>表示栈顶对应数组的起始位置是0，如果有元素入栈，则该属性会随之反生变化。</p>
+<p>首先我们先来实现第一个入栈方法。</p>
+<p><strong>push：向栈内压入一个新的元素</strong></p>
+<pre><code>//该方法将一个新元素入栈，放到数组中 top 所对应的位置上，并将 top 的值加 1，让其指向数组的下一个空位置
+
+function push( element ){
+    this.dataStore[this.top++] = element;
+}
+</code></pre><p>能入栈，就得可以出栈，接着我们来看出栈方法：</p>
+<p><strong>pop：取出栈顶元素</strong></p>
+<pre><code>//该方法与入栈相反，返回栈顶元素，并将 top 的值减 1
+
+function pop(){
+    return this.dataStore[--this.top];
+}
+</code></pre><p>如何查看栈顶元素呢，peek方法！</p>
+<p><strong>peek：查看栈顶元素</strong></p>
+<pre><code>//该方法返回的是栈顶元素，即 top - 1 个位置元素
+
+function peek(){
+    if( this.top &gt; 0 ) return this.dataStore[this.top-1];
+    else return &apos;Empty&apos;;
+}
+</code></pre><p>这里我做了个判断，如果一个空栈调用了 peek 方法，因为栈内没有任何元素，所以我这里返回了一个 ‘Empty’;</p>
+<p>现在，我们已经有了基本的入栈、出栈、查看栈顶元素的方法，我们不妨试一试。</p>
+<pre><code>//初始化一个栈
+var stack = new Stack();
+console.log( stack.peek() );    // Empty
+
+//入栈
+stack.push(&apos;Apple&apos;);
+stack.push(&apos;Banana&apos;);
+stack.push(&apos;Pear&apos;);
+
+//查看当前栈顶元素
+console.log( stack.peek() );    // Pear
+console.log( stack.pop() );     // Pear    
+</code></pre><p>如果我放入了一些水果，吃掉了一个，我现在想知道我还剩多少个水果怎么办？length 方法可以实现</p>
+<p><strong>length：返回栈内元素总数</strong></p>
+<pre><code>//该方法通过返回 top 属性的值来返回栈内总的元素个数
+
+function length(){
+    return this.top;
+}
+</code></pre><p>我们把代码恢复到出栈前的状态，也就是里面已经放了三个水果，接着我们来看看</p>
+<pre><code>console.log( stack.length() );      // 3
+
+//出栈
+stack.pop();
+
+console.log( stack.length() );      // 2
+</code></pre><p>好了，我们还剩最后一个clear方法，我们来实现一下</p>
+<p><strong>clear：清空栈</strong></p>
+<pre><code>//该方法实现很简单，我们将 top 值置为 0 ， dataStore 数值清空即可
+
+function clear(){
+    delete this.dataStore;
+    this.dataStore = [];
+    this.top = 0;
+}
+</code></pre><p>我们将上面的栈清空试试</p>
+<pre><code>stack.clear();
+
+console.log( stack.length() );      // 0
+console.log( stack.peek() );        // Empty
+</code></pre><p>至此，我们已经可以用JS实现一个栈，但是你仍可能处于不知道如何正确使用的状态，接下来，我们举两个例子，一起看看栈的使用。</p>
+<p><strong>案例1：实现数制间的相互转换</strong></p>
+<p>我们可以利用栈将一个数字从一种数制转换成另一种数制。例如将数字 n 转换成以 b 为基数的数字，可以采用如下算法（该算法只针对基数为 2-9 的情况）：</p>
+<ol>
+<li>最高位为 n % b ， 直接压入栈;</li>
+<li>使用 n / b 来代替 n ;</li>
+<li>重复上面的步骤，知道 n 为 0 ，并且没有余数；</li>
+<li>以此将栈内元素弹出，直到栈空，并依次将这些元素排列，就得到了转换后的形式</li>
+</ol>
+<p>代码如下：</p>
+<pre><code>//进制转换（2-9）
+
+function mulBase ( num , base ) {
+    var s = new Stack();
+    do{
+        s.push( num % base );
+        num = Math.floor( num /= base );
+    }while ( num &gt; 0 );
+
+    var converted = &apos;&apos;;
+    while (s.length() &gt; 0){
+        converted += s.pop();
+    }
+    return converted;
+}
+
+console.log( mulBase( 125 , 2 ) );      // 1111101
+console.log( mulBase( 125 , 8 ) );      // 175
+</code></pre><p><strong>案列2：判断一个字符串是不是回文</strong></p>
+<p>回文是指一个字符串，从前往后写和从后往前写结果都是一样的，比如单词 ‘level’ ， ‘racecar’，就是回文，数字 1001 也是回文。</p>
+<p>我们采用栈，可以很轻松判断一个字符串是否是回文，实现算法很简单，相信你们都猜到了。我们把字符串从左到右依次压入栈，这样，栈中保存了该字符串反转后的字符，我们再依次出栈，通过比较出栈后的字符串是否与原字符串是否相等，就可判断该字符串是否是回文。</p>
+<p>具体代码实现如下：</p>
+<pre><code>//回文判断
+
+function isPalindrome ( word ) {
+    var s = new Stack();
+    for( var i = 0 ; i &lt; word.length ; i ++ ){
+        s.push( word[i] );
+    }
+    var rword = &apos;&apos;;
+    while( s.length() &gt; 0 ){
+        rword += s.pop();
+    }
+
+    if( word == rword ){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+console.log( isPalindrome(&apos;level&apos;) )    // true
+console.log( isPalindrome(&apos;1001&apos;) )     // true
+console.log( isPalindrome(&apos;word&apos;) )     // false
+</code></pre><p>本文主要讲的是栈的运用，所以采用上述方式判断字符串是否是回文，实际上，你完全可以采用以下方式更方便的判断一个字符串是否是回文：</p>
+<pre><code>function isPalindrome ( word ){
+    return String(word).split(&apos;&apos;).reverse().join(&apos;&apos;) == word ? true : false;
+}
+</code></pre><p>到此，栈的内容也基本告一段落，希望你能有所收获，一起加油~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Dictionary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/27/Dictionary/" itemprop="url">JS中的算法与数据结构——字典(Dictionary)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T17:31:28+08:00">
+                2017-09-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
+                    <span itemprop="name">JS中的算法与数据结构</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="字典-Dictionary"><a href="#字典-Dictionary" class="headerlink" title="字典(Dictionary)"></a>字典(Dictionary)</h2><p>字典(Dictionary)是一种以 <strong>键-值对</strong> 形式存储数据的数据结构 ，就如同我们平时查看通讯录一样，要找一个电话，首先先找到该号码的机主名字，名字找到了，紧接着电话号码也就有了。这里的键就是你用来查找的东西，本例中指代的就是名字，值就是查找得到的结果，也就是对应的电话号码。</p>
+<p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
+<h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
+<p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611173603278.png" alt="数据类型定义"></p>
+<p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
+<pre><code>//字典类
+
+function Dictionary () {
+    this.dataStore = [];
+    this.add = add;         // 添加元素
+    this.find = find;       // 查找元素
+    this.remove = remove;   // 删除元素
+    this.count = count;     // 字典中元素个数
+    this.showAll = showAll; // 显示字典元素
+    this.clear = clear;     // 清空字典
+}
+</code></pre><p><strong>add：向字典添加一个元素</strong></p>
+<p>上面我们也提到，字典是以 键值对 的方式存储数据的，因此，add 方法就需要接受两个参数，分别是 键和值 ，其中键表示其在字典中的索引，实现如下</p>
+<pre><code>//向字典添加元素
+
+function add( key , value ){
+    this.dataStore[key] = value;
+}
+</code></pre><p>没错，就是这么简单！接着我们来看看 find 方法</p>
+<p><strong>find：查找字典中的元素</strong></p>
+<p>我们是以键值对方式存储的，因此我们只需要传入需要查找的键，就可以顺理成章的取到对应的值，这对应于JS中的数组也是十分简单的；</p>
+<pre><code>//查找字典中的元素
+
+function find( key ){
+    return this.dataStore[key];
+}
+</code></pre><p>有了添加和查找，接下来就是删除了！</p>
+<p><strong>remove：删除字典中的一个元素</strong></p>
+<p>要想删除字典中的一个元素，即删除一个 键值对 ， 我们需要借助 JS 提供的一个内置的函数 ： delete ，这个函数我们并不陌生，它可以同时删除键和与其对应的值，那么 remove 方法定义就很简单了</p>
+<pre><code>//删除一个元素
+
+function remove( key ){
+    if( this.dataStore[key] ) delete this.dataStore[key];
+    else return &apos;Not Found&apos;;
+}
+</code></pre><p>除此之外，我们还想显示字典中的所有键值对，showAll 方法来完成。</p>
+<p><strong>showAll：显示字典中所以键值对</strong></p>
+<pre><code>//显示字典元素
+
+function showAll () {
+    for( var key in this.dataStore ){
+        console.log( key + &apos;-&gt;&apos; + this.dataStore[key] );
+    }
+}
+</code></pre><p>我们已经完成了字典的基本操作，现在我们做个小测试，</p>
+<pre><code>//实例化字典类
+
+var directory = new Dictionary();
+
+//添加元素
+
+directory.add( &apos;Jack&apos; , &apos;138****5505&apos; );
+directory.add( &apos;Alice&apos; , &apos;156****6606&apos;);
+directory.add( &apos;Tom&apos; , &apos;180****8808&apos;);
+
+//显示字典
+
+directory.showAll();         // Jack-&gt;138****5505
+                             // Alice-&gt;156****6606
+                             // Tom-&gt;180****8808
+
+directory.remove( &apos;Tom&apos; );
+directory.showAll();         // Jack-&gt;138****5505
+                             // Alice-&gt;156****6606
+</code></pre><p> 我们定义的时候看到了还有两个方法没有实现呢，一个是 count ， 另一个是 clear ，下面我们一起来实现。</p>
+<p> <strong>count：查看字典中元素的个数</strong></p>
+<p> 该方法有时候会很有用，不过实现起来可能会跟你想的不太一样，我们先看看如何实现的</p>
+<pre><code>//查看字典中元素的个数
+
+function count(){
+    var n = 0 ;
+    for ( var key in this.dataStore ){
+        ++n;
+    }
+    return n;
+}
+</code></pre><p>怎么样，是不是跟想的不太一样，为什么不用 length 属性，不是很简单么？其实不然，我们的键为字符串的时候，数组的 length 属性就不起作用了，请看下面的例子：</p>
+<pre><code>var nums = [ 0 , 1 , 2 ] ;
+
+console.log(nums.length)        // 3
+
+var directory = [];
+directory[&apos;Jack&apos;] = &apos;138****5505&apos;;
+directory[&apos;Alice&apos;] = &apos;156****6606&apos;;
+directory[&apos;Tom&apos;] = &apos;180****8808&apos;;
+
+console.log(directory.length)   // 0
+</code></pre><p>现在是不是又了解了一个坑！哈哈，我们把最后一个clear方法实现一下。</p>
+<p><strong>clear：清空字典</strong></p>
+<pre><code>//清空字典
+
+function clear(){
+    for( var key in this.dataStore ){
+        delete this.dataStore[key];
+    }
+}
+</code></pre><p>至此，字典的功能已基本完成了，我们利用上述的代码继续走下去，测试测试</p>
+<pre><code>console.log(directory.count());     // 2
+directory.clear();
+console.log(directory.count());     // 0
+</code></pre><p>字典中我们通常都是用键来取值，所以我们无须关心s数据在字典中的实际存储顺序，但我们希望能看到显示字典内容的时候是有序的，这也很简单，我们只需稍微改造一下我们的 showAll 方法即可。</p>
+<pre><code>//改造后的showAll
+
+function showAll(){
+    var sortKeys = Object.keys(this.dataStore).sort();
+    for( var key in sortKeys ){
+        console.log( sortKeys[key] + &apos;-&gt;&apos; + this.dataStore[sortKeys[key]] );
+    }
+}
+</code></pre><p>和我们之前的方法唯一的区别就是，我们拿到了键之后，对其进行了一次 sort 排序，下面我们看看新方法的输出。</p>
+<pre><code>// 重新打印上述字典
+
+directory.showAll();        //  Alice-&gt;156****6606
+                            //  Jack-&gt;138****5505
+                            //  Tom-&gt;180****8808
+</code></pre><p>要注意的是，上述 showAll 方法中，进行 Object.keys().sort()排序后，返回的是新的一个数组，类似下面的形式，</p>
+<pre><code>//sortKeys
+
+[&quot;Alice&quot;, &quot;Jack&quot;, &quot;Tom&quot;]
+</code></pre><p>此时，数组的 key 是 0、1、2，这样是不是就清晰很多了呢？</p>
+<p>至此，我们已基本了解了字典的一些内容，并且我们可以用JS自己去实现一个字典了，有木有很棒！接下来，大家加油~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Linked-List/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -660,589 +1205,11 @@ console.log( fruits.dispReverse() );    // Grape
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/27/Dictionary/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/27/Dictionary/" itemprop="url">JS中的算法与数据结构——字典(Dictionary)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-27T17:31:28+08:00">
-                2017-09-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="字典-Dictionary"><a href="#字典-Dictionary" class="headerlink" title="字典(Dictionary)"></a>字典(Dictionary)</h2><p>字典(Dictionary)是一种以 <strong>键-值对</strong> 形式存储数据的数据结构 ，就如同我们平时查看通讯录一样，要找一个电话，首先先找到该号码的机主名字，名字找到了，紧接着电话号码也就有了。这里的键就是你用来查找的东西，本例中指代的就是名字，值就是查找得到的结果，也就是对应的电话号码。</p>
-<p>其实，JavaScript 中的 Object 类就是以字典的形式设计的，下面我们将会借助 Object 类的特性，自主实现一个 Dictionary 类，让这种字典类型的对象使用起来更加方便。</p>
-<h2 id="字典的实现"><a href="#字典的实现" class="headerlink" title="字典的实现"></a>字典的实现</h2><p>字典（Dictionary）类的基础是 Array 类。</p>
-<p>同之前的我们所看到的数据结构一样，字典类也应该有添加、删除、清空等操作，于是我们可以先定义一个字典类的基础数据类型，如下图。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173603278.png" alt="数据类型定义"></p>
-<p>有了上述的数据类型定义，我们 Dictionary 类构造函数定义也就迎刃而解了</p>
-<pre><code>//字典类
-
-function Dictionary () {
-    this.dataStore = [];
-    this.add = add;         // 添加元素
-    this.find = find;       // 查找元素
-    this.remove = remove;   // 删除元素
-    this.count = count;     // 字典中元素个数
-    this.showAll = showAll; // 显示字典元素
-    this.clear = clear;     // 清空字典
-}
-</code></pre><p><strong>add：向字典添加一个元素</strong></p>
-<p>上面我们也提到，字典是以 键值对 的方式存储数据的，因此，add 方法就需要接受两个参数，分别是 键和值 ，其中键表示其在字典中的索引，实现如下</p>
-<pre><code>//向字典添加元素
-
-function add( key , value ){
-    this.dataStore[key] = value;
-}
-</code></pre><p>没错，就是这么简单！接着我们来看看 find 方法</p>
-<p><strong>find：查找字典中的元素</strong></p>
-<p>我们是以键值对方式存储的，因此我们只需要传入需要查找的键，就可以顺理成章的取到对应的值，这对应于JS中的数组也是十分简单的；</p>
-<pre><code>//查找字典中的元素
-
-function find( key ){
-    return this.dataStore[key];
-}
-</code></pre><p>有了添加和查找，接下来就是删除了！</p>
-<p><strong>remove：删除字典中的一个元素</strong></p>
-<p>要想删除字典中的一个元素，即删除一个 键值对 ， 我们需要借助 JS 提供的一个内置的函数 ： delete ，这个函数我们并不陌生，它可以同时删除键和与其对应的值，那么 remove 方法定义就很简单了</p>
-<pre><code>//删除一个元素
-
-function remove( key ){
-    if( this.dataStore[key] ) delete this.dataStore[key];
-    else return &apos;Not Found&apos;;
-}
-</code></pre><p>除此之外，我们还想显示字典中的所有键值对，showAll 方法来完成。</p>
-<p><strong>showAll：显示字典中所以键值对</strong></p>
-<pre><code>//显示字典元素
-
-function showAll () {
-    for( var key in this.dataStore ){
-        console.log( key + &apos;-&gt;&apos; + this.dataStore[key] );
-    }
-}
-</code></pre><p>我们已经完成了字典的基本操作，现在我们做个小测试，</p>
-<pre><code>//实例化字典类
-
-var directory = new Dictionary();
-
-//添加元素
-
-directory.add( &apos;Jack&apos; , &apos;138****5505&apos; );
-directory.add( &apos;Alice&apos; , &apos;156****6606&apos;);
-directory.add( &apos;Tom&apos; , &apos;180****8808&apos;);
-
-//显示字典
-
-directory.showAll();         // Jack-&gt;138****5505
-                             // Alice-&gt;156****6606
-                             // Tom-&gt;180****8808
-
-directory.remove( &apos;Tom&apos; );
-directory.showAll();         // Jack-&gt;138****5505
-                             // Alice-&gt;156****6606
-</code></pre><p> 我们定义的时候看到了还有两个方法没有实现呢，一个是 count ， 另一个是 clear ，下面我们一起来实现。</p>
-<p> <strong>count：查看字典中元素的个数</strong></p>
-<p> 该方法有时候会很有用，不过实现起来可能会跟你想的不太一样，我们先看看如何实现的</p>
-<pre><code>//查看字典中元素的个数
-
-function count(){
-    var n = 0 ;
-    for ( var key in this.dataStore ){
-        ++n;
-    }
-    return n;
-}
-</code></pre><p>怎么样，是不是跟想的不太一样，为什么不用 length 属性，不是很简单么？其实不然，我们的键为字符串的时候，数组的 length 属性就不起作用了，请看下面的例子：</p>
-<pre><code>var nums = [ 0 , 1 , 2 ] ;
-
-console.log(nums.length)        // 3
-
-var directory = [];
-directory[&apos;Jack&apos;] = &apos;138****5505&apos;;
-directory[&apos;Alice&apos;] = &apos;156****6606&apos;;
-directory[&apos;Tom&apos;] = &apos;180****8808&apos;;
-
-console.log(directory.length)   // 0
-</code></pre><p>现在是不是又了解了一个坑！哈哈，我们把最后一个clear方法实现一下。</p>
-<p><strong>clear：清空字典</strong></p>
-<pre><code>//清空字典
-
-function clear(){
-    for( var key in this.dataStore ){
-        delete this.dataStore[key];
-    }
-}
-</code></pre><p>至此，字典的功能已基本完成了，我们利用上述的代码继续走下去，测试测试</p>
-<pre><code>console.log(directory.count());     // 2
-directory.clear();
-console.log(directory.count());     // 0
-</code></pre><p>字典中我们通常都是用键来取值，所以我们无须关心s数据在字典中的实际存储顺序，但我们希望能看到显示字典内容的时候是有序的，这也很简单，我们只需稍微改造一下我们的 showAll 方法即可。</p>
-<pre><code>//改造后的showAll
-
-function showAll(){
-    var sortKeys = Object.keys(this.dataStore).sort();
-    for( var key in sortKeys ){
-        console.log( sortKeys[key] + &apos;-&gt;&apos; + this.dataStore[sortKeys[key]] );
-    }
-}
-</code></pre><p>和我们之前的方法唯一的区别就是，我们拿到了键之后，对其进行了一次 sort 排序，下面我们看看新方法的输出。</p>
-<pre><code>// 重新打印上述字典
-
-directory.showAll();        //  Alice-&gt;156****6606
-                            //  Jack-&gt;138****5505
-                            //  Tom-&gt;180****8808
-</code></pre><p>要注意的是，上述 showAll 方法中，进行 Object.keys().sort()排序后，返回的是新的一个数组，类似下面的形式，</p>
-<pre><code>//sortKeys
-
-[&quot;Alice&quot;, &quot;Jack&quot;, &quot;Tom&quot;]
-</code></pre><p>此时，数组的 key 是 0、1、2，这样是不是就清晰很多了呢？</p>
-<p>至此，我们已基本了解了字典的一些内容，并且我们可以用JS自己去实现一个字典了，有木有很棒！接下来，大家加油~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/26/Queue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/26/Queue/" itemprop="url">JS中的算法与数据结构——队列(Queue)</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-26T11:00:18+08:00">
-                2017-09-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="队列-Queue"><a href="#队列-Queue" class="headerlink" title="队列(Queue)"></a>队列(Queue)</h2><p>我们之前说到了<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>，它是一种比较高效的数据结构，遵循 先入后出(LIFO，last-in-first-out) 的原则。而今天我们要讨论的<strong>队列</strong>，它也是一种特殊的列表，它与栈不同的是， 队列只能在队尾插入元素，在队首删除元素，就像我们平时排队买票一样~</p>
-<p>队列用于存储按顺序排列的数据，遵循 先进先出(FIFO，First-In-First-Out) 的原则，也是计算机常用的一种数据结构，别用于很多地方，比如提交给操作系统的一系列进程，打印池任务等。</p>
-<p>同栈有点类似，队列的操作主要也是有两种：向队列中插入新元素和删除队列中的元素，即入队和出队操作，我们采用 enqueue 和 dequeue 两个方法。</p>
-<p>除此之外，队列还有一些其他的操作，比如读取队首的元素，该操作仅返回对头元素并不将它从队列中删除，类似栈的 peek 方法；back 方法读取队尾的元素；toString 方法可以打印当前队列中所有的元素；clear 方法清空当前队列等。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611181551361.png" alt="队列数据定义"></p>
-<p>我们定义好数据类型，可以通过JS中的数组去实现它。</p>
-<h2 id="队列的实现"><a href="#队列的实现" class="headerlink" title="队列的实现"></a>队列的实现</h2><pre><code>//定义队列
-
-function Queue(){
-    this.dataStore = [];
-    this.enqueue = enqueue;     //入队
-    this.dequeue = dequeue;     //出队
-    this.front = front;         //查看队首元素
-    this.back = back;           //查看队尾元素
-    this.toString = toString;   //显示队列所有元素
-    this.clear = clear;         //清空当前队列
-    this.empty = empty;         //判断当前队列是否为空
-}
-</code></pre><p>我们先来实现入队操作：</p>
-<p><strong>enqueue：向队列添加元素</strong></p>
-<pre><code>//向队列末尾添加一个元素，直接调用 push 方法即可
-
-function enqueue ( element ) {
-    this.dataStore.push( element );
-}
-</code></pre><p>因为JS中的数组具有其他语言没有的有点，可以直接利用 shift 方法删除数组的第一个元素，因此，出队操作的实现就变得很简单了。</p>
-<p><strong>dequeue：删除队首的元素</strong></p>
-<pre><code>//删除队列首的元素，可以利用 JS 数组中的 shift 方法
-
-function dequeue () {
-    if( this.empty() ) return &apos;This queue is empty&apos;;
-    else this.dataStore.shift();
-}
-</code></pre><p>我们注意的，上面我做了一个判断，队列是否还有元素，因为去删除空队列的元素是没有意义的，那么，我们就来看看 empty 方法是如何实现的。</p>
-<p><strong>empty：判断队列是否为空</strong></p>
-<pre><code>//我们通过判断 dataStore 的长度就可知道队列是否为空
-
-function empty(){
-    if( this.dataStore.length == 0 ) return true;
-    else return false;
-}
-</code></pre><p>我们先来看看测试一下这几个方法，</p>
-<pre><code>var queue = new Queue();
-
-console.log( queue.empty() );       //true
-
-//添加几个元素
-queue.enqueue(&apos;Apple&apos;);
-queue.enqueue(&apos;Banana&apos;);
-queue.enqueue(&apos;Pear&apos;);
-
-console.log( queue.empty() );       // false
-</code></pre><p>现在，我不知道谁在第一个，谁是最后一个，我们可以利用 front 和 back 方法分别来查看，</p>
-<p><strong>front：查看队首元素</strong></p>
-<pre><code>//查看队首元素，直接返回数组首个元素即可
-
-function front(){
-    if( this.empty() ) return &apos;This queue is empty&apos;;
-    else return this.dataStore[0]；
-}
-</code></pre><p><strong>back：查看队尾元素</strong></p>
-<pre><code>//查看队首元素，直接返回数组最后一个元素即可
-
-//读取队列尾的元素
-function back () {
-    if( this.empty() ) return &apos;This queue is empty&apos;;
-    else return this.dataStore[ this.dataStore.length - 1 ];
-}
-</code></pre><p>我们先看看对不对：</p>
-<pre><code>//查看队首元素
-console.log( queue.front() );  // Apple
-//查看队尾元素  
-console.log( queue.back() );   // Pear
-
-//出队
-queue.dequeue();
-
-//查看队首元素
-console.log( queue.front() );  // Banana
-//查看队尾元素  
-console.log( queue.back() );   // Pear
-</code></pre><p>没问题！现在，我想看看，总共有多少水果，toString方法来实现，</p>
-<p><strong>toString：查看队列中所有元素</strong></p>
-<pre><code>//查看对了所有元素，我这里采用数组的 join 方法实现
-
-function toString(){
-    return this.dataStore.join(&apos;\n&apos;);
-}
-</code></pre><p>现在，你可以看看你还有什么水果没吃的了,</p>
-<pre><code>console.log( queue.toString() )     //  Apple
-                                    //  Banana
-                                    //  Pear
-</code></pre><p>我们就剩下一个 clear 方法了，如果你已经把所有水果都吃完了，那么你应该使用 clear 方法，</p>
-<pre><code>//清空当前队列，也很简单，我们直接将 dataStore 数值清空即可
-
-function clear(){
-    delete this.dataStore;
-    this.dataStor = [];
-}
-</code></pre><p>至此，我们已经用JS实现了一个队列，怎么样，是不是觉得JS的数组超级好用，省去了不少麻烦，有木有！！</p>
-<pre><code>//清空队列
-
-queue.clear();
-
-console.log( queue.empty() );    // true
-</code></pre><p>下面，我们利用队列来实现基数排序。</p>
-<p>基数排序（radix sort）属于“分配式排序”（distribution sort），它是透过键值的部份资讯，将要排序的元素分配至某些“桶”中，藉以达到排序的作用，基数排序法是属于稳定性的排序，其时间复杂度为O (nlog(r)m)，其中r为所采取的基数，而m为堆数，在某些时候，基数排序法的效率高于其它的稳定性排序法。</p>
-<p>先看一下基数排序的的实现步骤（以两位数为例），需要扫描两次，第一次按个位数字进行排序，第二次按十位数字排序，每个数字根据对应的数值分配到到不同的盒子里，最后将盒子的数字依次取出，组成新的列表即为排序好的数字。</p>
-<ol>
-<li>假设我们有一串数字，分别为 73, 22, 93, 43, 55, 14, 28, 65, 39, 81</li>
-<li>首先根据个位数字排序，放到不同的盒子里，如下图<br><img src="https://img-blog.csdnimg.cn/20200611181619439.png" alt="第一次排序"></li>
-<li>接下来将这些盒子中的数值重新串接起来，成为以下的数列：81, 22, 73, 93, 43, 14, 55, 65, 28, 39</li>
-<li>然后根据十位数字排序，再放到不同的盒子里，如下图<br><img src="https://img-blog.csdnimg.cn/20200611181647349.png" alt="第二次排序"></li>
-<li>接下来将这些盒子中的数值重新串接起来，整个数列已经排序完毕：14, 22, 28, 39, 43, 55, 65, 73, 81, 93</li>
-</ol>
-<p>我们已经了解了基数排序的算法思想，接着我们要结合队列去实现它，一起来看看吧。</p>
-<pre><code>//基数排序
-
-var queues = [];    //定义队列数组
-var nums = [];      //定义数字数组
-
-//选十个0~99的随机数进行排序
-for ( var i = 0 ; i &lt; 10 ; i ++ ){
-    queues[i] = new Queue();
-    nums[i] = Math.floor( Math.random() * 101 );
-}
-
-//排序之前
-console.log( &apos;before radix sort: &apos; + nums );
-
-//基数排序
-distribution( nums , queues , 10 , 1 );
-collect( queues , nums );
-distribution( nums , queues , 10 , 10 );
-collect( queues , nums );
-
-//排序之后
-console.info(&apos;after radix sort: &apos; + nums );
-
-//根据相应的（个位和十位）数值，将数字分配到相应队列
-
-function distribution ( nums , queues , n , digit ) {  //digit表示个位或者十位的值
-    for( var i = 0 ; i &lt; n ; i++ ){
-        if( digit == 1){
-            queues[ nums[i] % 10 ].enqueue( nums[i] );
-        }else{
-            queues[ Math.floor( nums[i] / 10 ) ].enqueue( nums[i] );
-        }
-    }
-}
-
-//从队列中收集数字
-
-function collect ( queues , nums ) {
-    var i = 0;
-    for ( var digit = 0 ; digit &lt; 10 ; digit ++ ){
-        while ( !queues[digit].empty() ){
-            nums[ i++ ] = queues[digit].front();
-            queues[digit].dequeue();
-        }
-    }
-}
-</code></pre><p>我这里贴出两组测试的结果，大家自己动手实践一下。</p>
-<pre><code>//第一组测试
-
-before radix sort: 23,39,2,67,90,41,47,21,98,13
-after radix sort: 2,13,21,23,39,41,47,67,90,98
-
-//第二组测试
-
-before radix sort: 29,62,38,16,55,26,33,54,76,65
-after radix sort: 16,26,29,33,38,54,55,62,65,76
-</code></pre><p>至此，我们队列也就告一段落了，大家还可以往深入拓展，比如优先队列，循环队列等，希望大家能发散思维，多动手实践，一起加油！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/13/">13</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/8/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><span class="page-number current">9</span><a class="page-number" href="/page/10/">10</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/10/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1291,7 +1258,7 @@ after radix sort: 16,26,29,33,38,54,55,62,65,76
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-count">40</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1302,7 +1269,7 @@ after radix sort: 16,26,29,33,38,54,55,62,65,76
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1313,7 +1280,7 @@ after radix sort: 16,26,29,33,38,54,55,62,65,76
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
