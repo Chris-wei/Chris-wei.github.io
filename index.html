@@ -278,6 +278,216 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/10/20/V3-Proxy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/10/20/V3-Proxy/" itemprop="url">聊一聊 Vue3 中响应式原理</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-10-20T17:05:46+08:00">
+                2020-10-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p><a href="https://v3.vuejs.org/" target="_blank" rel="external"><code>Vue.js 3.0 &quot;One Piece&quot;</code></a> 正式发布已经有一段时间了，真可谓是千呼万唤始出来啊！</p>
+<p>相比于 <code>Vue2.x</code>，<code>Vue3.0</code> 在新的版本中提供了更好的性能、更小的捆绑包体积、更好的 <code>TypeScript</code> 集成、用于处理大规模用例的新 <code>API</code>。</p>
+<p>在发布之前，尤大大就已经声明了响应式方面将采用 <code>Proxy</code> 对于之前的 <code>Object.defineProperty</code> 进行改写。其主要目的就是弥补 <code>Object.defineProperty</code> 自身的一些缺陷，例如无法检测到对象属性的新增或者删除，不能监听数组的变化等。</p>
+<p>而 <code>Vue3</code> 采用了新的 <code>Proxy</code> 实现数据读取和设置拦截，不仅弥补了之前 <code>Vue2</code> 中 <code>Object.defineProperty</code> 的缺陷，同时也带来了性能上的提升。</p>
+<p>今天，我们就来盘一盘它，看看 <code>Vue3</code> 中响应式是如何实现的。</p>
+<h3 id="Proxy"><a href="#Proxy" class="headerlink" title="Proxy ?"></a>Proxy ?</h3><p><code>The Proxy object enables you to create a proxy for another object, which can intercept and redefine fundamental operations for that object.</code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy" target="_blank" rel="external">MDN</a></p>
+<p><code>Proxy</code> - 代理，顾名思义，就是在要访问的对象之前增加一个中间层，这样就不直接访问对象，而是通过中间层做一个中转，通过操作代理对象，来实现修改目标对象。</p>
+<p>关于 <code>Proxy</code> 的更多的知识，可以参考我之前的一篇文章 —— <a href="https://chris-wei.github.io/2018/12/05/Proxy/" target="_blank" rel="external">初探 Vue3.0 中的一大亮点——Proxy !</a>，这里我就不在赘述。</p>
+<h3 id="reactive-和-effect-方法"><a href="#reactive-和-effect-方法" class="headerlink" title="reactive 和 effect 方法"></a>reactive 和 effect 方法</h3><p><code>Vue3</code> 中响应式核心方法就是 <code>reactive</code> 和 <code>effect</code> ， 其中 <code>reactive</code> 方法是负责将数据变成响应式，<code>effect</code> 方法的作用是根据数据变化去更新视图或调用函数，与 <code>react</code> 中的 <code>useEffect</code> 有点类似~</p>
+<p>其大概用法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">let &#123; reactive, effect &#125; = Vue;</div><div class="line">let data = reactive(&#123; name: &apos;Hello&apos; &#125;);</div><div class="line"></div><div class="line">effect(() =&gt; &#123;</div><div class="line">    console.log(data.name)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">data.name = &apos;World&apos;;</div></pre></td></tr></table></figure></p>
+<p>默认会执行一次，打印 <code>Hello</code> , 之后更改了 <code>data.name</code> 的值后，会在触发执行一次，打印<code>World</code>。</p>
+<p>我们先看看 <code>reactive</code> 方法的实现~</p>
+<p><strong><code>reactive.js</code></strong></p>
+<p>首先应该明确，我们应该导出一个 <code>reactive</code> 方法，该方法有一个参数 <code>target</code>，目的就是将 <code>target</code> 变成响应式对象，因此返回值就是一个响应式对象。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">import &#123;isObject&#125; from &quot;../shared/utils&quot;;</div><div class="line">// Vue3 响应式原理</div><div class="line">// 响应式方法，将 target 对象变成响应式对象</div><div class="line">export function reactive (target) &#123;</div><div class="line">    // 创建响应式对象</div><div class="line">    return createReactiveObject(target);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 创建响应式对象</div><div class="line">function createReactiveObject (target) &#123;</div><div class="line">    // 不是对象，直接返回</div><div class="line">    if ( !isObject(target) ) return target;</div><div class="line">    // 创建 Proxy 代理</div><div class="line">    const observed = new Proxy(target,&#123;&#125;)</div><div class="line">    return observed;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>reactive</code> 方法基本结构就是如此，给定一个对象，返回一个响应式对象。</p>
+<p>其中 <code>isObject</code> 方法用于判断是否是对象，不是对象不需要代理，直接返回即可。</p>
+<p><code>reactive</code> 方法的重点是 <code>Proxy</code> 的第二个参数<code>handler</code>，它承载监控对象变化，依赖收集，视图更新等各项重大责任，我们重点来研究这个对象。</p>
+<p><strong>handler.js</strong></p>
+<p>在 <code>Vue3</code> 中 <code>Proxy</code> 的 <code>handler</code> 主要设置了 <code>get</code>，<code>set</code>，<code>deleteProperty</code>，<code>has</code>，<code>ownKeys</code> 这些属性，即拦截了对象的读取，设置，删除，<code>in</code> 以及 <code>Object.getOwnPropertyNames</code> 方法和 <code>Object.getOwnPropertySymbols</code> 方法。</p>
+<p>这里我们偷个懒，暂时就考虑 <code>set</code> 和 <code>get</code> 操作。</p>
+<p><strong>handler.get()</strong></p>
+<p><code>get</code> 获取属性比较简单，我们先来看看这个，这里我们用一个方法创建 <code>getHanlder</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// 创建 get</div><div class="line">function createGetter () &#123;</div><div class="line">  return function get (target, key, receiver) &#123;</div><div class="line">      // proxy + reflect</div><div class="line">      const res = Reflect.get(target, key, receiver);  // target[key];</div><div class="line"></div><div class="line">      // 如果是对象，递归代理</div><div class="line">      if ( isObject(res) ) return reactive(res);</div><div class="line"></div><div class="line">      console.log(&apos;获取属性的值：&apos;, &apos;target：&apos;, target, &apos;key：&apos;, key)</div><div class="line"></div><div class="line">      return res;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里推荐使用了 <code>Reflect.get</code> 而并非 <code>target[key]</code>。</p>
+<p>可以发现，<code>Vue3</code> 是在取值的时候才去递归遍历属性的，而非 <code>Vue2</code> 中一开始就递归 <code>data</code> 给每个属性添加 <code>Watcher</code>，这也是 <code>Vue3</code> 性能提升之一。</p>
+<p><strong>handler.set()</strong></p>
+<p>同理 <code>set</code> 操作，我们也是用一个方法创建 <code>setHandler</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 创建 set</div><div class="line">function createSetter () &#123;</div><div class="line">    return function set (target, key, value, receiver) &#123;</div><div class="line">        // 设置属性值</div><div class="line">        const res = Reflect.set(target, key, value, receiver);	</div><div class="line">        return res;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>Reflect.set</code> 会返回一个 <code>Boolean</code> 值，用于判断属性是否设置成功。</p>
+<p>完事后将 <code>handler</code> 导出，然后在 <code>reactive</code> 中引入即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">const get = createGetter();</div><div class="line">const set = createSetter();</div><div class="line"></div><div class="line">// 拦截普通对象和数组</div><div class="line">export const mutableHandler = &#123;</div><div class="line">    get,</div><div class="line">    set</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>测试几组对象貌似没啥问题，其实是有一个坑，这个坑也跟数组有关。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">let &#123; reactive &#125; = Vue;</div><div class="line">// 代理数组</div><div class="line">let arr = [1,2,3]</div><div class="line">let proxy = reactive(arr)</div><div class="line">// 添加元素</div><div class="line">proxy.push(4)</div></pre></td></tr></table></figure>
+<p>如上例子，如果我们选择代理数组，在 <code>setHandler</code> 中打印其 <code>key</code> 和 <code>value</code> 的话会得到 <code>3 4</code> ，<code>length 4</code> 这两组值：</p>
+<ul>
+<li>第一组表示给数组索引为 <code>3</code> 的位置新增一个 <code>4</code> 的值</li>
+<li>第二组表示将数组的 <code>length</code> 改为 <code>4</code></li>
+</ul>
+<p>如果不作处理，那么会导致如果更新视图的话，则会触发两次，这肯定是不允许的，因此，我们需要将区分新增和修改这两种操作。</p>
+<p><code>Vue3</code> 中是通过判断 <code>target</code> 是否存在该属性来区分是新增还是修改操作，需要借助一个工具方法 —— <code>hasOwnProperty</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 判断自身是否包含某个属性</div><div class="line">function hasOwnProperty (target,key) &#123;</div><div class="line">    return Object.prototype.hasOwnProperty.call(target,key);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里我们将上述的 <code>createSetter</code> 方法修改如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">function createSetter () &#123;</div><div class="line">  return function set (target, key, value, receiver) &#123;</div><div class="line">      // 需要判断修改属性还是新增属性，如果原始值于新设置的值一样，则不作处理</div><div class="line">      const hasKey = hasOwnProperty(target, key);</div><div class="line">      // 获取原始值</div><div class="line">      const oldVal = target[key];</div><div class="line">      const res = Reflect.set(target, key, value, receiver);	// target[key]=value;</div><div class="line">		</div><div class="line">      if ( !hasKey ) &#123; </div><div class="line">          // 新增属性</div><div class="line">          console.log(&apos;新增了属性：&apos;, &apos;key：&apos;, key, &apos;value：&apos;, value);</div><div class="line">      &#125; else if ( hasChanged(value, oldVal) ) &#123; </div><div class="line">          // 原始值于新设置的值不一样，修改属性值</div><div class="line">          console.log(&apos;修改了属性：&apos;, &apos;key：&apos;, key, &apos;value：&apos;, value)</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      // 值未发生变化，不作处理</div><div class="line">      return res;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如此一来，我们调 <code>push</code> 方法的时候，就只会触发一次更新了，非常巧妙的避免了无意义的更新操作。</p>
+<p><strong>effect.js</strong></p>
+<p>光上述构造响应式对象并不能完成响应式的操作，我们还需要一个非常重要的方法 <code>effect</code>，它会在初始化执行的时候存储跟其有关的数据依赖，当依赖数据发生变化的时候，则会再次触发 <code>effect</code> 传递的函数。</p>
+<p>其基本雏形如下，入参是一个函数，还有个可选参数 <code>options</code> 方便后面计算属性等使用，暂时不考虑：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 响应式副作用方法</div><div class="line">export function effect (fn，options = &#123;&#125;) &#123;</div><div class="line">	// 创建响应式 effect</div><div class="line">    const reactiveEffect = createReactiveEffect(fn, options);</div><div class="line">    </div><div class="line">    // 默认执行一次</div><div class="line">    reactiveEffect()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>createReactiveEffect</code> 就是为了将 <code>fn</code> 变成响应式函数，监控数据变化，执行 <code>fn</code> 函数，因此该函数是一个高阶函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">let activeEffect;	// 当前 effect</div><div class="line">const effectStack = [];	// effect 栈</div><div class="line"></div><div class="line">// 创建响应式 effect</div><div class="line">function createReactiveEffect (fn, options) &#123;</div><div class="line">    // 创建的响应式函数</div><div class="line">    const reactiveEffect = function () &#123;</div><div class="line">        // 防止不停更改属性导致死循环</div><div class="line">        if ( !effectStack.includes(reactiveEffect) ) &#123;</div><div class="line">            try &#123;</div><div class="line">                effectStack.push(reactiveEffect);</div><div class="line">                // 将当前 effect 存储到 activeEffect</div><div class="line">                activeEffect = reactiveEffect;		</div><div class="line">                // 运行 fn 函数</div><div class="line">                return fn();</div><div class="line">            &#125; finally &#123;</div><div class="line">                // 执行完清空</div><div class="line">                effectStack.pop();</div><div class="line">                activeEffect = effectStack[effectStack.length - 1];</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return reactiveEffect;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>createReactiveEffect</code> 将原来的 <code>fn</code> 转变成一个 <code>reactvieEffect</code> ， 并将当前的 <code>effect</code> 挂到全局的 <code>activeEffect</code> 上，目的是为了一会与当前所依赖的属性做好对应关系。</p>
+<p>我们必须要将依赖属性构造成 <code>{ prop : [effect,effect] }</code> 这种结构，才能保证依赖属性变化的时候，依次去触发与之相关的 <code>effect</code>，因此，需要在 <code>get</code> 属性的时候，做属性的依赖收集，将属性与 <code>effect</code> 关联起来。</p>
+<p><strong>依赖收集 —— <code>track</code></strong></p>
+<p>在获取对象的属性时，会触发 <code>getHandler</code> ，再次做属性的依赖收集，即 <code>Vue2</code> 中的发布订阅。</p>
+<p>在 <code>setHandler</code> 中获取属性的时候，做一次 <code>track(target, key)</code> 操作。</p>
+<p>整个 <code>track</code> 的数据结构大概是这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">/** </div><div class="line">* 最外层是 WeakMap，其 key 是 target 对象，值是一个 map</div><div class="line">* map 中包含 target 的属性，key 为每一个属性 ， 值为属性对应的 `effect` </div><div class="line">*/</div><div class="line">     key  		       val(map)</div><div class="line">&#123;name : &apos;chris&#125;     &#123;  name : Set(effect,effect) ， age : Set() &#125;</div></pre></td></tr></table></figure>
+<p>目的就是将 <code>target</code>，<code>key</code>，<code>effect</code> 之间做好对应的关系映射。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">const targetMap = new WeakMap();</div><div class="line">// 依赖收集</div><div class="line">export function tract(target,key)&#123;</div><div class="line">    // activeEffect 为空</div><div class="line">    if ( activeEffect === undefined ) &#123;</div><div class="line">        return; // 说明取值的属性，不依赖于 effect</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 判断 target 对象是否收集过依赖</div><div class="line">    let depsMap = targetMap.get(target);</div><div class="line">    // 不存在构建</div><div class="line">    if ( !depsMap ) &#123;</div><div class="line">        targetMap.set(target, (depsMap = new Map()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 判断要收集的 key 中是否收集过 effect</div><div class="line">    let dep = depsMap.get(key);</div><div class="line">    // 不存在则创建</div><div class="line">    if ( !dep ) &#123;</div><div class="line">        depsMap.set(key, (dep = new Set()));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 如果未收集过当前依赖则添加</div><div class="line">    if ( !dep.has(activeEffect) ) &#123;</div><div class="line">        dep.add(activeEffect);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>打印 <code>targetMap</code> 的结构如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/20201020170723581.png" alt="targetMap"></p>
+<p><strong>触发更新 —— <code>trigger</code> </strong></p>
+<p>上述已经完成了依赖收集，剩下就是监控数据变化，触发更新操作，即在 <code>setHandler</code> 中添加 <code>trigger</code> 触发操作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">// 触发更新</div><div class="line">export function trigger (target, type, key) &#123;</div><div class="line">    // 获取 target 的依赖</div><div class="line">    const depsMap = targetMap.get(target);</div><div class="line">    // 没有依赖收集，直接返回</div><div class="line">    if ( !depsMap ) return;</div><div class="line"></div><div class="line">    // 获取 effects</div><div class="line">    const effects = new Set();</div><div class="line"></div><div class="line">    // 添加 key 对应的 effect</div><div class="line">    const add = (effectsToAdd) =&gt; &#123;</div><div class="line">        if ( effectsToAdd ) &#123;</div><div class="line">            effectsToAdd.forEach(effect =&gt; &#123;</div><div class="line">                effects.add(effect)</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 执行单个 effect</div><div class="line">    const run = (effect) =&gt; &#123;</div><div class="line">        effect &amp;&amp; effect()</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 获取 key 对应的 effect</div><div class="line">    if ( key !== null ) &#123;</div><div class="line">        add(depsMap.get(key));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    if ( type === &apos;add&apos; ) &#123; // 对数组新增会触发 length 对应的依赖</div><div class="line">        let effects = depsMap.get(Array.isArray(target) ? &apos;length&apos; : &apos;&apos;);</div><div class="line">        add(effects);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 触发更新</div><div class="line">    effects.forEach(run);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样一来，获取数据的时候通过 <code>track</code> 进行依赖收集，更新数据的时候再通过 <code>trigger</code> 进行更新，就完成了整个数据的响应式操作。</p>
+<p>再回头看看我们先前提到的例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">let &#123; effect, reactive &#125; = Vue;</div><div class="line"></div><div class="line">let data = reactive(&#123; name: &apos;Hello&apos; &#125;)</div><div class="line">effect(() =&gt; &#123;</div><div class="line">    console.log(data.name, &apos;  ***** effect *****  &apos;);</div><div class="line">&#125;)</div><div class="line"></div><div class="line">data.name = &apos;World&apos;</div></pre></td></tr></table></figure>
+<p>控制台会依次打印 <code>Hello   ***** effect *****</code> 以及 <code>World   ***** effect *****</code>， 分别是首次渲染触发跟更新数据重渲染触发，至此功能实现！</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>整体来说，<code>Vue3</code> 相比于 <code>Vue2</code> 在很多方面都做了调整，数据的响应式只是冰山一角，但是可以看出尤大团队非常巧妙的利用了 <code>Proxy</code> 的特点以及 <code>es6</code> 的数据结构和方法。另外，<code>Composition API</code> 的模式跟 <code>React</code> 在某些程度上有异曲同工之妙，这种设计模式让我们在实际开发使用中更加的方法快捷，值得我们去学习，加油！ </p>
+<p>最后附上仓库地址 <a href="https://github.com/Chris-wei/vue-proxy" target="_blank" rel="external">github</a>，欢迎各位大佬批评斧正~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/25/react-router-dom/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -885,225 +1095,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/04/24/Auto-deploy/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/04/24/Auto-deploy/" itemprop="url">基于Python实现前端自动化打包部署</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-04-24T19:30:38+08:00">
-                2020-04-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Python/" itemprop="url" rel="index">
-                    <span itemprop="name">Python</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p><img src="https://img-blog.csdnimg.cn/20200611172013515.png" alt=""></p>
-<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>人生苦短，我用<code>python</code>~</p>
-<p>作为一名专职前端开发的我，为了帮助解决目前工作中的一些繁琐的工作（主要是处理 <code>excel</code> 数据），解放程序员双手，前阵子就刚刚入了 <code>python</code> 的坑，毕竟也算是门工具语言，都已经加入少儿编程了，哈哈哈！</p>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>实践是检验学习成果的唯一标准！</p>
-<p>在我学习过程中，一直琢磨着如何将学习的理论与我所掌握的知识结合起来，来解决或者处理实际问题，于是就有了 前端自动化打包部署 的念头。</p>
-<p>尽快近几年，市面上关于自动化部署的工具层出不穷，比如当下比较流行的<code>Jenkins</code>，尽管如此，我还是想自己试一试~</p>
-<h3 id="环境配置"><a href="#环境配置" class="headerlink" title="环境配置"></a>环境配置</h3><p>初学乍道，切不可眼高手低，先给自己定个小目标，先实现一个最简单版本。</p>
-<p>工欲善其事，必先利其器，开发环境的配置是开发的第一步。</p>
-<p>关于 <code>python</code> 的安装配置我就不赘述了。</p>
-<p>为了方便测试，我本地利用 <code>VM</code> 虚拟机安装了 <code>centos</code> 系统，安装并配置 <code>nginx</code> 充当了服务器。</p>
-<h3 id="难点分析"><a href="#难点分析" class="headerlink" title="难点分析"></a>难点分析</h3><p>要想实现打包，核心需要考虑下面2个问题：</p>
-<ul>
-<li>在 <code>python</code> 脚本中如何去执行前端的打包命令<code>npm run build</code>（这里以<code>vue</code>项目作为测试）</li>
-<li>在 <code>python</code> 脚本中如何连接服务器将打包好的问题上传到服务器的指定目录中去</li>
-</ul>
-<h3 id="理论求证"><a href="#理论求证" class="headerlink" title="理论求证"></a>理论求证</h3><p>通过查阅资料得知，<code>python</code>中的 <code>os</code> 模块提供了非常丰富的方法用来处理文件和目录，其中 <code>os</code>模块中的<code>system()</code>函数可以方便地运行其他程序或者脚本，其语法如下：</p>
-<p><code>os.system(command)</code></p>
-<p><code>command</code>  要执行的命令，相当于<code>在Windows</code>的<code>cmd</code>窗口中输入的命令。如果要向程序或者脚本传递参数，可以使用空格分隔程序及多个参数，该方法返回结果如果为 0，则表示命令执行成功,其它值则表示错误。</p>
-<p>这样就解决了第一个问题。</p>
-<p>关于服务器连接这一块，可以使用<code>python</code>的一个第三方模块 <code>paramiko</code>，它实现了<code>SSHv2</code>协议，允许我们直接使用<code>SSH</code>协议对远程服务器执行操作，关于 <code>paramiko</code> 的更多知识和用法，请戳<a href="https://www.cnblogs.com/xiao-apple36/p/9144092.html#_label3_0" target="_blank" rel="external">这里</a></p>
-<p>这样上面两个难点就解决了，我们就可以开工了。</p>
-<h3 id="小试牛刀"><a href="#小试牛刀" class="headerlink" title="小试牛刀"></a>小试牛刀</h3><p>首先定义一个类 <code>SSHConnect</code> 后续的方法我们都会在这个类里面完善</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class SSHConnect:</div><div class="line">    # 定义一个私有变量，用来保存ssh连接通道，初始化为None</div><div class="line">    __transport = None</div></pre></td></tr></table></figure>
-<p><strong>初始构造函数</strong></p>
-<p>我们需要在构造函数中定义我们需要的参数，初始化我们的连接</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 初始化构造函数（主机，用户名，密码，端口，默认22）</div><div class="line">def __init__(self, hostname, username, password, port=22):</div><div class="line">    self.hostname = hostname</div><div class="line">    self.port = port</div><div class="line">    self.username = username</div><div class="line">    self.password = password</div><div class="line">    # 创建 ssh 连接通道</div><div class="line">    self.connect()</div></pre></td></tr></table></figure>
-<p><strong>建立 ssh 连接通道</strong></p>
-<p>我们在构造函数中最后调用了一个 <code>connect</code> 方法建立 <code>ssh</code> 连接通道，现在我们来具体的实现它</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 建立ssh连接通道，并绑定在 __transport 上</div><div class="line">def connect(self):</div><div class="line">    try:</div><div class="line">        # 设置SSH连接的远程主机地址和端口</div><div class="line">        self.__transport = paramiko.Transport((self.hostname, self.port))</div><div class="line">        # 通过用户名和密码连接SSH服务端</div><div class="line">        self.__transport.connect(username=self.username, password=self.password)</div><div class="line">    except Exception as e:</div><div class="line">        # 连接出错</div><div class="line">        print(e)</div></pre></td></tr></table></figure>
-<p><strong>执行打包</strong></p>
-<p>现在我们需要创建一个打包方法，执行 <code>npm run build</code> 命令，利用我们 <code>os.system</code> 方法，入参是 <code>work_path</code> 是打包项目所在的目录</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 前端打包（入参work_path为项目目录）</div><div class="line">def build(self, work_path):</div><div class="line">    # 开始打包</div><div class="line">    print(&apos;########### run build ############&apos;)</div><div class="line">    # 打包命令</div><div class="line">    cmd = &apos;npm run build&apos;</div><div class="line">    # 切换到需要项目目录</div><div class="line">    os.chdir(work_path)</div><div class="line">    # 当前项目目录下执行打包命令</div><div class="line">    if os.system(cmd) == 0:</div><div class="line">        # 打包完成</div><div class="line">        print(&apos;########### build complete ############&apos;)</div></pre></td></tr></table></figure>
-<p>只有一点要注意，就是要通过 <code>os.chdir(work_path)</code> 方法切换到项目的所在目录，打包当前的项目。</p>
-<p><strong>文件上传</strong></p>
-<p>打包结束后，我们需要将打包好的 <code>dist</code> 文件夹下的文件上传到服务器，因此，我们需要创建一个文件上传方法，我们通过 <code>paramiko.SFTPClient</code> 方法创建 <code>sftp</code> 来完成</p>
-<p>该方法入参需要两个参数，一个是本地项目打包后的<code>dist</code>路径 <code>local_path</code>，另一个是要上传到服务器的目标目录 <code>target_path</code></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"># 文件上传</div><div class="line">def upload(self, local_path, target_path):</div><div class="line">    # 判断路径问题</div><div class="line">    if not os.path.exists(local_path):</div><div class="line">        return print(&apos;local path is not exist&apos;)</div><div class="line"></div><div class="line">    print(&apos;文件上传中...&apos;)</div><div class="line"></div><div class="line">    # 实例化一个 sftp 对象,指定连接的通道</div><div class="line">    sftp = paramiko.SFTPClient.from_transport(self.__transport)</div><div class="line">    # 打包后的文件路径</div><div class="line">    local_path = os.path.join(local_path, &apos;dist&apos;)</div><div class="line">    # 本地路径转换，将windows下的 \ 转成 /</div><div class="line">    local_path = &apos;/&apos;.join(local_path.split(&apos;\\&apos;))</div><div class="line">    # 递归上传文件</div><div class="line">    self.upload_file(sftp, local_path, target_path)</div><div class="line"></div><div class="line">    print(&apos;文件上传完成...&apos;)</div><div class="line">    # 关闭连接</div><div class="line">    self.close()</div></pre></td></tr></table></figure>
-<p>为了方便操作，需要将 <code>windows</code> 中的路径分隔符<code>\</code>转成 <code>linux</code> 下的分隔符<code>/</code></p>
-<p>此外，该方法中调用了另外两个方法，分别是 <code>upload_file</code> 和 <code>close</code>，<code>close</code> 方法的定义很简单，直接调用 <code>__transport.close()</code> 方法即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"># 关闭连接</div><div class="line">def close(self):</div><div class="line">    self.__transport.close()</div></pre></td></tr></table></figure>
-<p>考虑到我们的 <code>static</code> 不是文件，而是一个文件夹，因此需要递归遍历，并将其拷贝到服务器上，所以我们定义了<code>upload_file</code> 方法，专门负责这个事情。</p>
-<p><strong>执行<code>linux</code>命令</strong></p>
-<p>上面我们也提到了，需要递归遍历<code>static</code>并上传到服务器，那么上传到服务器的目录结构肯定需要跟原来的 <code>static</code> 保持一致，因此对服务器的操作肯定是不可少的，需要执行<code>linux</code>命令，我们需要一个 <code>exec</code> 方法来实现这个功能，入参就是 <code>linux</code> 命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"># 执行linux命令</div><div class="line">def exec(self, command):</div><div class="line">    </div><div class="line">    # 创建 ssh 客户端</div><div class="line">    ssh = paramiko.SSHClient()</div><div class="line">    # 指定连接的通道</div><div class="line">    ssh._transport = self.__transport</div><div class="line">    </div><div class="line">    # 调用 exec_command 方法执行命令</div><div class="line">    stdin, stdout, stderr = ssh.exec_command(command)</div><div class="line">    </div><div class="line">    # 获取命令结果，返回是二进制，需要编码一下</div><div class="line">    res = stdout.read().decode(&apos;utf-8&apos;)</div><div class="line">    # 获取错误信息</div><div class="line">    error = stderr.read().decode(&apos;utf-8&apos;)</div><div class="line">    </div><div class="line">    # 如果没出错</div><div class="line">    if error.strip():</div><div class="line">        # 返回错误信息</div><div class="line">        return error</div><div class="line">    else:</div><div class="line">        # 返回结果</div><div class="line">        return res</div></pre></td></tr></table></figure>
-<p>现在你可以连接服务器测试一下，这个方法的正确性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ssh = SSHConnect(hostname=&apos;x.x.x.x&apos;, username=&apos;root&apos;, password=&apos;xxx&apos;)</div><div class="line">print(ssh.exec(r&apos;df -h&apos;))</div></pre></td></tr></table></figure>
-<p>我们连接到服务器并尝试调用 <code>linux</code> 中的 <code>df -h</code> 命令查看我们系统文件系统的磁盘使用情况，不出意外的话，会看到控制台返回的信息</p>
-<p>ps：命令 <code>df -h</code> 前面的 <code>r</code> 是为了让<code>python</code>解释器不转义</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172054547.png" alt=""></p>
-<p><strong>递归上传文件</strong></p>
-<p>准备工作做好以后，我们就可以来是实现我们的递归上传的方法 <code>upload_file</code> 了，主要是通过前面创建的 <code>sftp</code> 对象的 <code>put</code> 方法，将本地文件上传到对应的服务器中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"># 递归上传文件</div><div class="line">def upload_file(self, sftp, local_path, target_path):</div><div class="line">    # 判断当前路径是否是文件夹</div><div class="line">    if not os.path.isdir(local_path):</div><div class="line">        # 如果是文件，获取文件名</div><div class="line">        file_name = os.path.basename(local_path)</div><div class="line">        # 检查服务器文件夹是否存在</div><div class="line">        self.check_remote_dir(sftp, target_path)</div><div class="line">        # 服务器创建文件</div><div class="line">        target_file_path = os.path.join(target_path, file_name).replace(&apos;\\&apos;, &apos;/&apos;)</div><div class="line">        # 上传到服务器</div><div class="line">        sftp.put(local_path, target_file_path)</div><div class="line">    else:</div><div class="line">        # 查看当前文件夹下的子文件</div><div class="line">        file_list = os.listdir(local_path)</div><div class="line">        # 遍历子文件</div><div class="line">        for p in file_list:</div><div class="line">            # 拼接当前文件路径</div><div class="line">            current_local_path = os.path.join(local_path, p).replace(&apos;\\&apos;, &apos;/&apos;)</div><div class="line">            # 拼接服务器文件路径</div><div class="line">            current_target_path = os.path.join(target_path, p).replace(&apos;\\&apos;, &apos;/&apos;)</div><div class="line">            # 如果已经是文件，服务器就不需要创建文件夹了</div><div class="line">            if os.path.isfile(current_local_path):</div><div class="line">                # 提取当前文件所在的文件夹</div><div class="line">                current_target_path = os.path.split(current_target_path)[0]</div><div class="line">            # 递归判断</div><div class="line">            self.upload_file(sftp, current_local_path, current_target_path)</div></pre></td></tr></table></figure>
-<p>上述方法中添加了一个 <code>check_remote_dir</code> 方法，用来检测服务器端是否已经存在了文件夹，如果服务端没有我们就创建一个，定义如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 创建服务器文件夹</div><div class="line">def check_remote_dir(self, sftp, target_path):</div><div class="line">    try:</div><div class="line">        # 判断文件夹是否存在</div><div class="line">        sftp.stat(target_path)</div><div class="line">    except IOError:</div><div class="line">        # 创建文件夹</div><div class="line">        self.exec(r&apos;mkdir -p %s &apos; % target_path)</div></pre></td></tr></table></figure>
-<p>非常巧妙的利用了 <code>sftp.stat</code> 方法查看文件信息来区分的。</p>
-<p><strong>合并流程，自动发布</strong></p>
-<p>现在基本的方法我们都已经实现了，接下来我们需要将它们合并到 <code>auto_deploy</code> 方法中，真正实现自动发布。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 自动化打包部署</div><div class="line">def auto_deploy(self, local_path, target_path):</div><div class="line">    # 打包构建</div><div class="line">    self.build(local_path)</div><div class="line">    # 文件上传</div><div class="line">    self.upload(local_path, target_path)</div></pre></td></tr></table></figure>
-<p>ok~ 我们来调用 <code>auto_deploy</code> 方法测试一下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">if __name__ == &apos;__main__&apos;:</div><div class="line">    # 项目目录</div><div class="line">    project_path = r&apos;D:\learn\vue-demo&apos;</div><div class="line">    # 服务器目录</div><div class="line">    remote_path = r&apos;/www/project&apos;</div><div class="line">    </div><div class="line">    # 实例化</div><div class="line">    ssh = SSHConnect(hostname=&apos;x.x.x.x&apos;, username=&apos;root&apos;, password=&apos;xxx&apos;)</div><div class="line">    # 自动打包部署</div><div class="line">    ssh.auto_deploy(project_path, remote_path)</div></pre></td></tr></table></figure>
-<p>如果一切顺利，就可以看到控制台输出成功！！</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172135837.png" alt=""></p>
-<p>再看看服务器文件是否已上传成功。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172214247.png" alt=""></p>
-<p>并尝试访问我的主页！</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172252264.png" alt=""></p>
-<p>非常完美！</p>
-<p><code>Congratulations!</code> 你已经 <code>get</code> 了这项技能，点个赞吧！</p>
-<p><strong>服务器清空</strong></p>
-<p>到这里的话，我们的功能已基本完成了，只是还有一个小小的问题遗留，如果我们不断的迭代优化，那么如果我们不清除服务器的目录的话，会堆积越来越多的旧的文件，占用服务器的空间，因此我们需要在打包上传前清空一下。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172329273.png" alt=""></p>
-<p>不妨定义一个<code>clear_remote_dir</code>方法来实现这个功能</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 清空文件夹</div><div class="line">def clear_remote_dir(self, target_path):</div><div class="line">    if target_path[-1] == &apos;/&apos;:</div><div class="line">        cmd = f&apos;rm -rf &#123;target_path&#125;*&apos;</div><div class="line">    else:</div><div class="line">        cmd = f&apos;rm -rf &#123;target_path&#125;/*&apos;</div><div class="line">    self.exec(cmd)</div></pre></td></tr></table></figure>
-<p>之后把它添加到 <code>auto_delpoy</code> 方法中 <code>self.upload</code> 之前就好了~</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>勉强算是完成了一个小工具吧，这个过程对我来说也算是对 <code>python</code> 的一次小小的实践吧，也算是颇有收获了。</p>
-<p>对于上述的代码，完全还可以通过 <code>sys.argv</code> 通过命令行参数解析的方式来实现真正的 <code>cmd</code> 调用，笔者在这里就不赘述了，感兴趣的小伙伴可以自己去实践一下。</p>
-<p>可以看到<code>python</code> 在语法上的简洁和优雅，这一点也是让我感觉还是挺舒服的，对我个人来说，可能后面更多是作为一门工具语言来使用，最大程度的去解决实际问题。</p>
-<p><a href="https://gist.github.com/Chris-wei/349265566e60e359c4878265e89f36ec" target="_blank" rel="external">完整代码请戳</a></p>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a href="https://www.cnblogs.com/xiao-apple36/p/9144092.html#_label3_0" target="_blank" rel="external">Python模块学习 - Paramiko</a></p>
-<p><a href="https://www.runoob.com/python/os-file-methods.html" target="_blank" rel="external">Python3 OS 文件/目录方法</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1157,7 +1148,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-count">41</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1199,9 +1190,9 @@
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://www.jianshu.com/u/4d7dd4c7e51d" target="_blank" title="简书">
+                <a href="https://juejin.im/user/3790771820967406" target="_blank" title="掘金">
                   
-                    <i class="fa fa-fw fa-globe"></i>简书</a>
+                    <i class="fa fa-fw fa-globe"></i>掘金</a>
               </span>
             
               <span class="links-of-author-item">
