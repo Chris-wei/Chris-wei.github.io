@@ -278,6 +278,397 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/10/vue-slide/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/10/vue-slide/" itemprop="url">Vue 仿QQ左滑删除组件</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-10T16:05:20+08:00">
+                2018-03-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="Vue-仿QQ左滑删除组件"><a href="#Vue-仿QQ左滑删除组件" class="headerlink" title="Vue 仿QQ左滑删除组件"></a>Vue 仿QQ左滑删除组件</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前几天在做Vue项目开发的时候，因为之前别人写的代码有点小 bug，有人反应 IOS 上面的滑动点击有点问题，于是让我来帮忙解决，我看了看以前的代码实现比较繁琐，冗余，索性就直接自己重新写了一套，供大家参考，如有更好的方式，欢迎及时交流~</p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118354620.png" alt=""></p>
+<p>我们先看看效果图吧，毕竟无图无真相啊~</p>
+<h3 id="效果图"><a href="#效果图" class="headerlink" title="效果图"></a>效果图</h3><p><img src="https://img-blog.csdnimg.cn/20200611183620418.gif" alt="slider.gif"></p>
+<h3 id="实现思路"><a href="#实现思路" class="headerlink" title="实现思路"></a>实现思路</h3><p>具体实现思路如下：</p>
+<ul>
+<li>布局方面我采用的是 rem + flex 布局，具体如何结构和样式可以参考我的代码，值得注意的是后面的删除按钮是我通过定位放在了每一行的最后，超出隐藏了而已</li>
+<li>左滑和右滑是通过 <code>touchstart</code> 和 <code>touchend</code> 事件，通过判断滑动开始和结束，水平方向<code>x</code>的偏移量，如果大于一定得阈值认为是左滑动，小于一定的阈值则认为是右滑动</li>
+<li>左滑动和右滑动分别都是通过父级<code>li</code>元素的 <code>translate</code> 偏移量进行变化的，这里我的实现方式是提前声明好样式，通过改变当前父级<code>li</code>的<code>type</code>值，进行样式切换</li>
+<li>点击某一个滑块的时候，首先判断当前所有的滑块是否有处于<strong>滑出状态的</strong>，如果有，则必须先将所有的滑块状态还原，如果没有，则点击生效，我这里只是弹出一个<code>alter</code>，具体业务可以根据实际填写</li>
+<li>删除相对简单，当滑块画出后，出现删除按钮，点击按钮，拿到当前的数组索引值，通过数组的<code>splice</code>方法，删除对应的数组值即可</li>
+</ul>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>Html代码</strong></p>
+<pre><code>&lt;div class=&quot;container&quot;&gt;
+    &lt;div class=&quot;page-title&quot;&gt;滑动组件&lt;/div&gt;
+    &lt;ul&gt;
+        &lt;li class=&quot;list-item &quot; v-for=&quot;(item,index) in list &quot; data-type=&quot;0&quot;&gt;
+            &lt;div class=&quot;list-box&quot; @touchstart.capture=&quot;touchStart&quot; @touchend.capture=&quot;touchEnd&quot; @click=&quot;skip&quot;&gt;
+                &lt;img class=&quot;list-img&quot; :src=&quot;item.imgUrl&quot; alt=&quot;&quot;&gt;
+                &lt;div class=&quot;list-content&quot;&gt;
+                    &lt;p class=&quot;title&quot;&gt;{{item.title}}&lt;/p&gt;
+                    &lt;p class=&quot;tips&quot;&gt;{{item.tips}}&lt;/p&gt;
+                    &lt;p class=&quot;time&quot;&gt;{{item.time}}&lt;/p&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;delete&quot; @click=&quot;deleteItem&quot; :data-index=&quot;index&quot;&gt;删除&lt;/div&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+</code></pre><p>注意：我这里的数据全是本地 <code>mock</code> 的~</p>
+<p><strong>Css样式代码</strong></p>
+<pre><code>.page-title{
+    text-align: center;
+    font-size: 17px;
+    padding: 10px 15px;
+    position: relative;
+}
+.page-title:after{
+    content: &quot; &quot;;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    z-index: 2;
+}
+.list-item{
+    position: relative;
+    height: 1.6rem;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+.list-item[data-type=&quot;0&quot;]{
+    transform: translate3d(0,0,0);
+}
+.list-item[data-type=&quot;1&quot;]{
+    transform: translate3d(-2rem,0,0);
+}
+.list-item:after{
+    content: &quot; &quot;;
+    position: absolute;
+    left: 0.2rem;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ccc;
+    color: #ccc;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    z-index: 2;
+}
+.list-box{
+    padding: 0.2rem;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    justify-content: flex-end;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    font-size: 0;
+}
+.list-item .list-img{
+    display: block;
+    width: 1rem;
+    height: 1rem;
+}
+.list-item .list-content{
+    padding: 0.1rem 0 0.1rem 0.2rem;
+    position: relative;
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+}
+.list-item .title{
+    display: block;
+    color: #333;
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.list-item .tips{
+    display: block;
+    overflow: hidden;
+    font-size: 12px;
+    color: #999;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.list-item .time{
+    display: block;
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    top: 0.1rem;
+    color: #666;
+}
+.list-item .delete{
+    width: 2rem;
+    height: 1.6rem;
+    background: #ff4949;
+    font-size: 17px;
+    color: #fff;
+    text-align: center;
+    line-height: 1.6rem;
+    position: absolute;
+    top:0;
+    right: -2rem;
+}
+</code></pre><p>这是核心的样式代码，还有部分样式重置代码放在了 <code>App.vue</code> 里，通过计算根节点<code>html</code>的字体大小的脚本我放在了 <code>index.html</code> 中~</p>
+<p> <strong>js代码</strong></p>
+<pre><code> export default{
+    name: &apos;index&apos;,
+    data () {
+        return {
+            list : [
+                {
+                    title : &apos;Chrome更新了&apos; ,
+                    imgUrl : &apos;./static/images/Chrome.png&apos; ,
+                    tips : &apos;不再支持Flash视频播放&apos; ,
+                    time : &apos;上午 8:30&apos;
+                },
+                {
+                    title : &apos;电影新资讯&apos; ,
+                    imgUrl : &apos;./static/images/Sina.png&apos; ,
+                    tips : &apos;电影《红海行动》上映以来票房暴涨，很多国人表示对国产电影有了新的改观&apos; ,
+                    time : &apos;上午 12:00&apos;
+                },
+                {
+                    title : &apos;聚焦两会·共筑中国梦&apos; ,
+                    imgUrl : &apos;./static/images/video.png&apos; ,
+                    tips : &apos;习近平代表的两会故事&apos; ,
+                    time : &apos;下午 17:45&apos;
+                },
+                {
+                    title : &apos;微信团队&apos; ,
+                    imgUrl : &apos;./static/images/Wechat.png&apos; ,
+                    tips : &apos;您的帐号有异常登录，如非本人操作，请及时修改密码&apos; ,
+                    time : &apos;昨天&apos;
+                }
+            ],
+            startX : 0 ,
+            endX : 0 ,
+        }
+    },
+    methods : {
+        //跳转
+        skip(){
+            if( this.checkSlide() ){
+                this.restSlide();
+            }else{
+                alert(&apos;You click the slide!&apos;)
+            }
+        },
+        //滑动开始
+        touchStart(e){
+            // 记录初始位置
+            this.startX = e.touches[0].clientX;
+        },
+        //滑动结束
+        touchEnd(e){
+                        // 当前滑动的父级元素
+            let parentElement = e.currentTarget.parentElement;
+            // 记录结束位置
+            this.endX = e.changedTouches[0].clientX;
+
+                        // 左滑
+            if( parentElement.dataset.type == 0 &amp;&amp; this.startX - this.endX &gt; 30  ){
+                this.restSlide();
+                parentElement.dataset.type = 1;
+            }
+
+                        // 右滑
+            if( parentElement.dataset.type == 1 &amp;&amp; this.startX - this.endX &lt; -30 ){
+                this.restSlide();
+                parentElement.dataset.type = 0;
+            }
+
+            this.startX = 0;
+            this.endX = 0;
+        },
+        //判断当前是否有滑块处于滑动状态
+        checkSlide(){
+            let listItems = document.querySelectorAll(&apos;.list-item&apos;);
+
+            for( let i = 0 ; i &lt; listItems.length ; i++){
+                if( listItems[i].dataset.type == 1 ) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        //复位滑动状态
+        restSlide(){
+            let listItems = document.querySelectorAll(&apos;.list-item&apos;);
+                         // 复位
+            for( let i = 0 ; i &lt; listItems.length ; i++){
+                listItems[i].dataset.type = 0;
+            }
+        },
+        //删除
+        deleteItem(e){
+            // 当前索引
+            let index = e.currentTarget.dataset.index;
+            // 复位
+            this.restSlide();
+            // 删除
+            this.list.splice(index,1);
+        }
+    }
+}
+</code></pre><p>  js代码就这么一些，每个函数都有注释说明， 相信都能看得懂， 就不多解释了。</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>怎么样，是不是也米有想象中的那么难，只要理清思路即可，实现起来也并不是那么困难，当然我这里写的只是我的一个实现思路而已，可能你们自己会有更好的实现方式，为什么不拿出来分享呢？</p>
+<p>完整代码我已经托管到 <a href="https://github.com/Chris-wei/vue-slider" target="_blank" rel="external">github</a> 上了，欢迎 <code>star</code> 和 <code>issue</code></p>
+<p><img src="https://img-blog.csdnimg.cn/2020061118365444.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/29/magic-css/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -2286,403 +2677,6 @@ _handleNumberKey(num) {
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/Wx-component/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/12/13/Wx-component/" itemprop="url">手把手教你实现微信小程序中的自定义组件</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-13T19:37:20+08:00">
-                2017-12-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/小程序/" itemprop="url" rel="index">
-                    <span itemprop="name">小程序</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="微信小程序中的组件"><a href="#微信小程序中的组件" class="headerlink" title="微信小程序中的组件"></a>微信小程序中的组件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前做小程序开发的时候，对于开发来说比较头疼的莫过于自定义组件了，当时官方对这方面的文档也只是寥寥几句，一笔带过而已，所以写起来真的是非常非常痛苦！！</p>
-<p>好在微信小程序的库从 1.6.3 开始，官方对于自定义组件这一块有了比较大的变动，首先比较明显的感觉就是文档比以前全多了，有木有！（<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/custom-component/" target="_blank" rel="external">小程序文档</a>），现在小程序支持简洁的组件化编程，可以将页面内的功能模块抽象成自定义组件，以便在不同的页面中复用，提高自己代码的可读性，降低自己维护代码的成本！</p>
-<p>本篇文章就是手把手教你实现小程序中自定义组件，坐稳啦~</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>要做自定义组件，我们先定一个小目标，比如说我们在小程序中实现一下 WEUI 中的弹窗组件，基本效果图如下。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611184959199.png" alt="WEUI弹框"></p>
-<p><strong>Step1</strong></p>
-<p>我们初始化一个小程序（本示例基础版本库为 1.7 ），删掉里面的示例代码，并新建一个 <code>components</code> 文件夹，用于存放我们以后开发中的所用组件，今天我们的目的是实现一个 弹框 组件，因此，我们在 <code>components</code> 组件中新建一个 <code>Dialog</code> 文件夹来存放我们的弹窗组件，在 <code>Dialog</code> 下右击新建 <code>Component</code> 并命名为 <code>dialog</code> 后，会生成对应的 <code>json wxml wxss js</code> 4个文件，也就是一个自定义组件的组成部分，此时你的项目结构应该如下图所示：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185026220.png" alt="项目结构"></p>
-<p><strong>Step2</strong></p>
-<p>组件初始化工作准备完成，接下来就是组件的相关配置，首先我们需要声明自定义组件，也就是将 <code>dialog.json</code> 中 <code>component</code> 字段设为 <code>true</code> ：</p>
-<pre><code>{
-  &quot;component&quot;: true,        // 自定义组件声明
-  &quot;usingComponents&quot;: {}     // 可选项，用于引用别的组件
-}
-</code></pre><p>其次，我们需要在 <code>dialog.wxml</code> 文件中编写弹窗组件模版，在 <code>dialog.wxss</code> 文件中加入弹窗组件样式，它们的写法与页面的写法类似，我就不赘述，直接贴代码啦~</p>
-<p><code>dialog.wxml</code> 文件如下：</p>
-<pre><code>&lt;!--components/Dialog/dialog.wxml--&gt;
-&lt;view class=&apos;wx_dialog_container&apos; hidden=&quot;{{!isShow}}&quot;&gt;
-    &lt;view class=&apos;wx-mask&apos;&gt;&lt;/view&gt;
-    &lt;view class=&apos;wx-dialog&apos;&gt;
-        &lt;view class=&apos;wx-dialog-title&apos;&gt;{{ title }}&lt;/view&gt;
-        &lt;view class=&apos;wx-dialog-content&apos;&gt;{{ content }}&lt;/view&gt;
-        &lt;view class=&apos;wx-dialog-footer&apos;&gt;
-          &lt;view class=&apos;wx-dialog-btn&apos; catchtap=&apos;_cancelEvent&apos;&gt;{{ cancelText }}&lt;/view&gt;
-          &lt;view class=&apos;wx-dialog-btn&apos; catchtap=&apos;_confirmEvent&apos;&gt;{{ confirmText }}&lt;/view&gt;
-        &lt;/view&gt;
-    &lt;/view&gt;
-&lt;/view&gt;
-</code></pre><p><code>dialog.wxss</code> 文件如下：</p>
-<pre><code>/* components/Dialog/dialog.wxss */
-.wx-mask{
-  position: fixed;
-    z-index: 1000;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.3);
-}
-.wx-dialog{
-    position: fixed;
-    z-index: 5000;
-    width: 80%;
-    max-width: 600rpx;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    background-color: #FFFFFF;
-    text-align: center;
-    border-radius: 3px;
-    overflow: hidden;
-}
-.wx-dialog-title{
-    font-size: 18px;
-    padding: 15px 15px 5px;
-}
-.wx-dialog-content{
-    padding: 15px 15px 5px;
-    min-height: 40px;
-    font-size: 16px;
-    line-height: 1.3;
-    word-wrap: break-word;
-    word-break: break-all;
-    color: #999999;
-}
-.wx-dialog-footer{
-    display: flex;
-    align-items: center;
-    position: relative;
-    line-height: 45px;
-    font-size: 17px;
-}
-.wx-dialog-footer::before{
-    content: &apos;&apos;;
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    height: 1px;
-    border-top: 1px solid #D5D5D6;
-    color: #D5D5D6;
-    -webkit-transform-origin: 0 0;
-    transform-origin: 0 0;
-    -webkit-transform: scaleY(0.5);
-    transform: scaleY(0.5);
-}
-.wx-dialog-btn{
-    display: block;
-    -webkit-flex: 1;
-    flex: 1;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    position: relative;
-}
-.wx-dialog-footer .wx-dialog-btn:nth-of-type(1){
-    color: #353535;
-}
-.wx-dialog-footer .wx-dialog-btn:nth-of-type(2){
-    color: #3CC51F;
-}
-.wx-dialog-footer .wx-dialog-btn:nth-of-type(2):after{
-    content: &quot; &quot;;
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 1px;
-    bottom: 0;
-    border-left: 1px solid #D5D5D6;
-    color: #D5D5D6;
-    -webkit-transform-origin: 0 0;
-    transform-origin: 0 0;
-    -webkit-transform: scaleX(0.5);
-    transform: scaleX(0.5);
-}
-</code></pre><p><strong>step3</strong></p>
-<p>组件的结构和样式都有了，还缺少什么呢，没错，还缺 <code>js</code> ， 眼睛比较犀利的同学，可能已经发现了我们在 <code>dialog.wxml</code> 文件中的会有一些比如 <code></code> 、<code>手把手教你实现微信小程序中的自定义组件</code> 这样的模版变量，还定义了 <code>_cancelEvent</code> 和 <code>_confirmEvent</code> 两个方法，其具体实现就是在 <code>dialog.js</code> 中。</p>
-<p><code>dialog.js</code> 是自定义组件的构造器，是使用小程序中 <code>Component</code> 构造器生成的，调用 <code>Component</code> 构造器时可以用来指定自定义组件的属性、数据、方法等，具体的细节可以参考一下<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/custom-component/component.html" target="_blank" rel="external">官方的文档</a></p>
-<p>下面我通过代码注释解释一下构造器中的一些属性的使用：</p>
-<pre><code>// components/Dialog/dialog.js
-Component({
-  options: {
-    multipleSlots: true // 在组件定义时的选项中启用多slot支持
-  },
-  /**
-   * 组件的属性列表
-   * 用于组件自定义设置
-   */
-  properties: {
-    // 弹窗标题
-    title: {            // 属性名
-      type: String,     // 类型（必填），目前接受的类型包括：String, Number, Boolean, Object, Array, null（表示任意类型）
-      value: &apos;标题&apos;     // 属性初始值（可选），如果未指定则会根据类型选择一个
-    },
-    // 弹窗内容
-    content :{
-      type : String ,
-      value : &apos;弹窗内容&apos;
-    },
-    // 弹窗取消按钮文字
-    cancelText :{
-      type : String ,
-      value : &apos;取消&apos;
-    },
-    // 弹窗确认按钮文字
-    confirmText :{
-      type : String ,
-      value : &apos;确定&apos;
-    }
-  },
-
-  /**
-   * 私有数据,组件的初始数据
-   * 可用于模版渲染
-   */
-  data: {
-    // 弹窗显示控制
-    isShow:false
-  },
-
-  /**
-   * 组件的方法列表
-   * 更新属性和数据的方法与更新页面数据的方法类似
-   */
-  methods: {
-    /*
-     * 公有方法
-     */
-
-    //隐藏弹框
-    hideDialog(){
-      this.setData({
-        isShow: !this.data.isShow
-      })
-    },
-    //展示弹框
-    showDialog(){
-      this.setData({
-        isShow: !this.data.isShow
-      })
-    },
-     /*
-     * 内部私有方法建议以下划线开头
-     * triggerEvent 用于触发事件
-     */
-    _cancelEvent(){
-      //触发取消回调
-      this.triggerEvent(&quot;cancelEvent&quot;)
-    },
-    _confirmEvent(){
-      //触发成功回调
-      this.triggerEvent(&quot;confirmEvent&quot;);
-    }
-  }
-})
-</code></pre><p><strong>step4</strong></p>
-<p>截至目前为止，你应该完成了一个自定义弹窗组件的大部分，可是你保存后并没有发现任何变化，因为我们还需要在 <code>index.wxml</code> 文件中引入它！</p>
-<p>首先需要在 <code>index.json</code> 中引入组件：</p>
-<pre><code>{
-  &quot;usingComponents&quot;: {
-    &quot;dialog&quot;: &quot;/components/Dialog/dialog&quot;
-  }
-}
-</code></pre><p>然后我们在 <code>index.wxml</code> 中引入它，并增加我们自定义的一些值，如下</p>
-<pre><code>&lt;!--index.wxml--&gt;
-&lt;view class=&quot;container&quot;&gt;
-    &lt;dialog id=&apos;dialog&apos;
-      title=&apos;我是标题&apos;
-      content=&apos;恭喜你，学会了小程序组件&apos;
-      cancelText=&apos;知道了&apos;
-      confirm=&apos;谢谢你&apos;
-      bind:cancelEvent=&quot;_cancelEvent&quot;
-      bind:confirmEvent=&quot;_confirmEvent&quot;&gt;
-    &lt;/dialog&gt;
-
-    &lt;button type=&quot;primary&quot; bindtap=&quot;showDialog&quot;&gt; ClickMe! &lt;/button&gt;
-&lt;/view&gt;
-</code></pre><p>嗯哪，还差最后一步，<code>index.js</code> 配置，没错，这个也很简单，我就复制粘贴了</p>
-<pre><code>//index.js
-//获取应用实例
-const app = getApp()
-
-Page({
-
-  /**
- * 生命周期函数--监听页面初次渲染完成
- */
-  onReady: function () {
-    //获得dialog组件
-    this.dialog = this.selectComponent(&quot;#dialog&quot;);
-  },
-
-  showDialog(){
-    this.dialog.showDialog();
-  },
-
-   //取消事件
-  _cancelEvent(){
-    console.log(&apos;你点击了取消&apos;);
-    this.dialog.hideDialog();
-  },
-  //确认事件
-  _confirmEvent(){
-    console.log(&apos;你点击了确定&apos;);
-    this.dialog.hideDialog();
-  }
-
-})
-</code></pre><p>到此！大功告成！</p>
-<p><strong>step5</strong></p>
-<p>让我们测试一下试试看：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185054286.png" alt="初始化"></p>
-<p>点击按钮之后呢，会出现如下效果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185125365.png" alt="弹窗出现"></p>
-<p>点击取消或者确定按钮的话，我们在事件中设置了弹窗会关闭，并会打印出相应的信息，具体点击完应该怎么做，就看你们自己发挥了，我只能帮你到这里了~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185151800.png" alt="点击取消"></p>
-<p><img src="https://img-blog.csdnimg.cn/20200611185227972.png" alt="点击确定"></p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>现在，你已经基本掌握了小程序中的自定义组件开发技巧，怎么样，是不是很棒，应该给自己点个赞，打个call。<br>总体来说，小程序推出自定义组件后，感觉方便了很多，还没有 get 的小伙伴们，赶紧学习学习，以后多用组件化开发，就不会那么难受了，加油哦~</p>
-<p>具体代码，我已经托管到 <a href="https://github.com/Chris-wei/wx-component/" target="_blank" rel="external">github</a> 上了，欢迎 <code>issue</code>~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2736,7 +2730,7 @@ Page({
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

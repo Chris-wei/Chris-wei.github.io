@@ -278,6 +278,403 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/13/Wx-component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/12/13/Wx-component/" itemprop="url">手把手教你实现微信小程序中的自定义组件</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-13T19:37:20+08:00">
+                2017-12-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="微信小程序中的组件"><a href="#微信小程序中的组件" class="headerlink" title="微信小程序中的组件"></a>微信小程序中的组件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>之前做小程序开发的时候，对于开发来说比较头疼的莫过于自定义组件了，当时官方对这方面的文档也只是寥寥几句，一笔带过而已，所以写起来真的是非常非常痛苦！！</p>
+<p>好在微信小程序的库从 1.6.3 开始，官方对于自定义组件这一块有了比较大的变动，首先比较明显的感觉就是文档比以前全多了，有木有！（<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/custom-component/" target="_blank" rel="external">小程序文档</a>），现在小程序支持简洁的组件化编程，可以将页面内的功能模块抽象成自定义组件，以便在不同的页面中复用，提高自己代码的可读性，降低自己维护代码的成本！</p>
+<p>本篇文章就是手把手教你实现小程序中自定义组件，坐稳啦~</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>要做自定义组件，我们先定一个小目标，比如说我们在小程序中实现一下 WEUI 中的弹窗组件，基本效果图如下。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611184959199.png" alt="WEUI弹框"></p>
+<p><strong>Step1</strong></p>
+<p>我们初始化一个小程序（本示例基础版本库为 1.7 ），删掉里面的示例代码，并新建一个 <code>components</code> 文件夹，用于存放我们以后开发中的所用组件，今天我们的目的是实现一个 弹框 组件，因此，我们在 <code>components</code> 组件中新建一个 <code>Dialog</code> 文件夹来存放我们的弹窗组件，在 <code>Dialog</code> 下右击新建 <code>Component</code> 并命名为 <code>dialog</code> 后，会生成对应的 <code>json wxml wxss js</code> 4个文件，也就是一个自定义组件的组成部分，此时你的项目结构应该如下图所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185026220.png" alt="项目结构"></p>
+<p><strong>Step2</strong></p>
+<p>组件初始化工作准备完成，接下来就是组件的相关配置，首先我们需要声明自定义组件，也就是将 <code>dialog.json</code> 中 <code>component</code> 字段设为 <code>true</code> ：</p>
+<pre><code>{
+  &quot;component&quot;: true,        // 自定义组件声明
+  &quot;usingComponents&quot;: {}     // 可选项，用于引用别的组件
+}
+</code></pre><p>其次，我们需要在 <code>dialog.wxml</code> 文件中编写弹窗组件模版，在 <code>dialog.wxss</code> 文件中加入弹窗组件样式，它们的写法与页面的写法类似，我就不赘述，直接贴代码啦~</p>
+<p><code>dialog.wxml</code> 文件如下：</p>
+<pre><code>&lt;!--components/Dialog/dialog.wxml--&gt;
+&lt;view class=&apos;wx_dialog_container&apos; hidden=&quot;{{!isShow}}&quot;&gt;
+    &lt;view class=&apos;wx-mask&apos;&gt;&lt;/view&gt;
+    &lt;view class=&apos;wx-dialog&apos;&gt;
+        &lt;view class=&apos;wx-dialog-title&apos;&gt;{{ title }}&lt;/view&gt;
+        &lt;view class=&apos;wx-dialog-content&apos;&gt;{{ content }}&lt;/view&gt;
+        &lt;view class=&apos;wx-dialog-footer&apos;&gt;
+          &lt;view class=&apos;wx-dialog-btn&apos; catchtap=&apos;_cancelEvent&apos;&gt;{{ cancelText }}&lt;/view&gt;
+          &lt;view class=&apos;wx-dialog-btn&apos; catchtap=&apos;_confirmEvent&apos;&gt;{{ confirmText }}&lt;/view&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+&lt;/view&gt;
+</code></pre><p><code>dialog.wxss</code> 文件如下：</p>
+<pre><code>/* components/Dialog/dialog.wxss */
+.wx-mask{
+  position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+}
+.wx-dialog{
+    position: fixed;
+    z-index: 5000;
+    width: 80%;
+    max-width: 600rpx;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background-color: #FFFFFF;
+    text-align: center;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.wx-dialog-title{
+    font-size: 18px;
+    padding: 15px 15px 5px;
+}
+.wx-dialog-content{
+    padding: 15px 15px 5px;
+    min-height: 40px;
+    font-size: 16px;
+    line-height: 1.3;
+    word-wrap: break-word;
+    word-break: break-all;
+    color: #999999;
+}
+.wx-dialog-footer{
+    display: flex;
+    align-items: center;
+    position: relative;
+    line-height: 45px;
+    font-size: 17px;
+}
+.wx-dialog-footer::before{
+    content: &apos;&apos;;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    height: 1px;
+    border-top: 1px solid #D5D5D6;
+    color: #D5D5D6;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+.wx-dialog-btn{
+    display: block;
+    -webkit-flex: 1;
+    flex: 1;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    position: relative;
+}
+.wx-dialog-footer .wx-dialog-btn:nth-of-type(1){
+    color: #353535;
+}
+.wx-dialog-footer .wx-dialog-btn:nth-of-type(2){
+    color: #3CC51F;
+}
+.wx-dialog-footer .wx-dialog-btn:nth-of-type(2):after{
+    content: &quot; &quot;;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    border-left: 1px solid #D5D5D6;
+    color: #D5D5D6;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+}
+</code></pre><p><strong>step3</strong></p>
+<p>组件的结构和样式都有了，还缺少什么呢，没错，还缺 <code>js</code> ， 眼睛比较犀利的同学，可能已经发现了我们在 <code>dialog.wxml</code> 文件中的会有一些比如 <code></code> 、<code>手把手教你实现微信小程序中的自定义组件</code> 这样的模版变量，还定义了 <code>_cancelEvent</code> 和 <code>_confirmEvent</code> 两个方法，其具体实现就是在 <code>dialog.js</code> 中。</p>
+<p><code>dialog.js</code> 是自定义组件的构造器，是使用小程序中 <code>Component</code> 构造器生成的，调用 <code>Component</code> 构造器时可以用来指定自定义组件的属性、数据、方法等，具体的细节可以参考一下<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/custom-component/component.html" target="_blank" rel="external">官方的文档</a></p>
+<p>下面我通过代码注释解释一下构造器中的一些属性的使用：</p>
+<pre><code>// components/Dialog/dialog.js
+Component({
+  options: {
+    multipleSlots: true // 在组件定义时的选项中启用多slot支持
+  },
+  /**
+   * 组件的属性列表
+   * 用于组件自定义设置
+   */
+  properties: {
+    // 弹窗标题
+    title: {            // 属性名
+      type: String,     // 类型（必填），目前接受的类型包括：String, Number, Boolean, Object, Array, null（表示任意类型）
+      value: &apos;标题&apos;     // 属性初始值（可选），如果未指定则会根据类型选择一个
+    },
+    // 弹窗内容
+    content :{
+      type : String ,
+      value : &apos;弹窗内容&apos;
+    },
+    // 弹窗取消按钮文字
+    cancelText :{
+      type : String ,
+      value : &apos;取消&apos;
+    },
+    // 弹窗确认按钮文字
+    confirmText :{
+      type : String ,
+      value : &apos;确定&apos;
+    }
+  },
+
+  /**
+   * 私有数据,组件的初始数据
+   * 可用于模版渲染
+   */
+  data: {
+    // 弹窗显示控制
+    isShow:false
+  },
+
+  /**
+   * 组件的方法列表
+   * 更新属性和数据的方法与更新页面数据的方法类似
+   */
+  methods: {
+    /*
+     * 公有方法
+     */
+
+    //隐藏弹框
+    hideDialog(){
+      this.setData({
+        isShow: !this.data.isShow
+      })
+    },
+    //展示弹框
+    showDialog(){
+      this.setData({
+        isShow: !this.data.isShow
+      })
+    },
+     /*
+     * 内部私有方法建议以下划线开头
+     * triggerEvent 用于触发事件
+     */
+    _cancelEvent(){
+      //触发取消回调
+      this.triggerEvent(&quot;cancelEvent&quot;)
+    },
+    _confirmEvent(){
+      //触发成功回调
+      this.triggerEvent(&quot;confirmEvent&quot;);
+    }
+  }
+})
+</code></pre><p><strong>step4</strong></p>
+<p>截至目前为止，你应该完成了一个自定义弹窗组件的大部分，可是你保存后并没有发现任何变化，因为我们还需要在 <code>index.wxml</code> 文件中引入它！</p>
+<p>首先需要在 <code>index.json</code> 中引入组件：</p>
+<pre><code>{
+  &quot;usingComponents&quot;: {
+    &quot;dialog&quot;: &quot;/components/Dialog/dialog&quot;
+  }
+}
+</code></pre><p>然后我们在 <code>index.wxml</code> 中引入它，并增加我们自定义的一些值，如下</p>
+<pre><code>&lt;!--index.wxml--&gt;
+&lt;view class=&quot;container&quot;&gt;
+    &lt;dialog id=&apos;dialog&apos;
+      title=&apos;我是标题&apos;
+      content=&apos;恭喜你，学会了小程序组件&apos;
+      cancelText=&apos;知道了&apos;
+      confirm=&apos;谢谢你&apos;
+      bind:cancelEvent=&quot;_cancelEvent&quot;
+      bind:confirmEvent=&quot;_confirmEvent&quot;&gt;
+    &lt;/dialog&gt;
+
+    &lt;button type=&quot;primary&quot; bindtap=&quot;showDialog&quot;&gt; ClickMe! &lt;/button&gt;
+&lt;/view&gt;
+</code></pre><p>嗯哪，还差最后一步，<code>index.js</code> 配置，没错，这个也很简单，我就复制粘贴了</p>
+<pre><code>//index.js
+//获取应用实例
+const app = getApp()
+
+Page({
+
+  /**
+ * 生命周期函数--监听页面初次渲染完成
+ */
+  onReady: function () {
+    //获得dialog组件
+    this.dialog = this.selectComponent(&quot;#dialog&quot;);
+  },
+
+  showDialog(){
+    this.dialog.showDialog();
+  },
+
+   //取消事件
+  _cancelEvent(){
+    console.log(&apos;你点击了取消&apos;);
+    this.dialog.hideDialog();
+  },
+  //确认事件
+  _confirmEvent(){
+    console.log(&apos;你点击了确定&apos;);
+    this.dialog.hideDialog();
+  }
+
+})
+</code></pre><p>到此！大功告成！</p>
+<p><strong>step5</strong></p>
+<p>让我们测试一下试试看：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185054286.png" alt="初始化"></p>
+<p>点击按钮之后呢，会出现如下效果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185125365.png" alt="弹窗出现"></p>
+<p>点击取消或者确定按钮的话，我们在事件中设置了弹窗会关闭，并会打印出相应的信息，具体点击完应该怎么做，就看你们自己发挥了，我只能帮你到这里了~</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185151800.png" alt="点击取消"></p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185227972.png" alt="点击确定"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>现在，你已经基本掌握了小程序中的自定义组件开发技巧，怎么样，是不是很棒，应该给自己点个赞，打个call。<br>总体来说，小程序推出自定义组件后，感觉方便了很多，还没有 get 的小伙伴们，赶紧学习学习，以后多用组件化开发，就不会那么难受了，加油哦~</p>
+<p>具体代码，我已经托管到 <a href="https://github.com/Chris-wei/wx-component/" target="_blank" rel="external">github</a> 上了，欢迎 <code>issue</code>~</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/31/Oauth/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -943,425 +1340,6 @@ console.log( &apos;快速排序:&apos; + quickSort( dataStore) );
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/17/BST/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/17/BST/" itemprop="url">JS中的算法与数据结构——二叉查找树（Binary Sort Tree）</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-17T18:45:18+08:00">
-                2017-10-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JS中的算法与数据结构/" itemprop="url" rel="index">
-                    <span itemprop="name">JS中的算法与数据结构</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="二叉查找树（Binary-Sort-Tree）"><a href="#二叉查找树（Binary-Sort-Tree）" class="headerlink" title="二叉查找树（Binary Sort Tree）"></a>二叉查找树（Binary Sort Tree）</h2><p>我们之前所学到的<a href="http://www.jianshu.com/p/cea9f3be42f5" target="_blank" rel="external">列表</a>，<a href="http://www.jianshu.com/p/90808ed34b86" target="_blank" rel="external">栈</a>等都是一种线性的数据结构，今天我们将学习计算机中经常用到的一种非线性的数据结构——树（<strong>Tree</strong>），由于其存储的所有元素之间具有明显的层次特性，因此常被用来存储具有层级关系的数据，比如文件系统中的文件；也会被用来存储有序列表等。</p>
-<p>在树结构中，每一个结点只有一个前件，称为父结点，没有前件的结点只有一个，称为树的<strong>根结点</strong>，简称树的<strong>根</strong>（root）。每一个结点可以有多个后件，称为该结点的子结点。没有后件的结点称为叶子结点。一个结点所拥有的子结点的个数称为该结点的度，所有结点中最大的度称为树的度。树的最大层次称为树的深度。</p>
-<h2 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h2><p>二叉树是一种特殊的树，它的子节点个数不超过两个，且分别称为该结点的左子树（left subtree）与右子树（right subtree），二叉树常被用作二叉查找树和二叉堆或是二叉排序树（BST）。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172809881.png" alt="二叉树"></p>
-<p>按一定的规则和顺序走遍二叉树的所有结点，使每一个结点都被访问一次，而且只被访问一次，这个操作被称为树的遍历，是对树的一种最基本的运算。由于二叉树是非线性结构，因此，树的遍历实质上是将二叉树的各个结点转换成为一个线性序列来表示。</p>
-<p>按照根节点访问的顺序不同，树的遍历分为以下三种：前序遍历，中序遍历，后序遍历；</p>
-<p>前序遍历：根节点-&gt;左子树-&gt;右子树</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172854860.png" alt="先序遍历"></p>
-<p>中序遍历：左子树-&gt;根节点-&gt;右子树</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611172949404.png" alt="中序遍历"></p>
-<p>后序遍历：左子树-&gt;右子树-&gt;根节点</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173031249.png" alt="后序遍历"></p>
-<p>因此我们可以得之上面二叉树的遍历结果如下：<br>前序遍历：ABDEFGC<br>中序遍历：DEBGFAC<br>后序遍历：EDGFBCA</p>
-<h2 id="二叉查找树（BST）"><a href="#二叉查找树（BST）" class="headerlink" title="二叉查找树（BST）"></a>二叉查找树（BST）</h2><p>实际应用中，树的每个节点都会有一个与之相关的值对应，有时候会被称为<strong>键</strong>。因此，我们在构建二叉查找树的时候，确定子节点非常的重要，通常将相对较小的值保存在左节点中，较大的值保存在右节点中，这就使得查找的效率非常高，因此被广泛使用。</p>
-<h2 id="二叉查找树的实现"><a href="#二叉查找树的实现" class="headerlink" title="二叉查找树的实现"></a>二叉查找树的实现</h2><p>根据上面的知识，我们了解到二叉树实际上是由多个节点组成，因此我们首先就要定义一个Node类，用于存放树的节点，其构造与前面的<a href="http://www.jianshu.com/p/f254ec665e57" target="_blank" rel="external">链表</a>类似。Node类的定义如下：</p>
-<pre><code>//节点定义
-
-function Node (data , left , right) {
-    this.data = data;       // 数据
-    this.left = left;       // 左节点
-    this.right = right;     // 右节点
-    this.show = show;       // 显示节点数据
-}
-
-function show(){
-    return this.data;
-}
-</code></pre><p>Node对象既保存了数据，也保存了它的左节点和右节点的链接，其中 show 方法用来显示当前保存在节点中数据。</p>
-<p>现在我们可以创建一个类，用来表示二叉查找数（BST），我们初始化类只包含一个成员，一个表示二叉查找树根节点的 Node 对象，初始化为 null ， 表示创建一个空节点。</p>
-<pre><code>//二叉查找树（BST）的类
-
-function BST(){
-    this.root = null;           // 根节点
-    this.insert = insert;       // 插入节点
-    this.preOrder = preOrder;   // 先序遍历
-    this.inOrder = inOrder;     // 中序遍历
-    this.postOrder = postOrder; // 后序遍历
-    this.find = find;           // 查找节点
-    this.getMin = getMin;       // 查找最小值
-    this.getMax = getMax;       // 查找最大值
-    this.remove = remove;       // 删除节点
-}
-</code></pre><p>现在，我们需要为我们的类添加方法。</p>
-<p>首先就是 insert 方法，向树中添加一个新节点，我们一起来看看这个方法；</p>
-<p><strong>insert：向树中添加新节点</strong></p>
-<p>因为添加节点会涉及到插入位置的问题，必须将其放到正确的位置上，才能保证树的正确性，整个过程较为复杂，我们一起来梳理一下：</p>
-<p>首先要添加新的节点，首先需要创建一个Node对象，将数据传入该对象。</p>
-<p>其次要检查当前的BST树是否有根节点，如果没有，那么表示是一棵新数，该节点就为该树的根节点，那么插入这个过程就结束了；否则，就要继续进行下一步了。</p>
-<p>如果待插入节点不是根节点，那么就必须对BST进行遍历，找到合适的位置。该过程类似遍历链表，用一个变量存储当前节点，一层一层遍历BST，算法如下：</p>
-<ol>
-<li>设值当前节点为根节点</li>
-<li>如果待插入节点保存的数据小于当前节点，则新节点为原节点的左节点，反之，执行第4步</li>
-<li>如果当前节点的左节点为null，就将新节点放到这个位置，退出循环；反之，继续执行下一次循环</li>
-<li>设置新节点为原节点的右节点</li>
-<li>如果当前节点的右节点为null，就将新节点放到这个位置，退出循环；反之，继续执行下一次循环</li>
-</ol>
-<p>这样，就能保证每次添加的新节点能够放到正确的位置上，具体实现如下；</p>
-<pre><code>//插入新节点
-
-function insert(data) {
-    var n = new Node( data , null , null );
-    if( this.root == null ){
-        this.root = n;
-    }else{
-        var current = this.root;
-        var parent;
-        while( true ){
-            parent = current;
-            if( data &lt; current.data ){
-                current = current.left;
-                if( current == null ){
-                    parent.left = n ;
-                    break;
-                }
-            }else{
-                current = current.right;
-                if( current == null ){
-                    parent.right = n;
-                    break;
-                }
-            }
-        }
-    }
-}
-</code></pre><p>现在BST类已初步成型，但操作还仅仅限于插入节点，我们需要有遍历BST的能力，上面我们也提到了是三种遍历方式。其中中序遍历是最容易实现的，我们需要升序的方法访问树中的所有节点，先访问左子树，在访问根节点，最后是右子树，我们采用递归来实现！</p>
-<p><strong>inOrder：中序遍历</strong></p>
-<pre><code> // 中序遍历
-
-function inOrder (node) {
-    if( !(node == null )){
-        inOrder( node.left );
-        console.debug( node.show() + &apos; &apos;);
-        inOrder( node.right );
-    }
-}
-</code></pre><p>怎么样，了解了原理，实现起来还是蛮简单的~</p>
-<p>我们用一段代码来测试一下我们所写的中序遍历：</p>
-<pre><code>var nums = new BST();
-//插入数据
-nums.insert(23);
-nums.insert(45);
-nums.insert(16);
-nums.insert(37);
-nums.insert(3);
-nums.insert(99);
-nums.insert(22);
-</code></pre><p>上述插入数据后，会形成如下的二叉树</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173142214.png" alt="BST"></p>
-<p>中序遍历结果如下：</p>
-<pre><code>//中序遍历
-console.log(&quot;Inorder traversal: &quot;);
-inOrder(nums.root);
-
-// Inorder traversal:
-// 3 16 22 23 37 45 99
-</code></pre><p><strong>preOrder：先序遍历</strong></p>
-<p>有了中序遍历的基础，相信先序遍历的实现你已经想出来，怎么样？看看对吗？</p>
-<pre><code>//先序遍历
-
-function preOrder( node ) {
-    if( !(node == null )){
-        console.log( node.show() + &apos; &apos;);
-        preOrder( node.left );
-        preOrder( node.right );
-    }
-}
-</code></pre><p>怎么样，看起来是不是和中序遍历差不多，唯一的区别就是 if 语句中代码的执行顺序，中序遍历中 show 方法放在两个递归调用之间，先序遍历则放在递归调用之前。</p>
-<p>先序遍历结果如下：</p>
-<pre><code>// 先序遍历
-
-console.log(&quot;Preorder traversal: &quot;);
-preOrder(nums.root);
-
-// Preorder traversal:
-// 23 16 3 22 45 37 99
-</code></pre><p><strong>postOrder：后序遍历</strong></p>
-<p>后序遍历的实现和前面的基本相同，将 show 方法放在递归调用之后执行即可</p>
-<pre><code>//后序遍历
-
-function postOrder ( node ) {
-    if( !(node == null ) ){
-        postOrder( node.left );
-        postOrder( node.right );
-        console.log( node.show() + &apos; &apos;);
-    }
-}
-</code></pre><p>后序遍历结果如下：</p>
-<pre><code>// 后序遍历
-
-console.log(&quot;Postorder traversal: &quot;);
-postOrder(nums.root);
-
-// Postorder traversal:
-// 3 22 16 37 99 45 23
-</code></pre><h2 id="二叉查找树的查找运算"><a href="#二叉查找树的查找运算" class="headerlink" title="二叉查找树的查找运算"></a>二叉查找树的查找运算</h2><p>对于BST通常有一下三种的查找类型：</p>
-<ol>
-<li>查找给定值</li>
-<li>查找最大值</li>
-<li>查找最小值</li>
-</ol>
-<p>我们接下来一起来讨论三种查找的方式的实现。</p>
-<p>要查找BST中的最小值和最大值是非常简单的。因为较小的值总是在左子节点上，要想查找BST中的最小值，只需遍历左子树，直到找到最后一个节点即可。同理，查找最大值，只需遍历右子树，直到找到最后一个节点即可。</p>
-<p><strong>getMin：查找最小值</strong></p>
-<p>遍历左子树，直到左子树的某个节点的 left 为 null 时，该节点保存的即为最小值</p>
-<pre><code>//查找最小值
-
-function getMin( ) {
-    var current = this.root;
-    while ( !( current.left == null ) ){
-        current = current.left;
-    }
-    return current.show();
-}
-</code></pre><p><strong>getMax：查找最大值</strong></p>
-<p>遍历右子树，直到右子树的某个节点的 right 为 null 时，该节点保存的即为最大值</p>
-<pre><code>//查找最大值
-
-function getMax () {
-    var current = this.root;
-    while ( !( current.right == null ) ) {
-        current = current.right;
-    }
-    return current.show();
-}
-</code></pre><p>我们还是利用前面构建的树来测试：</p>
-<pre><code>// 最小值
-console.log(&apos;min:&apos; + nums.getMin() );       // min : 3
-
-//最大值
-console.log(&apos;max:&apos; + nums.getMax() );       // max : 99
-</code></pre><p>在BST上查找给定值，需要比较给定值和当前节点保存的值的大小，通过比较，就能确定给定值在不在当前节点，根据BST的特点，qu接下来是向左还是向右遍历；</p>
-<pre><code>//查找给定值
-
-function find ( data ) {
-    var current = this.root;
-    while ( current != null ){
-        if( current.data == data ){
-            return current;
-        }else if( current.data &lt; data ){
-            current = current.right;
-        }else{
-            current = current.left;
-        }
-    }
-    return null;
-}
-</code></pre><p>如果找到给定值，该方法返回保存该值的节点，反之返回null；</p>
-<pre><code>//查找不存在的值
-console.log(&apos;find:&apos; + nums.find(66));       // find : null
-
-//查找存在的值
-console.log(&apos;find:&apos; + nums.find(99) );      // find : [object Object]
-</code></pre><h2 id="二叉查找树的删除运算"><a href="#二叉查找树的删除运算" class="headerlink" title="二叉查找树的删除运算"></a>二叉查找树的删除运算</h2><p>从BST中删除节点的操作最为复杂，其复杂程度取决于删除的节点位置。如果待删除的节点没有子节点，那么非常简单。如果删除包含左子节点或者右子节点，就变得稍微有些复杂。如果删除包含两个节点的节点最为复杂。</p>
-<p>我们采用递归方法，来完成复杂的删除操作，我们定义 remove() 和 removeNode() 两个方法；算法思想如下：</p>
-<ol>
-<li>首先判断当前节点是否包含待删除的数据，如果包含，则删除该节点；如果不包含，则比较当前节点上的数据和待删除树的的大小关系。如果待删除的数据小于当前节点的数据，则移至当前节点的左子节点继续比较；如果大于，则移至当前节点的右子节点继续比较。</li>
-<li>如果待删除节点是叶子节点（没有子节点），那么只需要将从父节点指向它的链接指向变为null；</li>
-<li>如果待删除节点含有一个子节点，那么原本指向它的节点需要做调整，使其指向它的子节点；</li>
-<li>最后，如果待删除节点包含两个子节点，可以选择查找待删除节点左子树上的最大值或者查找其右子树上的最小值，这里我们选择后一种。</li>
-</ol>
-<p>因此，我们需要一个查找树上最小值的方法，后面会用它找到最小值创建一个临时节点，将临时节点上的值复制到待删除节点，然后再删除临时节点；</p>
-<p>我们上面说会用到两个方法，其中 remove 方法只是简单的接收待删除数据，调用 removeNode 删除它，主要工作在 removeNode 中完成，定义如下：</p>
-<pre><code>//删除操作
-
-function remove( data ) {
-    removeNode( this.root , data);
-}
-
-//查找最小值
-
-function getSmallest(node) {
-    if (node.left == null) {
-        return node;
-    }
-    else {
-        return getSmallest(node.left);
-    }
-}
-
-//删除节点
-function removeNode( node , data ) {
-    if( node == null ) {
-        return null;
-    }
-    if(data == node.data) {
-        // 没有子节点的节点
-        if(node.left == null &amp;&amp; node.right == null) {
-            return null;
-        }
-        // 没有左子节点的节点
-        if(node.left == null) {
-            return node.right;
-        }
-        // 没有右子节点的节点
-        if(node.right == null) {
-            return node.left;
-        }
-        // 有2个子节点的节点
-        var tempNode = getSmallest(node.right);
-        node.data = tempNode.data;
-        node.right = removeNode(node.right,tempNode.data);
-        return node;
-
-    }else if(data &lt; node.data) {
-        node.left = removeNode( node.left,data);
-        return node;
-    }else {
-        node.right = removeNode( node.right,data);
-        return node;
-    }
-}
-</code></pre><p> 现在我们来删除节点试试。</p>
-<pre><code>//删除根节点
-nums.remove(23);
-
-inOrder(nums.root);
-
-// 3 16 22 37 45 99
-</code></pre><p>成功了！<br>现在，我们的BST算是完整了。</p>
-<p>我们现在已经可以利用js是实现一个简单的BST了，实际中树的使用会很广泛，希望大家能多去了解了解树的数据结构，多动手实践，相信你会有不少的收获！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1415,7 +1393,7 @@ inOrder(nums.root);
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

@@ -114,7 +114,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190347437.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200611190414489.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/2020061119044355.png">
-<meta property="og:updated_time" content="2020-06-11T11:04:51.110Z">
+<meta property="og:updated_time" content="2020-12-21T10:16:59.950Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="手把手教你开发微信小程序中的插件">
 <meta name="twitter:description" content="微信小程序插件前言继上次手把手教你实现微信小程序中的自定义组件已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序「插件」功能，以及开发者工具新增「代码片段」功能，即在小程序基础库 1.9.6 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~">
@@ -378,7 +378,7 @@
       
 
       
-        <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
+        <h2 id="微信小程序插件"><a href="#微信小程序插件" class="headerlink" title="微信小程序插件"></a>微信小程序插件</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>继上次<a href="https://chris-wei.github.io/2017/12/13/Wx-component/" target="_blank" rel="external">手把手教你实现微信小程序中的自定义组件</a>已经有一段时间了（不了解的小伙伴建议去看看，因为插件很多内容跟组件相似），今年3月13日，小程序新增了 小程序<strong>「插件」</strong>功能，以及开发者工具新增<strong>「代码片段」</strong>功能，即在小程序基础库 <strong>1.9.6</strong> 版本上，允许开发者开发插件，同时将插件提供给其它小程序使用，这无疑给开发者带来了福音，因为不同的小程序之间可以共享代码啊，这将省去不少的开发成本了~</p>
 <h3 id="小程序插件接入"><a href="#小程序插件接入" class="headerlink" title="小程序插件接入"></a>小程序插件接入</h3><p>小程序插件不像自定义组件那样，很方便的就可以嵌在自己的代码中了，它是需要去官网开通小程序插件功能才能使用的，详细的接入流程和文档可以阅读官方的 <a href="https://developers.weixin.qq.com/miniprogram/introduction/plugin.html#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E6%8F%92%E4%BB%B6%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D" target="_blank" rel="external">小程序插件接入指南</a>，当然这不是我们本篇文章的重点，本篇文章重点是教你如何开发一个微信小程序插件~</p>
 <p><img src="https://img-blog.csdnimg.cn/20200611185941881.png" alt=""></p>
 <h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p><strong>建立模板</strong></p>
@@ -417,7 +417,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">.section&#123;</div><div class="line">    padding: 20rpx;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.section-title&#123;</div><div class="line">    font-size: 30rpx;</div><div class="line">    line-height: 40rpx;</div><div class="line">    text-align: center;</div><div class="line">    color: #666;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.picker&#123;</div><div class="line">    margin: 20rpx auto;</div><div class="line">    text-align: center;</div><div class="line">    font-size: 30rpx;</div><div class="line">    color: #666;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>js <code>regionPicker.js</code></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Component(&#123;</div><div class="line">    properties : &#123;</div><div class="line">        region : &#123;</div><div class="line">            type : Array ,</div><div class="line">            value: [&apos;北京市&apos;, &apos;北京市&apos;, &apos;东城区&apos;]</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">    data: &#123;</div><div class="line"></div><div class="line">    &#125;,</div><div class="line">    methods : &#123;</div><div class="line">       bindRegionChange(e)&#123;</div><div class="line">        this.setData(&#123;</div><div class="line">            region: e.detail.value</div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<p>跟我们书写自定义组件基本相同，数据绑定在 <code>region</code> 字段，方法声明在 <code>methods</code> 对象中，关于自定义组件中 <code>js</code> 文件中的书写还不是很熟的小伙伴，可以看看官方<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/component.html" target="_blank" rel="external"><code>Component构造器</code></a> 和 我上篇文章<a href="https://juejin.im/post/5a3110756fb9a0451b048b72" target="_blank" rel="external">自定义组件开发</a>中对其的一些介绍和理解~</p>
+<p>跟我们书写自定义组件基本相同，数据绑定在 <code>region</code> 字段，方法声明在 <code>methods</code> 对象中，关于自定义组件中 <code>js</code> 文件中的书写还不是很熟的小伙伴，可以看看官方<a href="https://developers.weixin.qq.com/miniprogram/dev/framework/custom-component/component.html" target="_blank" rel="external"><code>Component构造器</code></a> 和 我上篇文章<a href="https://chris-wei.github.io/2017/12/13/Wx-component/" target="_blank" rel="external">自定义组件开发</a>中对其的一些介绍和理解~</p>
 <p><strong>Step2</strong></p>
 <p>到这里，你已经实现了一个自定义的组件，如何将其以插件的形式让其他小程序应用呢，需要配置两个地方，一个是 <code>plugin.json</code> ，声明我们的插件;</p>
 <p><code>plugin.json</code></p>
@@ -581,7 +581,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">41</span>
+                <span class="site-state-item-count">42</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
