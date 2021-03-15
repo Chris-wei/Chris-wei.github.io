@@ -278,6 +278,218 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/10/Wx-iconfont/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/10/Wx-iconfont/" itemprop="url">小程序中 icon 颜色自定义解决方案</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-10T11:40:20+08:00">
+                2018-07-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/小程序/" itemprop="url" rel="index">
+                    <span itemprop="name">小程序</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>随着公司业务的发展，现在的产品真的是越来越 体(sang)贴(xin)用(bing)户(kuang) 了，刚好前阵子准备做一个后台可以让用用户 DIY 自己的小程序，不小心看到了 某网 提供了一套图标库，用户可以自主选择，并且可以进行颜色配置的时候，我就感觉事情不妙~</p>
+<p>当时脑子一热，桌子一拍，我们也需要提供这样的功能，而且要做的比他们还强大…</p>
+<p>作为开发的我默默的留下了这张图~</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185308750.png" alt=""></p>
+<p>我们知道小程序里面是不支持类似 <code>ttf</code> <code>woff</code> 这类字体的，直接引入编译都过不去~</p>
+<p>这个就是要告诉我们，我们不能像 H5 那样直接把字体下载下来然后引入到样式中，这条道路是行不通了，只能重新找找方案了~</p>
+<p>嗯，我也不 藏着掖着了 ， 接下来给大家 安利 2 中解决方案~</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p><strong>方案一</strong></p>
+<p>利用小程序中不支持 <code>ttf</code> 字体，却支持 <code>base64</code> 的特点，我们可以通过将 <code>ttf</code> 字体转码成 <code>base64</code> ，再通过 <code>iconfont</code> 的特点，通过设置字体大小和颜色来达到目的。</p>
+<p>其具体实现如下：</p>
+<ul>
+<li>1.我们可以先去阿里提供的图标库 <a href="http://iconfont.cn/" target="_blank" rel="external">官网</a> 下载我们需要的图标，一般来说都够用了，这里我随便好了 3 个作为测试用 ， 点击 <strong>下载代码</strong> 将代码下载到本地~</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185336876.png" alt=""></p>
+<ul>
+<li>2.解压我们刚才下载的包，会有以下这些文件，但对于我们来说，会用到的只有 <code>iconfont.css</code> 和 <code>iconfont.ttf</code> 这两个文件，</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185403934.png" alt=""></p>
+<ul>
+<li>3.我们要对 <code>iconfont.ttf</code> 这个文件进行转码，将它转成 <code>base64</code> 格式，刚好 <a href="https://transfonter.org/" target="_blank" rel="external">这个网站</a> 就提供了这个功能（pass：这个网站可能会有点慢，可以的话代理加个速），按照下图的步骤，分别上传 <code>ttf</code> 文件，选择配置，点击转换。</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185441967.png" alt=""></p>
+<ul>
+<li>4.转换完成如下图所示，废话不多说，直接下载下来解压，我们需要的是里面 <code>stylesheet.css</code> 这个文件</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185512354.png" alt=""></p>
+<ul>
+<li>5.我们在小程序里的静态资源文件夹里新建一个叫 <code>iconfont.wxss</code> 样式文件，将 上面解压出来的 <code>stylesheet.css</code> 里面的内容全部拷贝到 <code>iconfont.wxss</code> 中，另外，还记得我们上面说的 <code>iconfont.css</code> 吗？这时候就要派上用场了，我们打开 <code>iconfont.css</code> 这个样式文件，将下面的样式，也就是我用<strong>红框标注</strong>的内容复制到 <code>iconfont.wxss</code> 文件里，注意上面的不需要复制！！</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185542666.png" alt=""></p>
+<p>到此为止，准备工作算是已经完成了，这时候你的 <code>iconfont.wxss</code> 应该类似下面这样</p>
+<p><code>iconfont.wxss</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">@font-face &#123;</div><div class="line">    font-family: &apos;iconfont&apos;;</div><div class="line">    src: url(data:font/truetype;charset=utf-8;base64,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) format(&apos;truetype&apos;);</div><div class="line">    font-weight: normal;</div><div class="line">    font-style: normal;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.iconfont &#123;</div><div class="line">  font-family:&quot;iconfont&quot; !important;</div><div class="line">  font-size:16px;</div><div class="line">  font-style:normal;</div><div class="line">  -webkit-font-smoothing: antialiased;</div><div class="line">  -moz-osx-font-smoothing: grayscale;</div><div class="line">&#125;</div><div class="line"></div><div class="line">.icon-map:before &#123; content: &quot;\e6a2&quot;; &#125;</div><div class="line"></div><div class="line">.icon-success:before &#123; content: &quot;\e6b3&quot;; &#125;</div><div class="line"></div><div class="line">.icon-atm:before &#123; content: &quot;\e6bd&quot;; &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>6.接着，将我们的字体文件引入到 <code>app.wxss</code> 全局 , 这样你就可以在任何你想用到的地方进行调用了，只需要将 <code>class</code> 写对就没什么问题了，</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;!--index.wxml--&gt;</div><div class="line">&lt;view class=&quot;container&quot;&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-map&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;地图&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-success&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;成功&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-atm&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;atm&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
+<p>怎么样，成功了吧！</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185615195.png" alt=""></p>
+</li>
+</ul>
+<p>  什么？ 你要换颜色，难不倒我的，只要改变对应的 <code>color</code> 就可以了~</p>
+<pre><code><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;!--index.wxml--&gt;</div><div class="line">&lt;view class=&quot;container&quot;&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-map&apos; style=&apos;color : red&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;地图&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-success&apos; style=&apos;color : green&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;成功&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">    &lt;view class=&apos;block&apos;&gt;</div><div class="line">        &lt;text class=&apos;iconfont icon-atm&apos; style=&apos;color : blue&apos;&gt;&lt;/text&gt;</div><div class="line">        &lt;text&gt;atm&lt;/text&gt;</div><div class="line">    &lt;/view&gt;</div><div class="line">&lt;/view&gt;</div></pre></td></tr></table></figure>
+</code></pre><p><img src="https://img-blog.csdnimg.cn/20200611185647428.png" alt=""></p>
+<p> 嗯，是不是可以插会儿腰了~</p>
+<p> <img src="https://img-blog.csdnimg.cn/20200611185712751.png" alt=""></p>
+<p>且慢，刚不是说两种方案么，怎么到这里就叉起腰来了，还没完呢，等会嘚瑟哈！！</p>
+<p><strong>方案二</strong></p>
+<p>刚介绍了方案一，确实是一种选择，我们只需约定好样式，类名，后端将颜色什么的返回给我们就好了~</p>
+<p>但是这种方案存在弊端，不够灵活，如果我们要更新我们的图标库，那么我们上面的流程又得走一遍，如果后面图标库的类型变多，那么我们转码后的文件会随之变大，这对于小程序来说是致命的，因为做小程序都知道，我们都在时刻想着如何用最少的代码发挥最大的价值！</p>
+<p>所以，这种方案有一定的局限性，因此才出了第二套方案~</p>
+<p>第二套方案的思路是借助 <code>svg</code> 矢量图具有不失真和可以自主填充颜色的特点，通过 <code>fill</code> 属性，用户可以自定义填充颜色，但是小程序里面不支持 <code>svg</code> 标签的，我们通过颜色选择器将用户选择好的颜色填充到 <code>svg</code> 里，在通过转码将换过颜色的 <code>svg</code> 转成 <code>base64</code> 编码发给小程序，小程序可以直接用在 <code>image</code> 标签中的 <code>src</code> 属性上~</p>
+<p>我们一起来试试~</p>
+<ul>
+<li>1.我们还是先去阿里提供的图标库 <a href="http://iconfont.cn/" target="_blank" rel="external">官网</a> 下载我们需要的图标，这次跟第一次有些不一样，这次我们要选择下载素材，选择 <code>svg</code>~</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/2020061118574353.png" alt=""></p>
+<ul>
+<li>2.将下载好的 <code>svg</code> 源代码直接放在我们的图标库里面，选择某个图标之后，通过颜色选择器我们可以通过 <code>js</code> 设置对应的 <code>svg</code> 图标的 <code>fill</code> 属性，动态的给图标填充不同的颜色，差不多就跟下面的效果有点相似~</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185811357.png" alt=""></p>
+<ul>
+<li>3.接下来可以将换过颜色的 <code>svg</code> 通过 <code>svg</code> 转 <code>base64</code> 的插件将其转换成 <code>base64</code> 编码，这里为了方便，我直接偷懒，<a href="https://www.sojson.com/image2base64.html" target="_blank" rel="external">在线转换</a>了，对应的 <code>base64</code> 编码如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;!--map--&gt;</div><div class="line">data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzIuMDBweCIgdmlld0JveD0iMCAwIDEwMjQgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9InJlZCIgZD0iTTUxMy41Nzc4MDcgMTAxOC40ODg0MjVhMjQuNTcyMjI0IDI0LjU3MjIyNCAwIDAgMS0yMC4xOTMwNjYtMTAuNTY4NTQ0TDE5Mi4wMDIwNDggNTczLjM1NDI4YTI0LjY4MDc1NiAyNC42ODA3NTYgMCAwIDEtMC45Mzc4NzktMS40NTgwMTIgMzczLjg4MTk2NSAzNzMuODgxOTY1IDAgMCAxLTM0LjA3Njk1Mi03NS4zNjYxNTFjLTEyLjA3Nzc1MS0zNy4zMTE0MDUtMTguMTk4NTM4LTc2LjE5NjUyMi0xOC4xOTg1MzctMTE1LjU4OTQ4NiAwLTIwNi42NjQwODYgMTY4LjEzMzIzMy0zNzQuNzk4MzQzIDM3NC43OTgzNDItMzc0Ljc5ODM0MyA0Ny45NDM0MyAwIDk2LjAzODM5NiAxMS41NzkxMTkgMTQyLjk0NzcwMiAzNC40MTU4NTcgNDIuNzAzMTg1IDIwLjc4ODk2OCA4My43NjYxMDYgNTEuMDQyNzMxIDExOC43NTEyNDQgODcuNDg4OTU0IDM0LjA4NzE5IDM1LjUxMTQxNSA2Mi40MzE0MDggNzYuODYyMDQ3IDgxLjk2NzE0IDExOS41ODI2MzggMjAuMzYyMDA3IDQ0LjUyNDY3NyAzMS4xMjIwMTggOTAuNjEyODI3IDMxLjEyMDk5NCAxMzMuMjgwMTc3IDAgMzkuNDAyMTc5LTYuMTIxODEgNzguMjg2MjcyLTE4LjE5NDQ0MiAxMTUuNTczMTA0LTguMzM3NDk4IDI1LjcyODE5LTE5Ljg1OTI4IDUxLjM4NDcwOS0zMy4zMjQzOTYgNzQuMjAwOTY5LTAuMzA0MDk0IDAuNTE2MDM4LTAuNjI3NjQyIDEuMDIwODE0LTAuOTY4NTk1IDEuNTE0MzI3TDUzMy43NzA4NzQgMTAwNy45MTc4MzNhMjQuNTc2MzE5IDI0LjU3NjMxOSAwIDAgMS0yMC4xOTMwNjcgMTAuNTcwNTkyek0yMzIuODkwOTA4IDU0Ni4wNzI4NTZsMjgwLjY4MzgyOCA0MDQuNzE4MzE5TDc5NC45NzgzNTQgNTQ0Ljk0OTY1NGMxMS40Njk1NjMtMTkuNTcwNTQ0IDIxLjI5ODg2My00MS41NDYxOTUgMjguNDQ3NjMtNjMuNjA3ODUyIDEwLjQ4NDU4Ni0zMi4zODM0NDUgMTUuODAyNjQ2LTY2LjE3NTc1NiAxNS44MDI2NDYtMTAwLjQzMDg2NCAwLjAwNDA5Ni03Mi4xODE4NjgtMzcuMTUzNzI3LTE1My45ODcyMzMtOTkuMzk2NzM5LTIxOC44Mjg4NjdDNjc0LjY4NjE2MyA5NC4yMTM4MzIgNTkyLjIyMzQ2MyA1NS4yODk4MDggNTEzLjU4ODA0NiA1NS4yODk4MDhjLTE3OS41NjQ5MTMgMC0zMjUuNjUxODQ3IDE0Ni4wODY5MzQtMzI1LjY1MTg0NyAzMjUuNjUxODQ3IDAgMzQuMjQ1ODkyIDUuMzE3MDM2IDY4LjAzOTIyOCAxNS44MDQ2OTQgMTAwLjQzOTA1NGEzMjQuNTgxODg3IDMyNC41ODE4ODcgMCAwIDAgMjkuMTUwMDE1IDY0LjY5MjE0N3ogbTU4Mi44MDI2OTQgMTIuMTI0ODVoMC4wMTAyMzktMC4wMTAyMzl6IG0tMzAyLjc2MDg0MiAxOC42NDI5MDRjLTk2Ljg2MTYgMC0xNzUuNjYzOTEtNzguODAzMzM0LTE3NS42NjM5MS0xNzUuNjY0OTM0czc4LjgwMjMxLTE3NS42NjM5MSAxNzUuNjYzOTEtMTc1LjY2MzkwOWM5Ni44NjI2MjMgMCAxNzUuNjYzOTEgNzguODAyMzEgMTc1LjY2MzkwOSAxNzUuNjYzOTA5cy03OC44MDEyODYgMTc1LjY2NDkzNC0xNzUuNjYzOTA5IDE3NS42NjQ5MzR6IG0wLTMwMi4xODIzNDhjLTY5Ljc2MjQyNyAwLTEyNi41MTc0MTQgNTYuNzU2MDExLTEyNi41MTc0MTUgMTI2LjUxNzQxNFM0NDMuMTcxMzU3IDUyNy42OTQxMTQgNTEyLjkzMjc2IDUyNy42OTQxMTQgNjM5LjQ1MDE3NCA0NzAuOTM4MTAzIDYzOS40NTAxNzQgNDAxLjE3NTY3NnMtNTYuNzU0OTg3LTEyNi41MTc0MTQtMTI2LjUxNzQxNC0xMjYuNTE3NDE0eiIgIC8+PC9zdmc+</div><div class="line"></div><div class="line">&lt;!--success--&gt;</div><div class="line">data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzEuOTdweCIgdmlld0JveD0iMCAwIDEwMjUgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9ImdyZWVuIiBkPSJNNTExLjY3OTUyNCAxMDIzLjE1OTM5Yy02OC42NTg2NzggMC0xMzUuMzk5NjE5LTEzLjU2NDQzMy0xOTguMzY5NTkxLTQwLjMxNjUwOS02MC43NTIyMzYtMjUuODA5MDc3LTExNS4zNzM0NDYtNjIuNzEyOTc2LTE2Mi4zNDYyMzMtMTA5LjY4NTc2My00Ni45NzE3NjMtNDYuOTcxNzYzLTgzLjg3NTY2Mi0xMDEuNTkyOTc0LTEwOS42ODU3NjMtMTYyLjM0NjIzMy0yNi43NTEwNTItNjIuOTY5OTcxLTQwLjMxNTQ4NS0xMjkuNzEwOTEyLTQwLjMxNTQ4NS0xOTguMzY4NTY3czEzLjU2NDQzMy0xMzUuMzk5NjE5IDQwLjMxNTQ4NS0xOTguMzY5NTkxYzI1LjgxMDEwMS02MC43NTIyMzYgNjIuNzE0LTExNS4zNzM0NDYgMTA5LjY4NTc2My0xNjIuMzQ2MjMzIDQ2Ljk3Mjc4Ny00Ni45NzE3NjMgMTAxLjU5Mzk5Ny04My44NzU2NjIgMTYyLjM0NjIzMy0xMDkuNjg1NzYzQzM3Ni4yNzk5MDUgMTUuMjg5NjggNDQzLjAyMDg0NiAxLjcyNTI0NyA1MTEuNjc5NTI0IDEuNzI1MjQ3UzY0Ny4wNzgxMTkgMTUuMjg5NjggNzEwLjA0ODA5MSA0Mi4wNDA3MzFjNjAuNzUyMjM2IDI1LjgxMDEwMSAxMTUuMzc0NDcgNjIuNzE0IDE2Mi4zNDYyMzMgMTA5LjY4NTc2MyA0Ni45NzI3ODcgNDYuOTcyNzg3IDgzLjg3NjY4NiAxMDEuNTkzOTk3IDEwOS42ODY3ODcgMTYyLjM0NjIzMyAyNi43NTIwNzYgNjIuOTY5OTcxIDQwLjMxNjUwOSAxMjkuNzEwOTEyIDQwLjMxNjUwOSAxOTguMzY5NTkxcy0xMy41NjQ0MzMgMTM1LjM5ODU5NS00MC4zMTY1MDkgMTk4LjM2ODU2N2MtMjUuODEwMTAxIDYwLjc1MzI2LTYyLjcxMjk3NiAxMTUuMzc0NDctMTA5LjY4NTc2MyAxNjIuMzQ2MjMzLTQ2Ljk3MTc2MyA0Ni45NzI3ODctMTAxLjU5Mzk5NyA4My44NzY2ODYtMTYyLjM0NjIzMyAxMDkuNjg1NzYzQzY0Ny4wNzkxNDMgMTAwOS41OTQ5NTcgNTgwLjMzNzE3OCAxMDIzLjE1OTM5IDUxMS42Nzk1MjQgMTAyMy4xNTkzOXpNNTExLjY3OTUyNCA1MC44NzE3NDJjLTYyLjAxODc4MiAwLTEyMi4yOTM4ODcgMTIuMjQ3NzE2LTE3OS4xNTIyODcgMzYuNDAzMjE5LTU0LjkyMzI1NyAyMy4zMzMzMjMtMTA0LjMxNzUzMiA1Ni43MDk5MzYtMTQ2LjgxMDgyMSA5OS4yMDQyNDlzLTc1Ljg3MDkyNiA5MS44ODg1ODgtOTkuMjA0MjQ5IDE0Ni44MTA4MjFjLTI0LjE1NTUwMyA1Ni44NTg0LTM2LjQwMzIxOSAxMTcuMTMzNTA1LTM2LjQwMzIxOSAxNzkuMTUyMjg3IDAgNjIuMDE3NzU4IDEyLjI0NzcxNiAxMjIuMjkyODYzIDM2LjQwMzIxOSAxNzkuMTUyMjg3IDIzLjMzMzMyMyA1NC45MjMyNTcgNTYuNzA5OTM2IDEwNC4zMTc1MzIgOTkuMjA0MjQ5IDE0Ni44MTE4NDUgNDIuNDkzMjg5IDQyLjQ5MzI4OSA5MS44ODg1ODggNzUuODcwOTI2IDE0Ni44MTA4MjEgOTkuMjA0MjQ5IDU2Ljg1ODQgMjQuMTU1NTAzIDExNy4xMzM1MDUgMzYuNDAzMjE5IDE3OS4xNTIyODcgMzYuNDAzMjE5IDYyLjAxNzc1OCAwIDEyMi4yOTM4ODctMTIuMjQ3NzE2IDE3OS4xNTMzMTEtMzYuNDAzMjE5IDU0LjkyMzI1Ny0yMy4zMzMzMjMgMTA0LjMxNzUzMi01Ni43MTA5NiAxNDYuODEwODIxLTk5LjIwNDI0OSA0Mi40OTQzMTMtNDIuNDk0MzEzIDc1Ljg3MTk1LTkxLjg4ODU4OCA5OS4yMDUyNzMtMTQ2LjgxMTg0NSAyNC4xNTU1MDMtNTYuODU4NCAzNi40MDMyMTktMTE3LjEzMzUwNSAzNi40MDMyMTktMTc5LjE1MjI4N3MtMTIuMjQ3NzE2LTEyMi4yOTM4ODctMzYuNDA0MjQzLTE3OS4xNTIyODdjLTIzLjMzMzMyMy01NC45MjMyNTctNTYuNzEwOTYtMTA0LjMxNzUzMi05OS4yMDQyNDktMTQ2LjgxMDgyMS00Mi40OTQzMTMtNDIuNDkzMjg5LTkxLjg4ODU4OC03NS44NzA5MjYtMTQ2LjgxMTg0NS05OS4yMDQyNDlDNjMzLjk3MjM4NyA2My4xMTk0NTkgNTczLjY5NzI4MiA1MC44NzE3NDIgNTExLjY3OTUyNCA1MC44NzE3NDJ6TTQ1MS43ODAxODUgNjg5Ljg0ODg4MWMtNi4yMjMxNzUgMC0xMi40NTI0OTMtMi4yNTU2MTktMTcuMzY1MDk1LTYuNzk0NTAzTDI1My4xOTU1NzggNTE1LjY1ODM0MmMtMTAuMzg0MjQ1LTkuNTkyNzgyLTExLjAyNzI0NS0yNS43ODc1NzYtMS40MzQ0NjMtMzYuMTcxODIxIDkuNTkyNzgyLTEwLjM4NjI5MyAyNS43ODY1NTItMTEuMDI2MjIxIDM2LjE3MTgyMS0xLjQzNDQ2M2wxNjMuMTQ2OTEyIDE1MC43MDM2MzMgMjg5Ljc1MzQwNC0yODkuNzU0NDI4YzkuOTk3MjE2LTkuOTk2MTkyIDI2LjIwMzI3My05Ljk5NjE5MiAzNi4xOTk0NjYgMCA5Ljk5NjE5MiA5Ljk5NjE5MiA5Ljk5NjE5MiAyNi4yMDMyNzMgMCAzNi4xOTk0NjZMNDY5Ljg4MzUwMSA2ODIuMzUxOTkzQzQ2NC44OTYxNTYgNjg3LjMzOTMzOCA0NTguMzQyMjY2IDY4OS44NDg4ODEgNDUxLjc4MDE4NSA2ODkuODQ4ODgxeiIgLz48L3N2Zz4=</div><div class="line"></div><div class="line">&lt;!--atm--&gt;</div><div class="line">data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyBjbGFzcz0iaWNvbiIgd2lkdGg9IjMycHgiIGhlaWdodD0iMzEuOTdweCIgdmlld0JveD0iMCAwIDEwMjUgMTAyNCIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGZpbGw9ImJsdWUiIGQ9Ik01MTEuNzA4MTkzIDk4NS40NTk5MzJjLTI0My40MzQ4NzkgMC00NDIuNjA4MjItMTkxLjc5NzI3MS00NDIuNjA4MjItNDMwLjMxNDQyOSAwLTExNC4zNTQ2OCA0NS43NDIwNzctMjE5LjA3OTcxOSAxMjIuOTMzODE1LTI5Ny40OTkwOTYgMC4zNzA2NDYtMC4zNzY3OSAwLjAzOTkzMi0yLjgyMjg1Mi0wLjAyODY2OS00LjYzNTEyOS0wLjA4Mzk1OS0yLjE5ODI4MiAwLjA0MTk3OS0zLjg4NDYyMSAwLjA0MTk3OS01LjIzMzA3OEwxOTIuMDQ3MDk5IDc1LjY1Mzg2M2MwLTEyLjI5NDgxNSA3LjM3NzA5NC0yMi4xMzAyNTcgMTkuNjcxOTA5LTI0LjU4OTYzIDAgMCAwIDAgMi40NTkzNzMgMCAyLjQ1OTM3MyAwIDIuNDU5MzczIDAgMi40NTkzNzMgMHMwIDAgMi40NTkzNzMgMGM0LjkxNzcyMSAwIDkuODM1NDQyIDAgMTQuNzUzMTY0IDIuNDU5MzczbDE0Mi42MTgwMTEgODguNTIyMDU0IDIuNDU5MzczIDIuNDU5MzczYzQxLjgwMjE2Ni0xMi4yOTQ4MTUgODYuMDYyNjgxLTE5LjY3MTkwOSAxMzIuNzgyNTY4LTE5LjY3MTkwOSAyNDMuNDM0ODc5IDAgNDQyLjYwODIyIDE5MS43OTcyNzEgNDQyLjYwODIyIDQzMC4zMTQ0MjlTNzU1LjE0MzA3MiA5ODUuNDU5OTMyIDUxMS43MDgxOTMgOTg1LjQ1OTkzMnpNNTExLjcwODE5MyAxNzQuMDExMzU5Yy00NC4yNjA1MTUgMC04OC41MjIwNTQgNy4zNzcwOTQtMTI3Ljg2NDg0NyAyMi4xMzAyNTdsMCAwYy0xMC4zNzcwNzggNS40MTAyMS0yNC41ODk2MyA0LjkxNzcyMS0zNC40MjUwNzItMi40NTkzNzNMMjQxLjIyNTMzNSAxMjkuNzQ5ODJsMCAxMTguMDI5NDA1YzAgOS43MDIzMzcgMy4wNDA5MzkgMjEuMDI1NDg1LTAuNjA0MDkyIDI5LjczMjYwNi0wLjA1MDE3IDAuMTE5Nzk1LTAuMzEzMzA5IDAuNDkyNDg5LTAuNTEwOTE5IDAuNjk5MzE0LTAuMDUxMTk0IDAuMDUzMjQyLTAuMTE0Njc1IDAuMTA4NTMyLTAuMTg0Mjk5IDAuMTc2MTA4LTc0LjIyNDUxOSA3MC44NTQ5MTItMTIxLjY0Njc5MiAxNjcuOTM2NjQ3LTEyMS42NDY3OTIgMjc2Ljc1OTI3NSAwIDIxMS40NjgxNTYgMTc3LjA0MzA4MyAzODEuMTM1MTY5IDM5My40Mjk5ODQgMzgxLjEzNTE2OVM5MDUuMTM4MTc3IDc2Ni42MTQ2ODMgOTA1LjEzODE3NyA1NTUuMTQ2NTI4QzkwNS4xMzgxNzcgMzQzLjY3NzM0OCA3MjguMDk1MDkzIDE3NC4wMTEzNTkgNTExLjcwODE5MyAxNzQuMDExMzU5ek01MzYuMjk4ODQ3IDU0Ni4zMDAxNThjLTE0LjEzNzgwOSAwLTI1LjU5NzEzMy0xMS40NTkzMjUtMjUuNTk3MTMzLTI1LjU5NzEzM2wwLTc2LjczNzEzM2MwLTE0LjEzNjc4NSAxMS40NTkzMjUtMjUuNTk3MTMzIDI1LjU5NzEzMy0yNS41OTcxMzNzMjUuNTk3MTMzIDExLjQ2MDM0OCAyNS41OTcxMzMgMjUuNTk3MTMzbDAgNzYuNzM3MTMzQzU2MS44OTU5OCA1MzQuODQwODM0IDU1MC40MzU2MzEgNTQ2LjMwMDE1OCA1MzYuMjk4ODQ3IDU0Ni4zMDAxNTh6TTcyMy42Njk4NjEgNTQ2LjMwMDE1OGMtMTQuMTM3ODA5IDAtMjUuNTk3MTMzLTExLjQ1OTMyNS0yNS41OTcxMzMtMjUuNTk3MTMzbDAtNzYuNzM3MTMzYzAtMTQuMTM2Nzg1IDExLjQ1OTMyNS0yNS41OTcxMzMgMjUuNTk3MTMzLTI1LjU5NzEzM3MyNS41OTcxMzMgMTEuNDYwMzQ4IDI1LjU5NzEzMyAyNS41OTcxMzNsMCA3Ni43MzcxMzNDNzQ5LjI2Njk5NCA1MzQuODQwODM0IDczNy44MDY2NDYgNTQ2LjMwMDE1OCA3MjMuNjY5ODYxIDU0Ni4zMDAxNTh6IiAvPjwvc3ZnPg==</div></pre></td></tr></table></figure>
+<ul>
+<li>4.接着我们只需要把对应的 <code>base64</code> 编码发给小程序端，小程序直接放在 <code>image</code> 组件中的 <code>src</code> 属性即可，对于样式来说，可以直接修改 <code>image</code> 的样式来控制 <code>icon</code> 样式，效果如下：</li>
+</ul>
+<p><img src="https://img-blog.csdnimg.cn/20200611185836926.png" alt=""></p>
+<p>ok~ 还算是比较圆满的完成了任务~</p>
+<p>这下产品总不会刁难我了吧~</p>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p> 到此，我们已经 <code>get</code> 到了两种小程序中实现 <code>icon</code> 自定义颜色的解决方案，对比发现，第一种方案的特点是实现起来比较简单，步骤什么的也都还ok，就是拓展性不强，每次改动都需要重新再来一遍，而且对于比较多的图标来说小程序空间占用较大，有一定的局限性，而第二种方案相比于第一种来说虽然在实现过程中稍微繁琐了一些，但是带来的效果是显而易见的，解决了第一种方案的弊端，拓展性什么的都很好，是我比较推荐的，也是我们正在采用的一种方案~</p>
+<p> 当然，这不过是我的一种实现思路，如果你有关于这方面更好的解决方案记得及时艾特我，我已经迫不及待的等待学习了~</p>
+<p><img src="https://img-blog.csdnimg.cn/20200611185905115.png" alt=""></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/30/Wepy-Redux/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -700,176 +912,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/13/Crypto-js/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/04/13/Crypto-js/" itemprop="url">前端 crypto-js aes 加解密</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-13T11:30:10+08:00">
-                2018-04-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Vue/" itemprop="url" rel="index">
-                    <span itemprop="name">Vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="前端-crypto-js-aes-加解密"><a href="#前端-crypto-js-aes-加解密" class="headerlink" title="前端 crypto-js aes 加解密"></a>前端 crypto-js aes 加解密</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>前段时间公司做项目，该项目涉及到的敏感数据比较多，经过的一波讨论之后，决定前后端进行接口加密处理，采用的是 <code>AES</code> + <code>BASE64</code> 算法加密~</p>
-<p>网上关于 <code>AES</code> 对称加密的算法介绍挺多的，对这一块还不是特别理解的小伙伴可自行百度，这里我推荐一篇<a href="https://blog.csdn.net/qq_28205153/article/details/55798628" target="_blank" rel="external">AES加密算法的详细介绍与实现</a>，讲的还是蛮详细的~</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><p>其实搞懂了是怎么一回事，做起来还是挺简单的，因为库都是现成的，我们只需要会用就好啦，这里我在推荐一篇<a href="https://blog.csdn.net/vieri_32/article/details/48345023" target="_blank" rel="external">理解AES加密解密的使用方法</a>，加深大家对 <code>AES</code> 算法的理解~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173222806.png" alt=""></p>
-<p>这里我以 <code>Vue</code> 作为例子，其他的也就大同小异了~</p>
-<ul>
-<li><p>要用 <code>AES</code> 算法加密，首先我们要引入 <code>crypto-js</code> ，<code>crypto-js</code> 是一个纯 <code>javascript</code> 写的加密算法类库 ，可以非常方便地在 <code>javascript</code> 进行 <code>MD5</code>、<code>SHA1</code>、<code>SHA2</code>、<code>SHA3</code>、<code>RIPEMD-160</code> 哈希散列，进行 <code>AES</code>、<code>DES</code>、<code>Rabbit</code>、<code>RC4</code>、<code>Triple DES</code> 加解密，我们可以采用 <code>npm install crypto-js --save</code> 进行下载安装，也可以直接去 <a href="https://github.com/brix/crypto-js" target="_blank" rel="external">GitHub</a>下载源码~</p>
-</li>
-<li><p>其次我们需要定义两个方法 ，分别是用于加密和解密，这里我将它放在了 <code>utils</code> 文件夹下，命名为 <code>secret.js</code> ，其具体代码如下：</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">const CryptoJS = require(&apos;crypto-js&apos;);  //引用AES源码js</div><div class="line"></div><div class="line">const key = CryptoJS.enc.Utf8.parse(&quot;1234123412ABCDEF&quot;);  //十六位十六进制数作为密钥</div><div class="line">const iv = CryptoJS.enc.Utf8.parse(&apos;ABCDEF1234123412&apos;);   //十六位十六进制数作为密钥偏移量</div><div class="line"></div><div class="line">//解密方法</div><div class="line">function Decrypt(word) &#123;</div><div class="line">    let encryptedHexStr = CryptoJS.enc.Hex.parse(word);</div><div class="line">    let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr);</div><div class="line">    let decrypt = CryptoJS.AES.decrypt(srcs, key, &#123; iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 &#125;);</div><div class="line">    let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8);</div><div class="line">    return decryptedStr.toString();</div><div class="line">&#125;</div><div class="line"></div><div class="line">//加密方法</div><div class="line">function Encrypt(word) &#123;</div><div class="line">    let srcs = CryptoJS.enc.Utf8.parse(word);</div><div class="line">    let encrypted = CryptoJS.AES.encrypt(srcs, key, &#123; iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 &#125;);</div><div class="line">    return encrypted.ciphertext.toString().toUpperCase();</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default &#123;</div><div class="line">	Decrypt ,</div><div class="line">	Encrypt</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>上面的代码中的 <code>key</code> 是密钥 ，<code>iv</code> 是密钥偏移量，这个一般是接口返回的，为了方便，我们这里就直接在这里定义了。</p>
-<p>值得注意的是密钥的长度，由于对称解密使用的算法是 <code>AES-128-CBC</code>算法，数据采用 <code>PKCS#7</code> 填充 ， 因此这里的 <code>key</code> 需要为16位！</p>
-<p>接着我们定义了 <strong>解密方法<code>Decrypt</code></strong> 和 <strong>加密方法 <code>Encrypt</code></strong> ，最后通过 <code>export default</code> 将其暴露出去，方便在需要的时候进行引入~</p>
-<p>ok，核心代码就这么多，是不是很简单啊，其实也么有你想的那么复杂哈，剩下的就是展示一下如何使用咯~</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173253631.png" alt=""></p>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>这里我定义了一个 <code>index.vue</code> 用来展示数据加解密的操作~</p>
-<p><strong>加密操作：</strong> 假设我们现在要给后端发送一段文字，暂且定义为 <code>This is a clear text</code> ， 在发送之前我们需要对其进行加密操作，这时候我们可以调用上面介绍的 <code>Encrypt</code> 方法，通过加密后我们可以得到密文为：<code>4ACEA01505ADAF9FB59A03B22FC1EF1B244AE28DDACFDFAEFA7E263655C44357</code></p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173333389.png" alt=""></p>
-<p><strong>解密操作：</strong> 假设我们请求后端接口，后端返回了我们一堆如下的字符串 <code>BBFE62335C28821AD2F4043B715BB0C3E45734908254666526DCFD86A605F3AF</code> , 这让我很蒙蔽啊，这时候就要调用 <code>Decrypt</code> 方法，<br>通过解密我们可以拿到后端返回的信息其实是：<code>{&quot;name&quot;:&quot;Chris&quot;,&quot;sex&quot;:&quot;male&quot;}</code></p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173410113.png" alt=""></p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>至此，你已经 <code>get</code> 了前端 <code>AES</code> 加解密的方法，是不是感觉很简单啊，用起来很简单，原理可不简单，况且这也只是其中的一种方案，关于加解密的方法还有很多，感兴趣的小伙伴们可以继续做一些深入的研究哈~</p>
-<p>至于我呢。。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200611173444656.png" alt=""></p>
-<p>对了，代码已上传到 <a href="https://github.com/Chris-wei/vue-crypto" target="_blank" rel="external">GitHub</a>，有需要的小伙伴自行下载~</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/5/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/7/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -918,7 +965,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1008,7 +1055,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

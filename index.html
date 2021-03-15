@@ -278,6 +278,289 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/03/15/Pattern/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chris wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headImg.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Cryptic's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2021/03/15/Pattern/" itemprop="url">聊一聊常见设计模式的 JavaScript 实现</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-03-15T16:38:20+08:00">
+                2021-03-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="开门见山"><a href="#开门见山" class="headerlink" title="开门见山"></a>开门见山</h3><p>我们都知道 <code>javascript</code> 一种是基于原型的弱类型语言，拥有动态数据类型，灵活多变。因此，相比于传统的 <code>java</code>，<code>c++</code> 来说， <code>javascript</code> 面向对象的设计模式会有点牵强。</p>
+<p>但这也并不妨碍我们学习使用 <code>javascript</code> 来了解设计模式思想及其设计理念。因为在我看来，这属于程序员的 “内功” ，只有 “内功” 修炼得当，才能更好的学习 “上乘武功”。</p>
+<p>更何况，现在很多框架的源码都引入了非常多的设计模式思想，例如 发布订阅模式，单例模式，工程模式等比比皆是。</p>
+<p>因此，想要学习框架源码，编写高质量，易维护的代码，设计模式的学习是必不可少的。今天我们就聊一聊 <code>JavaScript</code> 中一些常见的设计模式。</p>
+<h3 id="单例模式-（Singleton-Pattern）"><a href="#单例模式-（Singleton-Pattern）" class="headerlink" title="单例模式 （Singleton Pattern）"></a>单例模式 （Singleton Pattern）</h3><p>单例模式，顾名思义就是只有一个实例，并且它自己负责创建自己的对象，这个类提供了一种访问其唯一的对象的方式，可以直接访问，不需要实例化该类的对象。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">// 单例模式</div><div class="line">const Singleton = (function () &#123;</div><div class="line">    let __instance = null;</div><div class="line"></div><div class="line">    const Singleton = function () &#123;</div><div class="line">        if (__instance) return __instance;</div><div class="line">        __instance = this;</div><div class="line">        this.init();</div><div class="line">        return __instance;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Singleton.prototype.init = function () &#123;</div><div class="line">        console.log(&apos;Singleton init completed!&apos;);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    Singleton.getInstance = function () &#123;</div><div class="line">        if (__instance) return __instance;</div><div class="line">        __instance = new Singleton()</div><div class="line">        return __instance;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return Singleton;</div><div class="line">&#125;)();</div><div class="line"></div><div class="line"></div><div class="line">const s1 = Singleton.getInstance();</div><div class="line">const s2 = new Singleton();</div><div class="line"></div><div class="line">console.log(s1 === s2); // true</div></pre></td></tr></table></figure>
+<p>利用 <code>IIFE</code> 的方式构造 <code>__instance</code> 实例，并提供了获取实例的方法，并保存起来，每次访问时，如果已经初始化则不需要重新创建，直接返回 <code>__instance</code> 即可，保证只有一个实例。</p>
+<p><strong>优缺点</strong></p>
+<p>单例模式的优点在于在创建后在内存中只存在一个实例，能保证访问一致性，并且反复创建销毁实例来说节约内存和 <code>cpu</code> 资源。</p>
+<p>单例模式的缺点也很明显，因为只有一个实例，也不太需要实例化过程，因此拓展性不好。</p>
+<p><strong>适用场景</strong></p>
+<p>比较适合项目中需要一个公共的状态，并通过单例也确保访问一致性的时候。例如，许多 <code>UI</code> 框架 中的全局 <code>Loading</code> 组件。</p>
+<h3 id="工厂模式-（Factory-Pattern）"><a href="#工厂模式-（Factory-Pattern）" class="headerlink" title="工厂模式 （Factory Pattern）"></a>工厂模式 （Factory Pattern）</h3><p>工厂模式，听名字就应该可以大概猜到，是根据不同的输入来创建同一类对象的。主要是为了将对象的创建与对象的实现分离。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">// 工厂模式</div><div class="line"></div><div class="line">/* 工厂类 */</div><div class="line">function CreateElement(type) &#123;</div><div class="line">    switch (type) &#123;</div><div class="line">        case &apos;Input&apos;:</div><div class="line">            return new Input()</div><div class="line">        case &apos;DIV&apos;:</div><div class="line">            return new Div()</div><div class="line">        default:</div><div class="line">            throw new Error(&apos;当前没有这个产品&apos;)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">/* 产品类 */</div><div class="line">function Input() &#123;</div><div class="line">    return document.createElement(&apos;input&apos;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">function Div() &#123;</div><div class="line">    return document.createElement(&apos;div&apos;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">const input = new CreateElement(&apos;Input&apos;);</div><div class="line">const div = new CreateElement(&apos;DIV&apos;);</div><div class="line"></div><div class="line"></div><div class="line">console.log(input)      // input</div><div class="line">console.log(div)        // div</div></pre></td></tr></table></figure>
+<p>上述通过一个简单的例子演示了工厂模式的创建过程，我们知道有一个大工厂类，负责生产产品，只要通过传递不同的类型，可以实例化出不同的对象。</p>
+<p><strong>优缺点</strong></p>
+<p>工程模式将对象的创建和实现进行了分离，代码结构清晰，使得代码高度解耦，具有很多良好的封装，我们无需知道创建对象的过程就可以得到想要的对象，拓展性也强。</p>
+<p>工厂模式的缺点在于，工厂类集中了所有实例的创建逻辑，它所能创建的类只能是事先考虑到的，如果需要添加新的类，则就需要改变工厂类。随着产品类的不断增多，代码的维护性就越差。</p>
+<p><strong>适用场景</strong></p>
+<p>当对象的创建比较复杂，而访问者无需知道创建的具体流程，我们可以考虑使用工厂模式。典型应用，如 <code>Vue</code>、<code>React</code> 中创建虚拟 <code>DOM</code> 的 <code>createElement</code> 函数。<code>Vue-Router</code> 的设计，根据不同的 <code>mode</code> 创建不同的路由实例。</p>
+<h3 id="建造者模式（Builder-Pattern）"><a href="#建造者模式（Builder-Pattern）" class="headerlink" title="建造者模式（Builder Pattern）"></a>建造者模式（Builder Pattern）</h3><p>建造者模式，将一个复杂对象的构建与表示分离，使得同样的构建过程可以创建不同的表示。在工程模式中，我们不关心创建过程，直接得到一个完成的对象。而建造者模式中，我们关心对象的创建过程，将复杂对象模块化，使得每个模块都可以复用。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">// 建造者模式</div><div class="line"></div><div class="line">/* 建造者 */</div><div class="line">function ComputerBuilder(brand) &#123;</div><div class="line">    this.brand = brand;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">ComputerBuilder.prototype.buildCPU = function (type) &#123;</div><div class="line">    switch (type) &#123;</div><div class="line">        case &apos;inter&apos;:</div><div class="line">            this.cpu = &apos;inter 处理器&apos;;</div><div class="line">            break;</div><div class="line">        case &apos;AMD&apos;:</div><div class="line">            this.cpu = &apos;AMD 处理器&apos;;</div><div class="line">            break;</div><div class="line">    &#125;</div><div class="line">    return this;</div><div class="line">&#125;</div><div class="line"></div><div class="line">ComputerBuilder.prototype.buildMemory = function (mSize) &#123;</div><div class="line">    this.mSize = &apos;内存&apos; + mSize + &apos;G&apos;;</div><div class="line">    return this;</div><div class="line">&#125;</div><div class="line"></div><div class="line">ComputerBuilder.prototype.buildDisk = function (dSize) &#123;</div><div class="line">    this.dSize = &apos;硬盘&apos; + dSize + &apos;G&apos;;</div><div class="line">    return this;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">/* 厂家，负责组装 */</div><div class="line">function computerDirector(brand, type, mSize, dSize) &#123;</div><div class="line">    const _computer = new ComputerBuilder(brand);</div><div class="line">    _computer.buildCPU(type)</div><div class="line">        .buildMemory(mSize)</div><div class="line">        .buildDisk(dSize);</div><div class="line">    return _computer;</div><div class="line">&#125;</div><div class="line"></div><div class="line">const com = computerDirector(&apos;联想&apos;, &apos;inter&apos;, 16, 500);</div><div class="line"></div><div class="line">console.log(com); // ComputerBuilder &#123;brand: &quot;联想&quot;, cpu: &quot;inter 处理器&quot;, mSize: &quot;内存16G&quot;, dSize: &quot;硬盘500G&quot;&#125;</div></pre></td></tr></table></figure>
+<p>上述我们通过生产电脑的例子，描述了建造者模式的构建过程，我们的部件都是由一个个类创建出来的，最后进行组装完成整个对象的。如果后期需要拓展组件，只需要在建造者上增加对应的方法，再适当修改链式调用即可。</p>
+<p><strong>优缺点</strong></p>
+<p>建造者模式适用于构建复杂的、需要分步骤构建的对象，可以将构建过程分离，分步骤进行。优点显而易见，具有很好的拓展性，很高的复用性。</p>
+<p>如果对象之间差异过大，复用性不高的话不建议使用这种模式，否则创建过程中会导致代码比较乱，复杂度过高，显得有些强行建造了。</p>
+<p><strong>适用场景</strong></p>
+<p>建造者模式适用于可以通过不同的部件组装得到不同完整产品的场景，可以将代码最小程度的拆分，利于后期维护。例如，你封装一个公共弹窗，里面涉及有标题，内容，按钮，文字等，但也不都是必须的，你可以在需要的时候去构建他们。</p>
+<h3 id="代理模式（Proxy-Pattern）"><a href="#代理模式（Proxy-Pattern）" class="headerlink" title="代理模式（Proxy Pattern）"></a>代理模式（Proxy Pattern）</h3><p>代理模式，是给某一个对象提供一个代理对象，并由代理对象控制对原对象的引用，防止访问者直接访问目标对象，从而对目标对象起到一种间接保护的作用，类似我们日常生活中的各种中介及微商。</p>
+<p><code>ps</code>: <code>ES6</code> 新增的 <code>Proxy</code> 可以非常方面快捷的帮助我们对一个对象进行代理，想要了解 <code>Proxy</code> 的同学可参考我之前的写的 <a href="https://juejin.cn/post/6844903731981467661" target="_blank" rel="external">初探 Vue3.0 中的一大亮点——Proxy !</a></p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">// 代理模式</div><div class="line"></div><div class="line">// 目标</div><div class="line">function sendMsg(msg) &#123;</div><div class="line">    console.log(msg);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 代理</div><div class="line">function ProxyMsg(msg) &#123;</div><div class="line">    if (!msg) &#123;</div><div class="line">        console.log(&apos;msg is empty.&apos;)</div><div class="line">        return</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    msg = &apos;我要发送的数据是：&apos; + msg;</div><div class="line"></div><div class="line">    sendMsg(msg);</div><div class="line">&#125;</div><div class="line"></div><div class="line">ProxyMsg(&apos;您好！&apos;);    // 我要发送的数据是：您好！</div></pre></td></tr></table></figure>
+<p>上述用一个发送消息的例子来描述了代理模式的工作原理，我们不直接通过 <code>sendMsg</code> 方法而是通过 <code>ProxyMsg</code> 方法来发送消息。这样做的好处是可以在发送消息之前对一些不合法的消息进行过滤，对合法的内容进行二次包装。</p>
+<p><strong>优缺点</strong></p>
+<p>代理模式的优点在于，代理对象作为访问者与目标对象之间桥梁，对目标对象起到保护的作用。可以很方面的拓展代理对象，并不直接干涉目标对象，一定程度上降低了系统的耦合度。</p>
+<p>另一方面，额外新增的代理对象无异于增加了整个系统的复杂度，造成请求处理速度变慢，增加了系统的维护成本，在使用前需要酌情考虑。</p>
+<p><strong>适用场景</strong></p>
+<p>随着前端的不断发展，代理模式在前端领域的使用场景还是很多的。</p>
+<p>典型的应用就是拦截器，项目中 <code>axios</code> 数据请求中的 <code>interceptor</code> 拦截器，以及一些权限校验的中间件等。另外像目前流行的 <code>vue</code> 框架，其中的数据响应式就是利用了这一思想，不同的是 <code>vue2</code> 采用的是 <code>Object.defineProperty</code> ， 而 <code>vue3</code> 采用的是 <code>Proxy</code>。</p>
+<h3 id="享元模式（Flyweight-Pattern）"><a href="#享元模式（Flyweight-Pattern）" class="headerlink" title="享元模式（Flyweight Pattern）"></a>享元模式（Flyweight Pattern）</h3><p>享元模式，字面解释，享就是共享，元就是元素，公共部分。</p>
+<p>因此，享元模式就是通过共享技术实现相同或相似对象的重用，主要用于减少创建对象的数量，以减少内存占用和提高性能。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">// 享元对象</div><div class="line">function Shape(shape) &#123;</div><div class="line">    this.shape = shape;</div><div class="line">&#125;</div><div class="line"></div><div class="line">Shape.prototype.draw = function () &#123;</div><div class="line">    console.log(`画了一个 $&#123;this.shape&#125;`)</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 享员工厂</div><div class="line">const ShapeFactory = (function () &#123;</div><div class="line">    const dataMap = &#123;&#125;;</div><div class="line">    return &#123;</div><div class="line">        getShapeContext(shape) &#123;</div><div class="line">            // 如果存在，则直接返回</div><div class="line">            if (dataMap[shape]) return dataMap[shape];</div><div class="line">            else &#123;</div><div class="line">                // 没有就创建，并保存当前shape的实例</div><div class="line">                const instance = new Shape(shape);</div><div class="line">                dataMap[shape] = instance</div><div class="line">                return instance;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;)();</div><div class="line"></div><div class="line">const rect = ShapeFactory.getShapeContext(&apos;rect&apos;);</div><div class="line">const circle = ShapeFactory.getShapeContext(&apos;circle&apos;);</div><div class="line"></div><div class="line">rect.draw();     // 画了一个 rect</div><div class="line">circle.draw();   // 画了一个 circle</div></pre></td></tr></table></figure>
+<p>上述代码，我们用来一个绘画的例子，通过享元工厂去创建不同类型的 “画笔” 对象，并保存在我们的工厂函数中，下次使用的时候则不需要重新创建，直接从 <code>map</code> 中读取即可。这种方式，相比于传统的用的时候去 <code>new</code> 创建在数据量大的时候会节约很多内存。</p>
+<p><strong>优缺点</strong></p>
+<p>享元模式最大的优点就在于它可以极大的减少了系统中对象的创建，降低内存的使用，加快了运行速度，提高了运行效率。</p>
+<p>提高效率的同时也暴露出其缺点，共享对象的创建，销毁等都需要增加额外的逻辑，会使整个系统的逻辑变得复杂，代码不容易阅读，维护的成本增加。</p>
+<p><strong>适用场景</strong></p>
+<p>享元模式比较适合项目中大量使用了相同或相似对象，可以共享资源时可以考虑。</p>
+<p>其实在前端开发设计中还是比较常见的，例如我们所熟知和使用的 事件委托 经行事件绑定，就是利用了享元模式的原理，我们并不是给每个元素绑定事件，而是为其父元素绑定一个事件，根据事件参数 <code>event</code> 来判断。</p>
+<p>另外 <code>nodejs</code> 中所使用的数据库连接池，一些缓存服务器的设计等是利用这个原理。</p>
+<h3 id="适配器模式（Adapter-Pattern）"><a href="#适配器模式（Adapter-Pattern）" class="headerlink" title="适配器模式（Adapter Pattern）"></a>适配器模式（Adapter Pattern）</h3><p>适配器模式，作为两个不兼容的接口之间的桥梁，目的就是通过适配器的转换解决类（对象）之间接口不兼容的问题，从而使得原本不兼容的接口可以兼容现有的需求。</p>
+<p>与早些年传统的万能充电器的作用类似。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">// 适配器模式</div><div class="line"></div><div class="line">// 百度地图 api</div><div class="line">const baiduMap = &#123;</div><div class="line">    show: function () &#123;</div><div class="line">        console.log(&apos;开始渲染百度地图&apos;)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// 高德地图 api</div><div class="line">const AMap = &#123;</div><div class="line">    render: function () &#123;</div><div class="line">        console.log(&apos;开始渲染高德地图&apos;)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// 适配器</div><div class="line">const baiduAdapter = &#123;</div><div class="line">    render: function () &#123;</div><div class="line">        return baiduMap.show()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">function renderMap(map) &#123;</div><div class="line">    if (typeof map.render === &apos;function&apos;) &#123;</div><div class="line">        map.render()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">renderMap(AMap);            // 开始渲染高德地图</div><div class="line">renderMap(baiduAdapter);    // 开始渲染百度地图</div></pre></td></tr></table></figure>
+<p>上述代码中演示了适配器模式的原理，我们之前用的是高德地图 ，如今我们也要接入百度地图，二者的 <code>api</code> 的渲染方式不同，为了解决不兼容的问题，我们构造了一个 <code>baiduAdapter</code> 适配器，这样我们就可以适用同样的接口完成不同地图的渲染。</p>
+<p><strong>优缺点</strong></p>
+<p>适配器模式相对来说是一种简单的设计模式，目的就是为了兼容旧的代码。因此，它的优点也很明显，就是不用大面积更改以前的旧的代码逻辑，使得原有的逻辑可以复用，拓展性强，灵活性强，可以随时随地更改或删除不同的适配器，而不会造成重大的影响。</p>
+<p>适配器模式的缺点自然而然就是，多的适配器会增加系统的复杂度，会使得系统的代码变得十分松散，凌乱，代码的的可阅读性大大折扣。如大规模使用适配器导致代码变得凌乱松散时，可以考虑重构。</p>
+<p><strong>适用场景</strong></p>
+<p>适配器模式有点 亡羊补牢 的意思，如果现有的接口已经能够正常工作，那就永远不会用上适配器模式。但随着公司业务的发展，也许现在好好工作的接口，未来的某天却不再适用于新系统，这时候就得考虑适用适配器模式，为其重新赋能。</p>
+<h3 id="装饰器模式-（Decorator-Pattern）"><a href="#装饰器模式-（Decorator-Pattern）" class="headerlink" title="装饰器模式 （Decorator Pattern）"></a>装饰器模式 （Decorator Pattern）</h3><p>装饰器模式，在不改变原对象的基础上，对其添加属性或方法来进行拓展，使原有对象可以具有更多功能，而不影响原有的对象结构。与继承相比装饰者是一种更轻便灵活的做法。</p>
+<p><code>ps</code>：<code>ES7</code> 关于装饰器 <code>@Decorator</code> 已经在草案中，我们项目中所使用的装饰器需借助第三方工具转义，等到时候标准定下来后就可放心使用了。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">const btn = document.querySelector(&apos;#btn&apos;);</div><div class="line"></div><div class="line">// 原绑定事件</div><div class="line">btn.onclick = function () &#123;</div><div class="line">    console.log(&apos;按钮被点击了&apos;)</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// 新增统计</div><div class="line">function ajaxToServer() &#123;</div><div class="line">    console.log(&apos;数据统计&apos;)</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 装饰器函数</div><div class="line">function decorator(target, eventName, cb) &#123;</div><div class="line">    const originFn = target[&apos;on&apos; + eventName];</div><div class="line">    originFn &amp;&amp; originFn()</div><div class="line">    cb &amp;&amp; cb();</div><div class="line">&#125;</div><div class="line"></div><div class="line">decorator(btn, &apos;click&apos;, ajaxToServer)</div></pre></td></tr></table></figure>
+<p>以一点按钮的点击事件为例，原点击事件只是打印 <code>按钮被点击了</code> ，现在需要再点击的时候调用 <code>ajaxToServer</code> 做数据统计，我们通过一个 <code>decorator</code> 装饰器函数先将原始绑定的事件缓存起来，再添加我们 <code>ajaxToServer</code> 回调即可，一来没有影响到原始代码的改动，二来后期如果需要新增，按部就班即可。</p>
+<p><strong>优缺点</strong></p>
+<p>装饰器的有点在于我们不需要关心原对象的实现，装饰者和被装饰者之间不会相互耦合，就可以拓展原对象的方法，可维护性好，并且装饰器还可以复用，使得对象的拓展更加灵活。</p>
+<p>由于装饰器的灵活性，因此随着装饰器的增多，会导致系统复杂度增加，尤其是多级装饰器，会导致代码错误定位困难繁琐，对于不熟悉这个模式的开发人员难以理解。</p>
+<p><strong>适用场景</strong></p>
+<p>装饰器模式适用于需要动态拓展对象或类的方法，或者需要对一些功能进行排列组合，完成复杂工功能的时候可以考虑装饰器模式。</p>
+<p>我们在使用<code>vue</code> ，或者<code>scss</code>的时候，有时候会用到 <code>mixins</code>，<code>mixins</code>的原理就类似于装饰器。</p>
+<h3 id="外观模式-（Facade-Pattern）"><a href="#外观模式-（Facade-Pattern）" class="headerlink" title="外观模式 （Facade Pattern）"></a>外观模式 （Facade Pattern）</h3><p>外观模式的本质是封装交互，简化调用，它的做法是隐藏了系统的复杂性，将子系统的一组接口封装起来，给使用者提供了一个统一的高层接口，减少了客户端与子系统之间的耦合性。</p>
+<p>在<code>JavaScript</code>中外观模式常常用于解决浏览器兼容性问题以及源码中的一些函数重载，很多主流的库，如 <code>jQuery</code>，<code>lodash</code> 等都有涉及。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">// 事件绑定</div><div class="line">function addEvent(element, type, fn) &#123;</div><div class="line">    if (element.addEventListener) &#123;      // 支持 DOM2 级事件处理方法的浏览器</div><div class="line">        element.addEventListener(type, fn, false)</div><div class="line">    &#125; else if (element.attachEvent) &#123;    // 不支持 DOM2 级但支持 attachEvent</div><div class="line">        element.attachEvent(&apos;on&apos; + type, fn)</div><div class="line">    &#125; else &#123;</div><div class="line">        element[&apos;on&apos; + type] = fn        // 都不支持的浏览器</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 阻止事件冒泡</div><div class="line">function cancelBubble(event) &#123;</div><div class="line">    if (event.stopPropagation) &#123;</div><div class="line">        event.stopPropagation()</div><div class="line">    &#125; else &#123;                    // IE 下</div><div class="line">        event.cancelBubble = true</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// axios 中 getDefaultAdapter</div><div class="line">function getDefaultAdapter() &#123;</div><div class="line">  var adapter;</div><div class="line">  // Only Node.JS has a process variable that is of [[Class]] process</div><div class="line">  if (typeof process !== &apos;undefined&apos; &amp;&amp; Object.prototype.toString.call(process) === &apos;[object process]&apos;) &#123;</div><div class="line">    // For node use HTTP adapter</div><div class="line">    adapter = require(&apos;./adapters/http&apos;);</div><div class="line">  &#125; else if (typeof XMLHttpRequest !== &apos;undefined&apos;) &#123;</div><div class="line">    // For browsers use XHR adapter</div><div class="line">    adapter = require(&apos;./adapters/xhr&apos;);</div><div class="line">  &#125;</div><div class="line">  return adapter;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上述的代码片段都是演示了外观模式的特点，对于用户端来说都是统一的调用，但是接口内部却根据传参不同，或者运行环境不同等做了对应的处理，简化了客户端的使用。</p>
+<p><strong>优缺点</strong></p>
+<p>外观模式的优点在于使用者不必关系子系统的具体实现，通过统一的接口调用就能达到效果，降低了使用者和系统模块之间的耦合性，增加了可维护性和可扩展性。</p>
+<p>由于外观模式是将一组子系统的接口进行整合，所以它的缺点就很明显，在系统内部扩展子系统时 , 容易产生风险。</p>
+<p><strong>适用场景</strong></p>
+<p>外观模式在很多开源作品中屡见不鲜，例如上述提到的 <code>jQuery</code>，<code>lodash</code> 等，实际上我们开发也会经常用到。它比较适合将复杂的系统进行分层，让外观模块成为每层的入口，简化层与层之间调用。或者说当我们需要通过一个单独的函数或方法来访问一系列的函数或方法调用时，为了使代码更容易跟踪管理或者更好的维护时，可以考虑适用外观模式。</p>
+<h3 id="组合模式-（Composite-Pattern）"><a href="#组合模式-（Composite-Pattern）" class="headerlink" title="组合模式 （Composite Pattern）"></a>组合模式 （Composite Pattern）</h3><p>组合模式是将一系列对象组合成树形结构，以表示 “部分-整体” 的层次结构，使用者只需统一地使用组合结构中的所有对象，而不需要关心它究竟是组合对象还是单个对象。它主要体现了整体与部分的关系，其典型的应用就是树形结构。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">// 创建部门</div><div class="line">function createApartment(name) &#123;</div><div class="line">    return &#123;</div><div class="line">        name,</div><div class="line">        _children: [],</div><div class="line">        add(target) &#123;</div><div class="line">            this._children.push(target);</div><div class="line">            return this;</div><div class="line">        &#125;,</div><div class="line">        show(cb) &#123;</div><div class="line">            this._children.forEach(function (child) &#123;</div><div class="line">                child.show(cb)</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 创建员工</div><div class="line">function createEmp(num, name) &#123;</div><div class="line">    return &#123;</div><div class="line">        num,</div><div class="line">        name,</div><div class="line">        show(cb) &#123;</div><div class="line">            cb(this)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 创建部门</div><div class="line">const techApartment = createApartment(&apos;技术部&apos;);</div><div class="line"></div><div class="line">// 创建子部门</div><div class="line">const proApartment = createApartment(&apos;产品组&apos;),</div><div class="line">    devApartment = createApartment(&apos;开发组&apos;);</div><div class="line"></div><div class="line">techApartment.add(proApartment).add(devApartment);</div><div class="line"></div><div class="line">proApartment.add(createEmp(100, &apos;张三&apos;))</div><div class="line">    .add(createEmp(101, &apos;李四&apos;))</div><div class="line"></div><div class="line">techApartment.add(createEmp(201, &apos;小刘&apos;))</div><div class="line">    .add(createEmp(202, &apos;小王&apos;))</div><div class="line">    .add(createEmp(203, &apos;小陈&apos;))</div><div class="line">    .add(createEmp(204, &apos;小亮&apos;))</div><div class="line"></div><div class="line">// 遍历</div><div class="line">techApartment.show(function (item) &#123;</div><div class="line">    console.log(`工号：$&#123;item.num&#125;，姓名：$&#123;item.name&#125;`)</div><div class="line">&#125;)</div><div class="line"></div><div class="line">/***</div><div class="line">    工号：100，姓名：张三</div><div class="line">    工号：101，姓名：李四</div><div class="line">    工号：201，姓名：小刘</div><div class="line">    工号：202，姓名：小王</div><div class="line">    工号：203，姓名：小陈</div><div class="line">    工号：204，姓名：小亮</div><div class="line">***/</div></pre></td></tr></table></figure>
+<p>上述我们同通过一个部门的组织架构图来展示了什么是组合模式，可以发现组合对象和单个子对象具有相同的接口和数据结构，一次来保证操作一致，我们在遍历整个 <code>techApartment</code> 对象时，如果当前对象是没有子对象，则自身会做处理，否则会传递到下一个子对象中处理，以此完成整个递归遍历。</p>
+<p><strong>优缺点</strong></p>
+<p>组合模式的组合对象和单个子对象具有同样的接口，所以无论调用的是组合对象还是叶子对象调用方式上没有差别，外部调用非常方便。拓展性良好，新增节点会很方便，也不会影响到其他的对象。</p>
+<p>随着节点的增加，组合模式也暴露出其不足，过多的节点会导致整个树状结构非常复制，层级嵌套深，内存占用较高，导致系统整体性能下降。</p>
+<p><strong>适用场景</strong></p>
+<p>如果对象组织呈树形结构，操作树中对象的方法比较类似时可以考虑适用组合模式。常见的比如组织架构图，文件目录，以及熟悉的 <code>vue</code> 中的 <code>createElement</code> 方法等都采用的组合模式这种设计理念。</p>
+<h3 id="桥接模式（Bridge-Pattern）"><a href="#桥接模式（Bridge-Pattern）" class="headerlink" title="桥接模式（Bridge Pattern）"></a>桥接模式（Bridge Pattern）</h3><p>桥接模式是为了将抽象部分与实现部分分离，使抽象部分和实现部分都可以独立的变化而不会互相影响，实现二者的解耦，从而降低了代码的耦合性，提高了代码的扩展性。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">// 桥接方法</div><div class="line">function addEvent(ele, eventName, fn) &#123;</div><div class="line">    document.querySelector(ele).addEventListener(eventName, fn, false);</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 具体业务</div><div class="line">addEvent(&apos;#btn&apos;, &apos;click&apos;, function () &#123;</div><div class="line">    console.log(&apos;hello world&apos;);     // hello world</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>上述通过一个简单的事件监听器的例子来展示了桥接模式的工作原理，桥接方法 <code>addEvent</code> 它内部不实现具体的业务逻辑，只是抽象出一个方法，它就充当了了 <code>DOM</code> 元素与其具体事件绑定的一个桥梁，要实现具体的业务逻辑只要给桥接函数传递参数即可。</p>
+<p><strong>优缺点</strong></p>
+<p>桥接模式分离了抽象和实现部分，将实现层（<code>DOM</code> 元素事件具体逻辑）和抽象层（绑定方法）解耦，使用者不需要关心细节的实现，只需要方便快捷的使用即可，提高了代码的拓展性。</p>
+<p>桥接模式的弊端在于需要很好地抽象出桥接方法与业务逻辑，具有一定的局限性，另外桥接模式会引入额外的代码，增加系统的复杂度。</p>
+<p><strong>适用场景</strong></p>
+<p>如果开发中遇到部分系统的复用性大，且各个部件有独立的变化维度，就可以考虑引入桥接模式，实现代码的分层。常见的如同上述的事件监听器，动态更新 <code>dom</code> 的样式，以及 <code>ajax</code> 请求封装等。</p>
+<h3 id="发布-订阅模式-（Publish-Subscribe-Pattern）"><a href="#发布-订阅模式-（Publish-Subscribe-Pattern）" class="headerlink" title="发布-订阅模式 （Publish-Subscribe Pattern）"></a>发布-订阅模式 （Publish-Subscribe Pattern）</h3><p>发布-订阅模式，它定义了一种一对多的关系，当一个对象的状态发生改变时，所有依赖于它的对象都将得到通知，使得它们能够自动更新。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">// 事件监听器</div><div class="line">const Emitter = (function () &#123;</div><div class="line">    const _events = &#123;&#125;;</div><div class="line">    return &#123;</div><div class="line">        // 事件绑定</div><div class="line">        on(type, cb) &#123;</div><div class="line">            if (!_events[type]) &#123;</div><div class="line">                _events[type] = [];</div><div class="line">            &#125;</div><div class="line">            if (typeof cb === &quot;function&quot;) &#123;</div><div class="line">                _events[type].push(cb);</div><div class="line">            &#125; else &#123;</div><div class="line">                throw  new Error(&apos;参数类型必须为函数&apos;)</div><div class="line">            &#125;</div><div class="line">        &#125;,</div><div class="line">        // 事件解绑</div><div class="line">        off(type, cb) &#123;</div><div class="line">            if (!_events[type] || !_events[type].includes(cb)) return;</div><div class="line">            // 移除事件监听</div><div class="line">            _events[type].map((fn, index) =&gt; &#123;</div><div class="line">                 if (fn === cb) &#123;</div><div class="line">                    _events[type].splice(index, 1)</div><div class="line">                &#125;</div><div class="line">            &#125;)</div><div class="line">        &#125;,</div><div class="line">        emit(type, ...args) &#123;</div><div class="line">            if (!_events[type]) return;</div><div class="line">            _events[type].forEach(cb =&gt; cb(...args))</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;)();</div><div class="line"></div><div class="line">// 事件订阅</div><div class="line">Emitter.on(&apos;change&apos;, data =&gt; console.log(`我是第一条信息：$&#123;data&#125;`))</div><div class="line">Emitter.on(&apos;change&apos;, data =&gt; console.log(`我是第二条信息：$&#123;data&#125;`))</div><div class="line"></div><div class="line">// 事件发布</div><div class="line">Emitter.emit(&apos;change&apos;, &apos;参数&apos;)</div></pre></td></tr></table></figure>
+<p>上述我们通过发布订阅模式实现了一个简单的事件监听器，可以通过 <code>on</code> 方法监听某一事件，之后通过 <code>emit</code> 方法去分发，所有监听该事件的函数都会被依次执行，这就是发布订阅模式基本工作原理。</p>
+<p><strong>优缺点</strong></p>
+<p>发布订阅模式最大的特点就是发布者和订阅者之间完全解耦：发布者不需要订阅者是谁，只需要更新的时候遍历所以订阅该消息的订阅者即可。订阅者也不需要时时关注发布者的动态，当有消息更新时会自动接受。因此，可以将事件处理中心封装起来，统一管理，独立运行。</p>
+<p>发布订阅模式的缺点在于，订阅者会增加内存消耗，及时后续没有触发，也会常驻内存中。随着订阅者的增多，系统复杂度会增加，代码运行效率、资源消耗会变大。另外，发布者与订阅者完全解耦，会导致代码追踪起来比较困难。</p>
+<p><strong>适用场景</strong></p>
+<p>发布订阅模式特别适用于要实现一对多关联的场景。日常生活中我们订阅的公众号，关注的明星微博，今日头条的新闻等，他们都会在有新消息的时候第一时间推送给你。而实际开发中，<code>vue</code> 的数据响应式，浏览器的 <code>DOM</code> 事件绑定等也都是这个原理。</p>
+<h3 id="策略模式-（Strategy-Pattern）"><a href="#策略模式-（Strategy-Pattern）" class="headerlink" title="策略模式 （Strategy Pattern）"></a>策略模式 （Strategy Pattern）</h3><p>策略模式就是将一系列算法封装起来，并使它们相互之间可以替换。被封装起来的算法具有独立性，外部不可改变其特性。它的目的就是将算法的使用与算法的实现分离开来，有效避免代码中很多<code>if-else</code>的条件语句。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div></pre></td><td class="code"><pre><div class="line">// 校验规则</div><div class="line">const strategyMap = &#123;</div><div class="line">    // 校验手机号</div><div class="line">    isMobile(mobile) &#123;</div><div class="line">        return /^1\d&#123;10&#125;$/.test(mobile);</div><div class="line">    &#125;,</div><div class="line">    // 校验是否必填</div><div class="line">    isRequired(str) &#123;</div><div class="line">        return str.replace(/(^\s*)|(\s*$)/g, &quot;&quot;) !== &quot;&quot;;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 校验方法</div><div class="line">function validate(formData) &#123;</div><div class="line">    let valid;</div><div class="line"></div><div class="line">    for (let key in formData) &#123;</div><div class="line">        const val = formData[key].value;</div><div class="line">        const rules = formData[key].rules;</div><div class="line"></div><div class="line">        for (let i = 0; i &lt; rules.length; i++) &#123;</div><div class="line">            const result = strategyMap[rules[i][&apos;rule&apos;]].call(null, val);</div><div class="line">            if (!result) &#123;</div><div class="line">                valid = &#123;</div><div class="line">                    errField: key,</div><div class="line">                    errValue: val,</div><div class="line">                    errMsg: rules[i][&apos;message&apos;]</div><div class="line">                &#125;</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        if (valid) return valid;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return valid;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line">// form 表单校验</div><div class="line">const formData = &#123;</div><div class="line">    mobile: &#123;</div><div class="line">        value: &apos;1380000000&apos;,</div><div class="line">        rules: [</div><div class="line">            &#123;rule: &apos;isRequired&apos;, message: &apos;手机号码不能为空&apos;&#125;,</div><div class="line">            &#123;rule: &apos;isMobile&apos;, message: &apos;手机号码格式不正确&apos;&#125;,</div><div class="line">        ]</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 获取校验结果</div><div class="line">const valid = validate(formData)</div><div class="line">if (!valid) &#123;</div><div class="line">    console.log(&apos;校验通过&apos;)</div><div class="line">&#125; else &#123;</div><div class="line">    console.log(valid)   </div><div class="line">    // &#123;errField: &quot;mobile&quot;, errValue: &quot;1380000000&quot;, errMsg: &quot;手机号码格式不正确&quot;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上述用了一个非常经典的表单校验来展示了策略模式的应用，我们可以事先将一些校验规则即一些策略算法放到一个 <code>map</code> 中，通过 <code>validate</code> 方法来完成对复杂表单的校验，相比于传统的 <code>if-else</code> 判断看起来简单明了的多，也可以大大提高开发效率。</p>
+<p><strong>优缺点</strong></p>
+<p>通过上述例子，可以发现策略模式可以将一个个算法封装起来，提高代码复用率，减少代码冗余；它可看作为 <code>if/else</code> 判断的另一种表现形式，在达到相同目的的同时，极大的减少了代码量以及代码维护成本。另外策略模式中各个策略之间相互独立，互不影响，使得它具有良好的可扩展性。</p>
+<p>策略模式的缺点在于各个策略相互独立，因此一些复杂的算法逻辑无法共享，造成资源的浪费。另一方面，我们必须实现定义好种种策略，且使用者必须事先了解这些策略方能灵活运用，在一定程度上来讲，对于使用者来说不是很方便。</p>
+<p><strong>适用场景</strong></p>
+<p>策略模式比较适合实现某一个功能有多种方案可以选择，自由切换的场景，或者是有时需要多重条件判断，可以使用策略模式来规避多重条件判断的情况。前端典型应用就是许多开源框架中 <code>form</code> 表单的动态校验，以及电商系统中不同优惠券的对应不同的逻辑等。</p>
+<h3 id="状态模式-（State-Pattern）"><a href="#状态模式-（State-Pattern）" class="headerlink" title="状态模式 （State Pattern）"></a>状态模式 （State Pattern）</h3><p>状态模式定义是一个对象在其内部状态改变时对应的改变它的行为，对象看起来似乎修改了它的类。其意思就是说 对象行为是基于状态来改变的，内部的状态转化，导致了行为表现形式不同。</p>
+<p>其主要是用来解决系统中复杂对象的状态转换以及不同状态下行为的封装问题。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">// 正常状态</div><div class="line">function NormalState() &#123;</div><div class="line">    this.handleChange = function (context) &#123;</div><div class="line">        console.log(&apos;正常状态&apos;)</div><div class="line">        context.state = new ColorfulState()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 彩灯状态</div><div class="line">function ColorfulState() &#123;</div><div class="line">    this.handleChange = function (context) &#123;</div><div class="line">        console.log(&apos;彩灯状态&apos;)</div><div class="line">        context.state = new CloseState()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 关闭状态</div><div class="line">function CloseState() &#123;</div><div class="line">    this.handleChange = function (context) &#123;</div><div class="line">        console.log(&apos;关闭状态&apos;)</div><div class="line">        context.state = new NormalState()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 灯</div><div class="line">function Light(state) &#123;</div><div class="line">    this.state = state;</div><div class="line">    this.switch = function () &#123;</div><div class="line">        this.state.handleChange(this)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// 设置灯光初始为关闭</div><div class="line">const light = new Light(new CloseState());</div><div class="line"></div><div class="line">setInterval(() =&gt; &#123;</div><div class="line">    light.switch()      </div><div class="line">&#125;, 1000)</div><div class="line"></div><div class="line">// 关闭状态--&gt;正常状态--&gt;彩灯状态--&gt;关闭状态...</div></pre></td></tr></table></figure>
+<p>我们通过生活中一个客厅的灯光状态来掩饰状态模式的是如何工作的，我们把每个状态定义成一个类，并且把每个状态所对应的功能处理封装起来，这样选择不同状态的时候，其实就是在选择不同的状态处理类，由于状态是在运行期被改变的，因此行为也会在运行期根据状态的改变而改变，看起来，同一个对象，在不同的运行时刻，行为是不一样的，就像是类被修改了一样。</p>
+<p><strong>优缺点</strong></p>
+<p>很明显，状态模式之间的状态都是一个个不同的类，相比于 <code>switch-case</code> 或 <code>if-else</code> 语句的使用，状态模式结构很清晰，拓展性很好，需要添加状态时，只需要在新增一个状态类即可，并且状态切换提供了统一的接口，外部的调用无需知道类内部如何实现状态和行为的变换，具有很好的封装性。</p>
+<p>状态模式的缺点在于，每个状态都有对应的类，因此系统会引入了很多的类，这样导致系统中类的个数增加，维护成本变高。</p>
+<p><strong>适用场景</strong></p>
+<p>如果系统的代码中有多分支的条件语句，且这些分支依赖于某个对象的状态时，可以考虑使用状态模式来将分支的处理分散到单独的状态类中，来实现状态和行为的分离。</p>
+<p>前端的<code>Promise</code>就是一个典型的状态模式。前端处理 <code>ajax</code> 请求返回不同的 <code>status</code> 时对应的处理逻辑，就可以考虑使用状态模式了。</p>
+<h3 id="命令模式-（Command-Pattern）"><a href="#命令模式-（Command-Pattern）" class="headerlink" title="命令模式 （Command Pattern）"></a>命令模式 （Command Pattern）</h3><p>命令模式，就是将一系列操作的指令封装起来，根据客户端不同的请求参数执行的对应的方法，本质上是对方法调用的封装，但它可以使请求发送者和接收者消除彼此之间的耦合关系。</p>
+<p><strong>代码示例</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">const Manager = (function () &#123;</div><div class="line">    // 命令</div><div class="line">    const commander = &#123;</div><div class="line">        open: function () &#123;</div><div class="line">            console.log(&apos;打开电视&apos;)</div><div class="line">        &#125;,</div><div class="line">        close: function () &#123;</div><div class="line">            console.log(&apos;关闭电视&apos;)</div><div class="line">        &#125;,</div><div class="line">        change: function (channel) &#123;</div><div class="line">            console.log(&apos;更换频道 &apos; + channel)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return &#123;</div><div class="line">        // 执行命令</div><div class="line">        exec: function (cmd) &#123;</div><div class="line">            const args = [].splice.call(arguments, 1)</div><div class="line">            commander[cmd] &amp;&amp; commander[cmd](args)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;)();</div><div class="line"></div><div class="line">Manager.exec(&apos;open&apos;)        // 打开电视</div><div class="line">Manager.exec(&apos;change&apos;, 10)  // 更换频道 10</div><div class="line">Manager.exec(&apos;close&apos;)       // 关闭电视</div></pre></td></tr></table></figure>
+<p>上述代码以一种简单的方式展示了命令模式的基本用法，我们是先定义好一些命令，并暴露出一个执行命令的 <code>exec</code> 方法，使用者就可以通过 <code>Manager.exec</code> 传递不同的命令参数来达到执行不同命令的效果。</p>
+<p><strong>优缺点</strong></p>
+<p>上面的代码很明显就可以看出，命令模式中命令的请求和命令的执行两者完全解耦，因此系统的可扩展性良好，加入新的命令不会影响原有逻辑，而且复用性很强，可以被任何请求者使用，不关心请求者是谁。</p>
+<p>命令模式的缺点在于，一是使用者要事先了解有哪些命令方能正常使用，二是随着命令的不断增加系统会变得很膨胀，复杂性会随之增加。</p>
+<p><strong>适用场景</strong></p>
+<p>命令模式比较适合于需要发布一些命令，但不清楚接受者和请求的操作，即只用知道发布了一个指令就行，具体做什么谁来做不用关心。常见的 <code>GUI</code> 编程中基本都采用这种模式，前端比较典型应用如，富文本编辑器中的各种按钮，<code>canvas</code> 动画中各种指令操作等。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我们上面用了很大的篇幅总结了常见的一些的设计模式在 <code>JavsScript</code> 中的实现，虽然在 <code>js</code> 中有些设计模式看起来有些不尽人意，但这却不是我们所要关注的核心，我们真正需要关心的是这些设计模式的理念、它所要解决的问题。</p>
+<p>设计模式对于我们学习框架源码，做一些前端架构是非常有帮助的，只有真正了解了它的思想，明白它所能解决的问题，才能让我们在开发中少走弯路，写出高质量的代码。</p>
+<p>也希望阅读到这的你，继续加油，时刻保持一颗学习的心态，继续在程序员这条道路上摸爬滚打！</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/12/21/Vue@next/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -721,235 +1004,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/08/25/react-router-dom/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chris wei">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/headImg.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Cryptic's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/25/react-router-dom/" itemprop="url">手动实现一个 react-router-dom</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-25T18:45:18+08:00">
-                2020-08-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/React/" itemprop="url" rel="index">
-                    <span itemprop="name">React</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>我们日常中使用 <code>react</code> 开发项目，那么一定会跟 <a href="https://reactrouter.com/" target="_blank" rel="external"><code>react-rouer</code></a> 打交道，但是由于 <code>react</code> 路由的设计和用法，使得很多刚使用 <code>react</code> 的同学在接触到<code>react-router</code>的时候就会很蛋疼，不知道其匹配的机制和原理。</p>
-<p>追本溯源一直是我们学习和提升过程中一个很重要的过程，本文就以 <code>HashRouter</code> 为例，结合最新的 <code>react-hooks</code> 语法， 一步步的实现一个属于自己的 <code>react-router</code>，看一看 <code>react-router</code> 到底应该怎么实现！</p>
-<h3 id="初始化项目"><a href="#初始化项目" class="headerlink" title="初始化项目"></a>初始化项目</h3><p>我们需要做一些前期的准备工作，初始化项目这一步是必须的，我们通过</p>
-<p><code>npx create-react-app my-react-router</code> </p>
-<p>脚手架工具初始化一个项目，为了方便测试，将里面没用的文件删除掉，保留一个比较干净的 <code>workspace</code>。</p>
-<p>新建 <code>react-router-dom</code> 的文件夹，存放我们自定义的 <code>router</code> 组件。</p>
-<p>新建 <code>views</code> 文件夹，先自定义三个组件并将其导入到 <code>App.js</code> 中，用于后期测试我们的页面跳转，这里我已 <code>Home</code>，<code>Category</code>，<code>Profile</code>三个组件为例。</p>
-<h3 id="Context-api"><a href="#Context-api" class="headerlink" title="Context api"></a>Context api</h3><p><a href="https://reactrouter.com/web/api/Route" target="_blank" rel="external"><code>react-router</code></a> 最基本的用法如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;Router&gt;</div><div class="line">    &lt;div&gt;</div><div class="line">      &lt;Route path=&quot;/&quot;&gt;</div><div class="line">        &lt;Home /&gt;</div><div class="line">      &lt;/Route&gt;</div><div class="line">      &lt;Route path=&quot;/news&quot;&gt;</div><div class="line">        &lt;News /&gt;</div><div class="line">      &lt;/Route&gt;</div><div class="line">    &lt;/div&gt;</div><div class="line">  &lt;/Router&gt;</div></pre></td></tr></table></figure>
-<p>我们在使用 <code>Router</code> 的时候，只要是被 <code>Route</code> 包裹的组件，我们都可以通过 <code>props</code> 属性获取到改组件的路由信息，而这些信息都是往往都是通过父组件 <code>Router</code> 传递过去的，这也是为什么要用 <code>Router</code> 包裹 <code>Route</code> 的原因。</p>
-<p>当 <code>Route</code> 嵌套过深，路由信息更为复杂的时候，为了解决嵌套路由之间的数据共享，以及状态更新的问题，需要引入新的 <code>api</code>，即 <code>createContext</code> 和 <code>useContext</code>，它可以实现跨组件的数据传递。</p>
-<p>因此，我们在 <code>react-router-dom</code> 文件夹下创建一个 <code>Context</code> 文件，用于管理路由信息。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;</div><div class="line"></div><div class="line">// 创建路由共享 context</div><div class="line">const RouterContext = React.createContext(&#123;&#125;);</div><div class="line"></div><div class="line">export default RouterContext;</div></pre></td></tr></table></figure>
-<p>关于 <code>createContext</code> 和 <code>useContext</code> 的用法，这里不在赘述，不了解的小伙伴，这里给你们准备了一篇文章，<a href="http://www.ptbird.cn/react-createContex-useContext.html" target="_blank" rel="external">供你参考</a>。</p>
-<h3 id="Router-组件"><a href="#Router-组件" class="headerlink" title="Router 组件"></a>Router 组件</h3><p>上面我们大概了解了 <code>react-router</code> 的基本用法，即 <code>Router</code> 和 <code>Route</code> 组件。</p>
-<p>我们不妨也仿照着先来构建这两组件。</p>
-<p>我们在 <code>react-router-dom</code> 文件夹下新建，<code>index.js</code> 入口文件 ，以及 <code>HashRouter.js</code> 和 <code>Route.js</code> 两个组件文件，并在入口文件导出，<code>App.js</code> 引入即可。</p>
-<p><code>App.js</code> 组件基本内容如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">import &#123; HashRouter as Router , Route &#125; from &apos;./react-router-dom&apos;</div><div class="line">function App () &#123;</div><div class="line">	return (</div><div class="line">    	&lt;Router&gt;</div><div class="line">			&lt;div className=&quot;App&quot;&gt;</div><div class="line">                &lt;div className=&quot;&quot;&gt;</div><div class="line">                    &lt;Route path=&#123;&apos;/home&apos;&#125; component=&#123;Home&#125; /&gt;</div><div class="line">                    &lt;Route path=&#123;&apos;/category&apos;&#125; component=&#123;Category&#125; /&gt;</div><div class="line">                    &lt;Route path=&#123;&apos;/profile&apos;&#125; component=&#123;Profile&#125; /&gt;</div><div class="line">                &lt;/div&gt;</div><div class="line">          	&lt;/div&gt;</div><div class="line">      	&lt;/Router&gt;</div><div class="line">	);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><code>Router.js</code> 组件，主要是给子组件提供路由信息，因为其基础结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import React from &apos;react&apos;;</div><div class="line">import RouterContext from &apos;./Context&apos;;</div><div class="line"></div><div class="line">const HashRouter = (props) =&gt; &#123;</div><div class="line">	return &lt;RouterContext.Provider value=&#123;&#123;a : 1&#125;&#125;&gt;</div><div class="line">		&#123; props.children &#125;</div><div class="line">	&lt;/RouterContext.Provider&gt;</div><div class="line">&#125;</div><div class="line"></div><div class="line">export default HashRouter;</div></pre></td></tr></table></figure>
-<p>其中 <code>props.children</code> 就是 <code>Router.js</code> 组件所包裹的子组件的内容。</p>
-<ul>
-<li>初始化路由</li>
-</ul>
-<p>如果初始化没有 <code>hash</code> 值，在初始化路由的时候默认会被自动到导向到 <code>#/</code> 根路由上去，我们需要在 <code>useEffect</code> 中做处理</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">useEffect(()=&gt;&#123;</div><div class="line">    // 初始化路由信息</div><div class="line">    window.location.hash = window.location.hash || &apos;/&apos;;</div><div class="line">&#125;,[])</div></pre></td></tr></table></figure>
-<ul>
-<li>构建 <code>location</code> 信息</li>
-</ul>
-<p>路由信息里有一个非常重要的属性 <code>location</code>，里面包含了 <code>pathname</code> ， <code>hash</code> 等参数，因此我们需要通过 <code>useState</code> 构建这么一个状态；</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// location 状态</div><div class="line">const [location, setLocation] = useState(&#123;</div><div class="line">    pathname: window.location.hash.slice(1) || &apos;/&apos;</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
-<ul>
-<li>监控 <code>hash</code> 变化</li>
-</ul>
-<p>有了 <code>location</code> 的状态，我们需要在 <code>hashchange</code> 的时候去更改它，需要在 <code>useEffect</code> 添加 <code>onHashChange</code> 事件，监控 <code>hash</code> 变化，并更新 <code>location</code> 的值。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">// hash 变化处理函数</div><div class="line">const onHashChange = () =&gt; &#123;</div><div class="line">    setLocation((location) =&gt; (&#123;</div><div class="line">        ...location,</div><div class="line">        pathname: window.location.hash.slice(1) || &apos;/&apos;</div><div class="line">    &#125;))</div><div class="line">&#125;</div><div class="line"></div><div class="line">useEffect(() =&gt; &#123;</div><div class="line">    // 初始化路由信息</div><div class="line">    window.location.hash = window.location.hash || &apos;/&apos;;</div><div class="line">    // 监控 hash 变化</div><div class="line">    window.addEventListener(&apos;hashchange&apos;, onHashChange, false);</div><div class="line">&#125;, [])</div></pre></td></tr></table></figure>
-<ul>
-<li>传递 <code>location</code> 属性</li>
-</ul>
-<p>父组件已经可以根据 <code>hash</code> 状态更新 <code>location</code> 的值，那么 <code>Route</code> 子组件需要根据 <code>pathname</code> 的状态去匹配对应的 <code>Component</code>，所以父组件需要通过  <code>context</code> 的值将 <code>location</code> 信息传递下去。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">// 传递给子组件</div><div class="line">const value = &#123;</div><div class="line">    location</div><div class="line">&#125;</div><div class="line">return &lt;RouterContext.Provider value=&#123;value&#125;&gt;</div><div class="line">    &#123;props.children&#125;</div><div class="line">&lt;/RouterContext.Provider&gt;</div></pre></td></tr></table></figure>
-<h3 id="Route-组件"><a href="#Route-组件" class="headerlink" title="Route 组件"></a>Route 组件</h3><p>上面父组件已经通过 <code>context</code> 将路径传递给了 <code>Route</code> 子组件，<code>Route</code> 子组件就可以通过<code>useContext</code> 去消费父组件提供的 <code>location</code>，进而进行路径匹配，决定组件的渲染。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 获取 pathname 路径</div><div class="line">const &#123; location: &#123; pathname &#125; &#125; = useContext(RouterContext);</div><div class="line">// 获取 path 和 Component 属性</div><div class="line">const &#123; path, component: Component &#125; = props;</div><div class="line">// 判断路径是否匹配，匹配返回对应的组件</div><div class="line">if ( pathname === path ) return &lt;Component/&gt;;</div><div class="line">// 不匹配返回 null</div><div class="line">return null;</div></pre></td></tr></table></figure>
-<p>现在一个，基本的匹配就完成了，你可以手动在地址栏上输入对应的 <code>hash</code> 值，就可以看到匹配的组件了。</p>
-<p>这么匹配显然是有问题吧，因为它只能精确匹配，不能包含匹配，即路径为 <code>home/1</code> 的时候匹配不到 <code>Home</code> ，这是有问题的，我们需要将匹配规则进行修改，改成正则匹配。</p>
-<p>这里我们利用一个第三方的库 <code>Path-to-RegExp</code> 来实现，它的介绍和详细用法请戳 <a href="https://github.com/pillarjs/path-to-regexp#readme" target="_blank" rel="external">这里</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// path 转正则进行匹配</div><div class="line">let reg = pathToRegexp(path, [], &#123; end: false &#125;);</div><div class="line">// 判断路径是否匹配，匹配返回对应的组件</div><div class="line">let result = pathname.match(reg);</div><div class="line">if ( result ) return &lt;Component/&gt;;</div></pre></td></tr></table></figure>
-<p>其中 <code>end:false</code> 表示不精确匹配。</p>
-<p>ok，这样一来就比较靠谱了~</p>
-<p>虽然解决了上面的问题，但我们访问 <code>home/1</code> 的时候，会同时匹配 <code>home</code> 和 <code>home/1</code> 两个路径所对应的组件，而我们就想只匹配一个的时候，我们需要加上 <code>exact</code> 参数。</p>
-<p>我们上述代码只需要简单的修改即可，<code>end</code> 参数的值通过结构 <code>props</code> 的 <code>exact</code> 参数来获取，默认为 <code>false</code> 即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">// 获取 path 和 Component 属性</div><div class="line">const &#123; path, component: Component, exact = false &#125; = props;</div><div class="line">// path 转正则进行匹配</div><div class="line">let reg = pathToRegexp(path, [], &#123; end: exact &#125;);</div></pre></td></tr></table></figure>
-<h3 id="Link-组件"><a href="#Link-组件" class="headerlink" title="Link 组件"></a>Link 组件</h3><p>我们目前实现的结果是可以通过手动输入 <code>hash</code> 的值，可以跳转到对应的组件，这样显然很不方便，我们希望的是可以通过点击来完成这一功能，需要提供一个 <code>Link</code> 组件。</p>
-<p>先在 <code>react-router-dom</code> 目录下新建 <code>Link</code> 组件，并在 <code>index.js</code> 中导出。</p>
-<p>我们需要点击跳转，那么就需要有一个跳转的方法 <code>push</code> ， 该方法应该是由 父组件 <code>Router</code> 提供的，因此我们在 <code>Router</code> 组件新增一个 <code>history</code> 属性，里面有一个 <code>push</code> 方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">// Rouer.js</div><div class="line"></div><div class="line">// 传递给子组件</div><div class="line">const value = &#123;</div><div class="line">    location,</div><div class="line">    history : &#123;</div><div class="line">        push(to)&#123;</div><div class="line">            window.location.hash = to;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>然后在 <code>Link</code> 组件接收使用即可</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">const Link = (props) =&gt; &#123;</div><div class="line">	// 获取 push 方法</div><div class="line">	const &#123; history: &#123; push &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 获取跳转路径</div><div class="line">	const &#123; to &#125; = props;</div><div class="line">	// 跳转</div><div class="line">	return &lt;a onClick=&#123;() =&gt; push(to)&#125;&gt;&#123;props.children&#125;&lt;/a&gt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="Redirect-组件"><a href="#Redirect-组件" class="headerlink" title="Redirect 组件"></a>Redirect 组件</h3><p>有时候我们希望用户访问到某一路由时重定向到其他路由，例如我们如果输入不合法的路由，匹配不成功的时候我们希望重定向到我们的首页 <code>/home</code> 上去，就需要用到 <code>Redirect</code> 组件。</p>
-<p><code>App.js</code> 组件稍做修改：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;Route path=&#123;&apos;/home&apos;&#125; exact=&#123;true&#125; component=&#123;Home&#125;/&gt;</div><div class="line">&lt;Route path=&#123;&apos;/category&apos;&#125; component=&#123;Category&#125;/&gt;</div><div class="line">&lt;Route path=&#123;&apos;/profile&apos;&#125; component=&#123;Profile&#125;/&gt;</div><div class="line">&lt;Redirect to=&#123;&apos;/home&apos;&#125; /&gt;</div></pre></td></tr></table></figure>
-<p>在我们的 <code>react-router-dom</code> 文件夹下新建 <code>Redirect.js</code> 文件并在 <code>index.js</code> 导出。</p>
-<p><code>Redirect</code> 组件与 <code>Link</code> 类似，只不过它不做热河渲染，加载完毕就直接跳转。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">const Redirect = (props) =&gt; &#123;</div><div class="line">	// 获取 push 方法</div><div class="line">	const &#123; history: &#123; push &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 获取跳转路径</div><div class="line">	const &#123; to &#125; = props;</div><div class="line">	// 重定向跳转</div><div class="line">	useEffect(() =&gt; &#123;</div><div class="line">		push(to);</div><div class="line">	&#125;, [push, to]);</div><div class="line">	// 不渲染</div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这会，你随便敲一个不存在路径，就会帮你重定向到 <code>home</code> 页面~</p>
-<p>但是，你再点击 <code>category</code>、<code>profile</code> 路由的时候也会闪一下后重定向到 <code>home</code> 页面。</p>
-<p>这是因为，我们并没有做处理，虽然匹配到了 <code>category</code> 和 <code>profile</code> 路由，但是也并不妨碍继续往下执行，就又到了 <code>Redirect</code> 组件，应该说是我们无论如何匹配都会重定向到 <code>home</code> 页面，这显然是不合理的，需要通过 <code>Swtich</code> 组件进行包裹。</p>
-<h3 id="Swtich-组件"><a href="#Swtich-组件" class="headerlink" title="Swtich 组件"></a>Swtich 组件</h3><p><code>Swtich</code> 组件要实现的功能就是当我们匹配到了路径之后，就不需要继续匹配，解决上述重定向的问题。</p>
-<p>我们在 <code>react-router-dom</code> 文件夹下新建 <code>Swtich.js</code> 文件并在 <code>index.js</code> 导出。</p>
-<p>实现思路就是，循环遍历 <code>Switch</code> 的子组件，判断当前路径是否与子组件的路由匹配，匹配成功后返回即可。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">const Switch = (props) =&gt; &#123;</div><div class="line">	// 获取 pathname 路径</div><div class="line">	const &#123; location: &#123; pathname &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 子组件</div><div class="line">	const children = props.children;</div><div class="line">	// 循环遍历进行匹配</div><div class="line">	for ( let i = 0; i &lt; children.length; i++ ) &#123;</div><div class="line">		// 子组件</div><div class="line">		let child = children[i];</div><div class="line">		// 子组件的路径（redirect 没有 path 属性）</div><div class="line">		let path = child.props.path || &apos;&apos;;</div><div class="line">		// 路由正则</div><div class="line">		let reg = pathToRegexp(path, [], &#123; end: false &#125;);</div><div class="line">		// 如果匹配成功</div><div class="line">		if( reg.test(pathname )) return child;</div><div class="line">	&#125;</div><div class="line">	// 匹配不成功</div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>现在只要在我们的 <code>Route</code> 上用 <code>Switch</code> 包裹一下，就可以解决上述问题了！</p>
-<p>现在，我们的基本路由已经实现了一大半了，赞！</p>
-<h3 id="组件Props"><a href="#组件Props" class="headerlink" title="组件Props"></a>组件Props</h3><p>目前我们的跳转只能靠 <code>Link</code> 或者 <code>Redirect</code> 组件来实现，实际上我们并不希望这样，我们希望每个组件都可以获取 <code>Router</code> 组件的 <code>history</code> 以及 <code>location</code> 等属性，方便子组件的使用。</p>
-<p>实现方式也非常简单，只需要将我们的 <code>Route</code> 稍作修改即可，在渲染 <code>Component</code> 的时候以 <code>props</code> 的方式传递给子组件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// 传递给子组件的数据</div><div class="line">const &#123; location, history &#125; = useContext(RouterContext);</div><div class="line">const componentProps = &#123;</div><div class="line">    location,</div><div class="line">    history,</div><div class="line">    match: &#123;&#125;</div><div class="line">&#125;</div><div class="line">if ( result ) return &lt;Component &#123;...componentProps&#125;/&gt;;</div></pre></td></tr></table></figure>
-<p>这样，子组件就可以获取 <code>history</code> ，<code>location</code> 等参数，即可以在组件中通过 <code>props.history.push</code> 方法进行跳转了。</p>
-<h3 id="参数路由"><a href="#参数路由" class="headerlink" title="参数路由"></a>参数路由</h3><p>类似 <code>/detail/:id</code> 这种带参数的路由实际生产是非常常见的，我们要动态获取 <code>id</code> 的值，好在 <code>path-to-regexp</code> 这个包给我们提供了解析路由的参数的方法，只需要照搬即可。</p>
-<p>将 <code>Route.js</code> 组件修改一下，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">const Route = (props) =&gt; &#123;</div><div class="line">	// 获取 pathname 路径</div><div class="line">	const &#123; location: &#123; pathname &#125; &#125; = useContext(RouterContext);</div><div class="line">	// 获取 path 和 Component 属性</div><div class="line">	const &#123; path, component: Component, exact = false &#125; = props;</div><div class="line">	// path 转正则进行匹配</div><div class="line">	let keys = [];</div><div class="line">	let reg = pathToRegexp(path, keys, &#123; end: exact &#125;);</div><div class="line">	// 判断路径是否匹配，匹配返回对应的组件</div><div class="line">	let result = pathname.match(reg);</div><div class="line">	let [url, ...values] = result || [];</div><div class="line">	// 传递给子组件的数据</div><div class="line">	const &#123; location, history &#125; = useContext(RouterContext);</div><div class="line">	const componentProps = &#123;</div><div class="line">		location,</div><div class="line">		history,</div><div class="line">		match: &#123;</div><div class="line">			path: pathname,</div><div class="line">			params: keys.reduce((obj, current, idx) =&gt; &#123;</div><div class="line">				obj[current[&apos;name&apos;]] = values[idx]</div><div class="line">				return obj;</div><div class="line">			&#125;, &#123;&#125;),</div><div class="line">			url</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	if ( result ) return &lt;Component &#123;...componentProps&#125;/&gt;;</div><div class="line">	// 不匹配返回 null</div><div class="line">	return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>通过 <code>keys</code> 查询匹配的 <code>name</code> 属性值，通过 <code>values</code> 查询匹配的 <code>name</code> 属性值对应的<code>value</code> 值，之后将其放到 <code>match</code> 对象中，一并传递给子组件，子组件就可以在 <code>props</code> 的 <code>match</code> 中查询到该值。</p>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>至此，我们已经实现了一个简易版的 <code>react-router</code> ， 有没有感到一丝欣慰？</p>
-<p>相信你能阅读到这里，对 <code>react-router</code> 有了一个较深的理解，当你深入了解之后发现 <code>react-router</code> 的实现非常巧妙，并不是特别复杂，当然，这些基础功能也只是冰山一角，还有更多更强大功能等着你去实现。</p>
-<p>代码已上传<a href="https://github.com/Chris-wei/react-router-dom" target="_blank" rel="external">github</a>，需要的小伙伴自行查阅！</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/14/">14</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/15/">15</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -998,7 +1057,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">42</span>
+                <span class="site-state-item-count">43</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1088,7 +1147,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
